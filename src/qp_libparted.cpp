@@ -291,6 +291,10 @@ bool QP_PartInfo::partUMount() {
 QString QP_PartInfo::mountPoint() {
     return _mountPoint;
 }
+
+QString QP_PartInfo::label() {
+    return _label;
+}
 /*-end of QP_PartInfo----------------------------------------------------------------------------*/
 
 

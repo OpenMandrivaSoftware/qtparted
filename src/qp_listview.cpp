@@ -126,6 +126,7 @@ void QP_RealListView::addPrimary(QP_PartInfo *partinfo, int number) {
     QString sizeStr = MB2String(partinfo->mb_end()-partinfo->mb_start());
     QString snumber; snumber.sprintf("%.2d", number);
     QString name = partinfo->partname();
+    QString label = partinfo->label();
     
     QString status;
     if (partinfo->isActive()) status = QString(tr("Active"));
@@ -178,6 +179,7 @@ void QP_RealListView::addLogical(QP_PartInfo *partinfo, int number) {
     QString endStr = MB2String(partinfo->mb_end());
     QString sizeStr = MB2String(partinfo->mb_end()-partinfo->mb_start());
     QString snumber; snumber.sprintf("%.2d", number);
+    QString label = partinfo->label();
     
     QString status;
     if (partinfo->isActive()) status = QString(tr("Active"));

@@ -772,13 +772,15 @@ void QP_MainWindow::slotProperty() {
                     "end at: %3\n"
                     "it can grow left: %4 and "
                     "right: %5\n"
-                    "the filesystem is: %6"))
+                    "the filesystem is: %6"
+                    "label: %7\n"))
                             .arg(type)
                             .arg(diskview->selPartInfo()->mb_start())
                             .arg(diskview->selPartInfo()->mb_end())
                             .arg(diskview->selPartInfo()->mb_t_start())
                             .arg(diskview->selPartInfo()->mb_t_end())
-                            .arg(diskview->selPartInfo()->fsspec->name());
+                            .arg(diskview->selPartInfo()->fsspec->name())
+                            .arg(diskview->selPartInfo()->label());
 
     QMessageBox::information(this, PROG_NAME, label);
 }

@@ -91,6 +91,7 @@ public:
     bool partMount();                       /*---mount the partition                          ---*/
     bool partUMount();                      /*---umount the partition                         ---*/
     QString mountPoint();                   /*---return the mountpoint                        ---*/
+    QString label();                        /*---return the label of the partition            ---*/
 
 private:
     QString _label;
