@@ -93,6 +93,18 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
         <source>Cannot umount partition device: %1.Please do it by hand first to commit the changes!</source>
         <translation>Kann eingebindene Partition nicht lösen: %1. Bitte diese manuell lösen um die Änderungen zu übernehmen!</translation>
     </message>
+    <message>
+        <source>Utility for mount a filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Utility for umount a filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Utility for grow a xfs filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_ActionList</name>
@@ -152,6 +164,14 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
         <source>All operations completed.</source>
         <translation>Alle Aktionen beendet.</translation>
     </message>
+    <message>
+        <source>Critical error during ped_disk_new!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical error during ped_disk_duplicate!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -177,6 +197,39 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Writing inode tables.</source>
         <translation>schreibe Dateizuordnungstabelle.</translation>
+    </message>
+    <message>
+        <source>There was a problem with mkfs.ext3.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSJfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">Kann keine Partition vergrößern, solange das Laufwerk beschäftigt ist</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSNtfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">Kann keine Partition vergrößern, solange das Laufwerk beschäftigt ist</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSXfs</name>
+    <message>
+        <source>There was a problem with mkfs.xfs.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">Kann keine Partition vergrößern, solange das Laufwerk beschäftigt ist</translation>
+    </message>
+    <message>
+        <source>Error during xfs_grow.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -626,7 +679,7 @@ In anderen Worten, BITTE ALLE LAUFWERKSVERBINDUNGEN ZU DIESEM LAUFWERK LÖSEN, b
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation>Kann keine Partition vergrößern, solange das Laufwerk beschäftigt ist</translation>
+        <translation type="obsolete">Kann keine Partition vergrößern, solange das Laufwerk beschäftigt ist</translation>
     </message>
 </context>
 <context>
@@ -678,6 +731,10 @@ In anderen Worten, BITTE ALLE LAUFWERKSVERBINDUNGEN ZU DIESEM LAUFWERK LÖSEN, b
     <message>
         <source>Partition table</source>
         <translation>Partitionstabelle</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

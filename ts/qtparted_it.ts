@@ -93,6 +93,18 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
         <source>Cannot umount partition device: %1.Please do it by hand first to commit the changes!</source>
         <translation>Non posso smontare il dispositivo disco: %1. Per favore, fallo a mano prima di salvare le modifiche!</translation>
     </message>
+    <message>
+        <source>Utility for mount a filesystem.</source>
+        <translation>Programma per montare un filesystem.</translation>
+    </message>
+    <message>
+        <source>Utility for umount a filesystem.</source>
+        <translation>Programma per smontare un filesystem.</translation>
+    </message>
+    <message>
+        <source>Utility for grow a xfs filesystem.</source>
+        <translation>Utility per allargare una partizione xfs.</translation>
+    </message>
 </context>
 <context>
     <name>QP_ActionList</name>
@@ -152,6 +164,14 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
         <source>All operations completed.</source>
         <translation>Tutte le operazioni sono state compiute con successo.</translation>
     </message>
+    <message>
+        <source>Critical error during ped_disk_new!</source>
+        <translation>Errore critico durante una chiamata a ped_disk_new!</translation>
+    </message>
+    <message>
+        <source>Critical error during ped_disk_duplicate!</source>
+        <translation>Errore critico durante una chiamata a ped_disk_duplicate!</translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -177,6 +197,39 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Writing inode tables.</source>
         <translation>Scrivendo la tabella inode.</translation>
+    </message>
+    <message>
+        <source>There was a problem with mkfs.ext3.</source>
+        <translation>Un problema è occorso con mkfs.ext3.</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSJfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation>Non è possibile allargare partizioni se il disco è occupato</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSNtfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation>Non è possibile allargare partizioni se il disco è occupato</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSXfs</name>
+    <message>
+        <source>There was a problem with mkfs.xfs.</source>
+        <translation>E&apos; occorso un problema con mkfs.xfs.</translation>
+    </message>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation>Non è possibile allargare partizioni se il disco è occupato</translation>
+    </message>
+    <message>
+        <source>Error during xfs_grow.</source>
+        <translation>Errore durante xfs_grow.</translation>
     </message>
 </context>
 <context>
@@ -626,7 +679,7 @@ In altre parole PER FAVORE SMONTA TUTTE LE PARTIZIONI prima di applicare cambiam
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation>Non è possibile allargare partizioni se il disco è occupato</translation>
+        <translation type="obsolete">Non è possibile allargare partizioni se il disco è occupato</translation>
     </message>
 </context>
 <context>
@@ -678,6 +731,10 @@ In altre parole PER FAVORE SMONTA TUTTE LE PARTIZIONI prima di applicare cambiam
     <message>
         <source>Partition table</source>
         <translation>Tabella partizioni</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation>Etichetta</translation>
     </message>
 </context>
 <context>

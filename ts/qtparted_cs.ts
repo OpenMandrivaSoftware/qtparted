@@ -93,6 +93,18 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
         <source>Cannot umount partition device: %1.Please do it by hand first to commit the changes!</source>
         <translation>Nelze odpojit zařízení: %1. Proveďte to prosím před potvrzením změn ručně!</translation>
     </message>
+    <message>
+        <source>Utility for mount a filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Utility for umount a filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Utility for grow a xfs filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_ActionList</name>
@@ -152,6 +164,14 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
         <source>All operations completed.</source>
         <translation>Všechny operace ukončeny.</translation>
     </message>
+    <message>
+        <source>Critical error during ped_disk_new!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical error during ped_disk_duplicate!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -177,6 +197,39 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Writing inode tables.</source>
         <translation>Zapisuji tabulku inodů.</translation>
+    </message>
+    <message>
+        <source>There was a problem with mkfs.ext3.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSJfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">Nelze zvětšit velikost oddílu pokud je disk zaneprázdněn</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSNtfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">Nelze zvětšit velikost oddílu pokud je disk zaneprázdněn</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSXfs</name>
+    <message>
+        <source>There was a problem with mkfs.xfs.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">Nelze zvětšit velikost oddílu pokud je disk zaneprázdněn</translation>
+    </message>
+    <message>
+        <source>Error during xfs_grow.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -626,7 +679,7 @@ Před potvrzením změn raději ODPOJTE VŠECHNY DISKOVÉ ODDÍLY!</translation>
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation>Nelze zvětšit velikost oddílu pokud je disk zaneprázdněn</translation>
+        <translation type="obsolete">Nelze zvětšit velikost oddílu pokud je disk zaneprázdněn</translation>
     </message>
 </context>
 <context>
@@ -678,6 +731,10 @@ Před potvrzením změn raději ODPOJTE VŠECHNY DISKOVÉ ODDÍLY!</translation>
     <message>
         <source>Partition table</source>
         <translation>Tabulka rozdělení disku</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

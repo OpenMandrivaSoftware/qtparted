@@ -94,6 +94,18 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
         <source>Cannot umount partition device: %1.Please do it by hand first to commit the changes!</source>
         <translation>No se puede desmontar el dispositivo de la partición: %1. ¡Por favor, hágalo manualmente antes de efectuar los cambios!</translation>
     </message>
+    <message>
+        <source>Utility for mount a filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Utility for umount a filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Utility for grow a xfs filesystem.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_ActionList</name>
@@ -153,6 +165,14 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
         <source>All operations completed.</source>
         <translation>Todas las operaciones han sido completadas.</translation>
     </message>
+    <message>
+        <source>Critical error during ped_disk_new!</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Critical error during ped_disk_duplicate!</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -178,6 +198,39 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Writing inode tables.</source>
         <translation>Escribiendo tablas de inodos.</translation>
+    </message>
+    <message>
+        <source>There was a problem with mkfs.ext3.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSJfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">No se puede agrandar una partición si el dispositivo de disco está ocupado</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSNtfs</name>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">No se puede agrandar una partición si el dispositivo de disco está ocupado</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSXfs</name>
+    <message>
+        <source>There was a problem with mkfs.xfs.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Cannot enlarge a partition if the disk device is busy</source>
+        <translation type="unfinished">No se puede agrandar una partición si el dispositivo de disco está ocupado</translation>
+    </message>
+    <message>
+        <source>Error during xfs_grow.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -630,7 +683,7 @@ En otras palabras, ¡POR FAVOR DESMONTE TODAS LAS PARTICIONES antes de efectuar 
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation>No se puede agrandar una partición si el dispositivo de disco está ocupado</translation>
+        <translation type="obsolete">No se puede agrandar una partición si el dispositivo de disco está ocupado</translation>
     </message>
 </context>
 <context>
@@ -682,6 +735,10 @@ En otras palabras, ¡POR FAVOR DESMONTE TODAS LAS PARTICIONES antes de efectuar 
     <message>
         <source>Partition table</source>
         <translation>Tabla de particiones</translation>
+    </message>
+    <message>
+        <source>Label</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
