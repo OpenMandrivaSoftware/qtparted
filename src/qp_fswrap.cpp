@@ -34,6 +34,7 @@
 #define NOTFOUND tr("command not found")
 #define TMP_MOUNTPOINT "/tmp/mntqp"
 
+
 bool QP_FSWrap::fs_open(QString cmdline) {
 
     /*---this force stderr to stdout---*/
@@ -82,33 +83,49 @@ QP_FSWrap * QP_FSWrap::fswrap(QString name) {
         return NULL;
 }
 
-QString QP_FSWrap::get_label(QString name, char *buffer) {
+QString QP_FSWrap::get_label(PedPartition *part, QString name) {
     if (name.compare("ntfs") == 0) {
-        return QP_FSNtfs::_get_label(buffer);
+        return QP_FSNtfs::_get_label(part);
     } else
     if (name.compare("jfs") == 0) {
-        return QP_FSJfs::_get_label(buffer);
+        return QP_FSJfs::_get_label(part);
     } else
     if (name.compare("ext3") == 0) {
-        return QP_FSExt3::_get_label(buffer);
+        return QP_FSExt3::_get_label(part);
     } else
     if (name.compare("xfs") == 0) {
-        return QP_FSXfs::_get_label(buffer);
+        return QP_FSXfs::_get_label(part);
     }
     if (name.compare("fat16") == 0) {
-        return QP_FSFat16::_get_label(buffer);
+        return QP_FSFat16::_get_label(part);
     }
     if (name.compare("fat32") == 0) {
-        return QP_FSFat32::_get_label(buffer);
+        return QP_FSFat32::_get_label(part);
     }
     if (name.compare("ext2") == 0) {
-        return QP_FSExt2::_get_label(buffer);
+        return QP_FSExt2::_get_label(part);
     }
     if (name.compare("reiserfs") == 0) {
-        return QP_FSExt2::_get_label(buffer);
+        return QP_FSExt2::_get_label(part);
     }
     else
         return QString::null;
+}
+
+bool QP_FSWrap::read_sector(PedPartition *part, PedSector offset, PedSector count, char *buffer) {
+    /*---open a new device, read a sector and close it---*/
+    if (!ped_device_open(part->geom.dev))
+        return false;
+
+    if (!ped_geometry_read(&part->geom, buffer, offset, count)) {
+        ped_device_close (part->geom.dev);
+        return false;
+    }
+    
+    if (!ped_device_close(part->geom.dev))
+        return false;
+
+    return true;
 }
 
 bool QP_FSWrap::qpMount(QString device) {
@@ -517,7 +534,7 @@ QString QP_FSNtfs::fsname() {
     return QString("ntfs");
 }
 
-QString QP_FSNtfs::_get_label(char *) {
+QString QP_FSNtfs::_get_label(PedPartition *) {
     return QString::null;
 }
 
@@ -685,7 +702,7 @@ QString QP_FSJfs::fsname() {
     return QString("jfs");
 }
 
-QString QP_FSJfs::_get_label(char *) {
+QString QP_FSJfs::_get_label(PedPartition *) {
     return QString::null;
 }
 
@@ -788,7 +805,7 @@ QString QP_FSExt3::fsname() {
     return QString("ext3");
 }
 
-QString QP_FSExt3::_get_label(char *) {
+QString QP_FSExt3::_get_label(PedPartition *) {
     return QString::null;
 }
 
@@ -963,30 +980,38 @@ QString QP_FSXfs::fsname() {
     return QString("xfs");
 }
 
-QString QP_FSXfs::_get_label(char *) {
+QString QP_FSXfs::_get_label(PedPartition *) {
     return QString::null;
 }
 
 
 /*---FAT16 WRAPPER---------------------------------------------------------------*/
-QString QP_FSFat16::_get_label(char *) {
+QString QP_FSFat16::_get_label(PedPartition *) {
     return QString::null;
 }
 
 
 /*---FAT32 WRAPPER---------------------------------------------------------------*/
-QString QP_FSFat32::_get_label(char *) {
-    return QString::null;
+QString QP_FSFat32::_get_label(PedPartition *part) {
+    char buffer[PED_SECTOR_SIZE];
+    
+    if (!QP_FSWrap::read_sector(part, 0, 1, buffer)) {
+        return QString::null;
+    } else {
+        buffer[PED_SECTOR_SIZE-1] = 0;
+        printf("returned buffer: %s\n", buffer);
+        return QString::null;
+    }
 }
 
 
 /*---EXT2 WRAPPER----------------------------------------------------------------*/
-QString QP_FSExt2::_get_label(char *) {
+QString QP_FSExt2::_get_label(PedPartition *) {
     return QString::null;
 }
 
 
 /*---REISERFS WRAPPER------------------------------------------------------------*/
-QString QP_FSReiserFS::_get_label(char *) {
+QString QP_FSReiserFS::_get_label(PedPartition *) {
     return QString::null;
 }
