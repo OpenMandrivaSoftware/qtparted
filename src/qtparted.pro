@@ -64,7 +64,6 @@ HEADERS   =  qtparted.h          \
              qp_spinbox.h        \
              qp_dlgdevprop.h     \
              qp_debug.h          \
-             runprog.h           \
              statistics.h
 
 
@@ -102,7 +101,6 @@ SOURCES   =  main.cpp            \
              qp_devlist.cpp      \
              qp_dlgdevprop.cpp   \
              qp_debug.cpp        \
-             runprog.cpp         \
              statistics.cpp
 
 

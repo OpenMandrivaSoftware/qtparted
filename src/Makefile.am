@@ -46,7 +46,6 @@ qtparted_SOURCES = qp_ui_config.ui      \
 				   qp_sizepart.cpp      \
 				   qp_spinbox.cpp       \
 	               qp_debug.cpp         \
-				   runprog.cpp          \
                    statistics.cpp
 
 noinst_HEADERS =   qtparted.h           \
@@ -79,7 +78,6 @@ noinst_HEADERS =   qtparted.h           \
 				   qp_fswrap.h          \
 				   qp_sizepart.h        \
 				   qp_spinbox.h         \
-				   runprog.h            \
                    statistics.h
 
 qtparted_LDFLAGS = @QTPARTED_LDFLAGS@ @QTPARTED_LIBS@ -L$(qt_libraries) $(all_libraries) $(LIBS)
