@@ -37,6 +37,7 @@ QP_ListViewItem::QP_ListViewItem(QListView *parent,
         const QString &usedStr,
         const QString &startStr,
         const QString &endStr,
+        const QString &label,
         QP_PartInfo *pinfo)
     :QListViewItem(parent, number, diskName, fstype, status, sizeStr, usedStr, startStr, endStr) {
 
@@ -44,6 +45,7 @@ QP_ListViewItem::QP_ListViewItem(QListView *parent,
     partinfo->listviewitem = this;
 
     setPixmap(0, pinfo->fsspec->pixmap());
+    setText(8, label);
 }
 
 QP_ListViewItem::QP_ListViewItem(QListViewItem *parent, 
@@ -55,6 +57,7 @@ QP_ListViewItem::QP_ListViewItem(QListViewItem *parent,
         const QString &usedStr,
         const QString &startStr,
         const QString &endStr,
+        const QString &label,
         QP_PartInfo *pinfo)
     :QListViewItem(parent, number, diskName, fstype, status, sizeStr, usedStr, startStr, endStr) {
 
@@ -62,6 +65,7 @@ QP_ListViewItem::QP_ListViewItem(QListViewItem *parent,
     partinfo->listviewitem = this;
 
     setPixmap(0, pinfo->fsspec->pixmap());
+    setText(8, label);
 }
 /*-----------------------------------------------------------------------------------*/
 
@@ -163,6 +167,7 @@ void QP_RealListView::addPrimary(QP_PartInfo *partinfo, int number) {
                                                 fstype,
                                                 status,
                                                 sizeStr, usedStr, startStr, endStr,
+                                                label,
                                                 partinfo);
 
     /*---if you add an extended... just save the pointer---*/
@@ -205,6 +210,7 @@ void QP_RealListView::addLogical(QP_PartInfo *partinfo, int number) {
                         partinfo->fsspec->name(),
                         status,
                         sizeStr, usedStr, startStr, endStr,
+                        label,
                         partinfo);
 
     /*---open the extended tree---*/

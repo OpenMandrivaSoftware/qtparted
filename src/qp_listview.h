@@ -52,6 +52,7 @@ public:
             const QString &usedStr,
             const QString &startStr,
             const QString &endStr,
+            const QString &label,
             QP_PartInfo *pinfo);
     QP_ListViewItem(QListViewItem *parent,
             const QString &number,
@@ -62,6 +63,7 @@ public:
             const QString &usedStr,
             const QString &startStr,
             const QString &endStr,
+            const QString &label,
             QP_PartInfo *pinfo);
     ~QP_ListViewItem() {}
     QP_PartInfo *partinfo;

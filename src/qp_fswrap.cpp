@@ -107,7 +107,7 @@ QString QP_FSWrap::get_label(PedPartition *part, QString name) {
         return QP_FSExt2::_get_label(part);
     }
     if (name.compare("reiserfs") == 0) {
-        return QP_FSExt2::_get_label(part);
+        return QP_FSReiserFS::_get_label(part);
     }
     else
         return QString::null;
