@@ -718,6 +718,16 @@ QP_FSXfs::QP_FSXfs() {
         if (cline) wrap_create = true;
     }
     fs_close();
+
+    /*---check if the wrapper is installed---*/
+    fs_open("which", lstExternalTools->getPath(XFS_GROWFS), NULL);
+
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) wrap_resize = RS_ENLARGE;
+    }
+
+    fs_close();
 }
 
 bool QP_FSXfs::mkpartfs(QString dev, QString label) {
@@ -756,6 +766,102 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label) {
 
     if (!success) _message = QString(tr("There was a problem with mkfs.xfs."));
     return success;
+}
+
+bool QP_FSXfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinfo, PedSector new_start, PedSector new_end) {
+    /*---pointer to libparted---*/
+    QP_LibParted *libparted = _libparted;
+    
+	showDebug("%s", "Resizing a filesystem using a wrapper\n");
+
+    /*---the user want to shrink or enlarge the partition?---*/
+    /*---the user want to shrink!---*/
+    if (new_end < partinfo->end) {
+        /*---update the filesystem---*/
+	    showDebug("%s", "shrinking filesystem not supported with xfs...\n");
+        return false;
+    /*---the user want to enlarge!---*/
+    } else {
+        /*---cannot enlarge if we cannot change disk geometry!---*/
+        if (partinfo->device()->isBusy()) {
+            showDebug("%s", "the device is busy, so you cannot enlarge it\n");
+            _message = tr("Cannot enlarge a partition if the disk device is busy");
+            return false;
+        }
+        
+        /*---first se the geometry of the partition---*/
+        showDebug("%s", "update geometry...\n");
+        if (!libparted->set_geometry(partinfo, new_start, new_end)) {
+            showDebug("%s", "update geometry ko\n");
+            _message = libparted->message();
+            return false;
+        } else {
+            /*---if you are NOT committing then add in the undo/commit list---*/
+            if (!write) {
+                showDebug("%s", "operation added to undo/commit list\n");
+                PedPartitionType parttype = libparted->type2parttype(partinfo->type);
+                PedGeometry geom = libparted->get_geometry(partinfo);
+                libparted->actlist->ins_resize(partinfo->num, new_start, new_end, geom, parttype);
+            }
+        }
+
+        if (write) {
+            /*---and now update the filesystem!---*/
+	        showDebug("%s", "enlarge filesystem...\n");
+            if (!xfsresize(write, partinfo, new_end - new_start)) {
+	            showDebug("%s", "enlarge filesystem ko\n");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+}
+
+bool QP_FSXfs::xfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
+    bool error = false;
+
+    if (!write) return true;
+
+    /*---init of the error message---*/
+    _message = QString::null;
+
+    if (!qpMount(partinfo->partname()))
+        return false;
+
+    /*---do the resize!---*/
+    if (!fs_open(lstExternalTools->getPath(XFS_GROWFS).latin1(), TMP_MOUNTPOINT, NULL)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+
+    error = true;
+    char *cline;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
+
+            QRegExp rx;
+            rx = QRegExp("^realtime =.*");
+            if (rx.search(line) == 0) {
+                error = false;
+            }
+        }
+    }
+    fs_close();
+
+    if (error) {
+        _message = QString(tr("Error during xfs_grow."));
+        return false;
+    }
+    
+    if (!qpUMount(partinfo->partname()))
+        return false;
+
+    return true;
 }
 
 QString QP_FSXfs::fsname() {

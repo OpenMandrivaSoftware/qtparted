@@ -116,6 +116,7 @@ friend class QP_PartInfo;
 friend class QP_ActionList;
 friend class QP_FSNtfs;
 friend class QP_FSJfs;
+friend class QP_FSXfs;
     Q_OBJECT
 public:
     QP_LibParted();

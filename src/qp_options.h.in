@@ -41,5 +41,7 @@
 #define MOUNT_PATH                           "@FSPATH_MOUNT@"
 #define UMOUNT                               "umount"
 #define UMOUNT_PATH                          "@FSPATH_UMOUNT@"
+#define XFS_GROWFS                           "xfs_growfs"
+#define XFS_GROWFS_PATH                      "@FSPATH_XFS_GROWFS@"
 
 #endif // QP_OPTIONS_H

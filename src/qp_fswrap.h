@@ -134,7 +134,11 @@ Q_OBJECT
 public:
     QP_FSXfs();
     bool mkpartfs(QString dev, QString label);
+    bool resize(QP_LibParted *, bool write, QP_PartInfo *, PedSector, PedSector);
     QString fsname();
+    
+private:
+    bool xfsresize(bool, QP_PartInfo *, PedSector newsize); //this is the true xfsresize wrapper
 };
 
 #endif
