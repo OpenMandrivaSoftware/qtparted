@@ -913,6 +913,12 @@ int QP_LibParted::mkfs(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QString
     if (fsspec->fswrap()
     && _write) {
         showDebug("%s", "libparted::mkfs, (wrapper and want to commit)\n");
+        /*---Destroys all file system signatures---*/
+        if (!ped_file_system_clobber(&part->geom)) {
+            showDebug("%s", "libparted::mkfs, ped_file_system_clobber ko\n");
+            goto error;
+        }
+
         bool rc = fsspec->fswrap()->mkpartfs(partinfo->partname(), label);
         if (!rc) {
             showDebug("%s", "libparted::mkfs, file_system_create ko\n");
@@ -1033,11 +1039,18 @@ int QP_LibParted::mkpart(QTParted::partType type, PedSector start, PedSector end
 		goto error;
     }
 
-    if (_write)
+    if (_write) {
+        /*---Destroys all file system signatures---*/
+        if (!ped_file_system_clobber(&part->geom)) {
+            showDebug("%s", "libparted::mkpart, ped_file_system_clobber ko\n");
+            goto error;
+        }
+    
     	if (disk_commit(actlist->disk()) == 0) {
             showDebug("%s", "libparted::mkpart, commit ko\n");
             goto error;
         }
+    }
 
     /*---if it exist a wrapper just make the filesystem---*/
     if (fswrap
