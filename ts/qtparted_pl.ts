@@ -142,7 +142,7 @@ Strona główna Parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>All operations clompleted.</source>
-        <translation>Wszystkie operacje zakończono.</translation>
+        <translation type="obsolete">Wszystkie operacje zakończono.</translation>
     </message>
     <message>
         <source>Preparation for moving a partition.</source>
@@ -151,6 +151,10 @@ Strona główna Parted: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Moving a partition.</source>
         <translation>Przesuwanie partycji.</translation>
+    </message>
+    <message>
+        <source>All operations completed.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -872,7 +876,11 @@ Innymi słowy ODMONTUJ WSZYSTKIE PARTYCJE zanim ostatecznie potwierdzisz zmiany!
     <name>QP_dlgAbout</name>
     <message>
         <source>O&amp;K</source>
-        <translation>O&amp;K</translation>
+        <translation type="obsolete">O&amp;K</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -915,7 +923,11 @@ Obecna operacja: %3</translation>
     </message>
     <message>
         <source>Operations completed sucessfull.</source>
-        <translation>Operacje zostały zakończone sukcesem.</translation>
+        <translation type="obsolete">Operacje zostały zakończone sukcesem.</translation>
+    </message>
+    <message>
+        <source>Operations completed sucessfully.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

@@ -37,6 +37,7 @@
 #include "qp_settings.h"
 #include "qp_common.h"
 #include "qp_options.h"
+#include "debug.h"
 
 QP_MainWindow *mainwindow;
 
@@ -44,6 +45,7 @@ void checkDevfs() {
     int rc;
 
     rc = isDevfsEnabled();
+    showDebug("isDevfsEnabled() == %d\n", rc);
 
     if (rc == -1) {
         QString label = QString(QObject::tr("Cannot read /proc/partitions, QTParted cannot be used!.\n"
@@ -58,11 +60,6 @@ void checkDevfs() {
 
 int main(int argc, char *argv[])
 {
-#if 0 // DISABLE THE FOLLOWING 3 LINES
-  #include "statistics.h"
-  space_stats("/dev/hda1");
-#endif
-
 // This allows to run QtParted with QtEmbedded without having
 // to pass parameters "-qws".
 #ifdef Q_WS_QWS // Frame Buffer 
@@ -77,15 +74,18 @@ int main(int argc, char *argv[])
     translator->load(QString(DATADIR "/locale/qtparted_") + QString(QTextCodec::locale()));
     app.installTranslator(translator);
 
+    /*---initialize the debug system---*/
+    g_debug.open();
+    showDebug("QtParted debug logfile (http://qtparted.sf.net) version %s\n---------\n", VERSION);
+
     /*---check the Parted version---*/
     if (!QP_LibParted::checkForParted())
         return EXIT_FAILURE;
 
-
     /*---check if the kernel support devfs---*/
     checkDevfs();
 
-    QP_Settings settings;
+     QP_Settings settings;
 
     mainwindow = new QP_MainWindow(&settings, 0, "QP_MainWindow");
     app.setMainWidget(mainwindow);
@@ -101,10 +101,10 @@ int main(int argc, char *argv[])
     mainwindow->init();
     mainwindow->show();
 
-    //return app.exec();
     bool rc = app.exec();
 
     delete mainwindow;
 
+    g_debug.close();
     return rc;
 }

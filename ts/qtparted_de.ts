@@ -142,7 +142,7 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>All operations clompleted.</source>
-        <translation>Alle Aktionen beendet.</translation>
+        <translation type="obsolete">Alle Aktionen beendet.</translation>
     </message>
     <message>
         <source>Preparation for moving a partition.</source>
@@ -151,6 +151,10 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Moving a partition.</source>
         <translation>Eine Partition verschieben.</translation>
+    </message>
+    <message>
+        <source>All operations completed.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -870,7 +874,11 @@ In anderen Worten, BITTE ALLE LAUFWERKSVERBINDUNGEN ZU DIESEM LAUFWERK LÖSEN, b
     <name>QP_dlgAbout</name>
     <message>
         <source>O&amp;K</source>
-        <translation>O&amp;K</translation>
+        <translation type="obsolete">O&amp;K</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -913,7 +921,11 @@ Aktuelle Aktion: %3</translation>
     </message>
     <message>
         <source>Operations completed sucessfull.</source>
-        <translation>Aktionen erfolgreich beendet.</translation>
+        <translation type="obsolete">Aktionen erfolgreich beendet.</translation>
+    </message>
+    <message>
+        <source>Operations completed sucessfully.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

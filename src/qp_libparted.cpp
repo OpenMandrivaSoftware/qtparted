@@ -28,6 +28,7 @@
 #include "qp_actlist.h"
 #include "qp_common.h"
 #include "qp_options.h"
+#include "debug.h"
 
 #define MIN_FREESPACE		(1000 * 2)	/* 1000k */
 #define PED_ASSERT(cond, action)        while (0) {}
@@ -526,6 +527,7 @@ bool QP_LibParted::checkForParted() {
 	    printf ("Cannot get parted version\n");
         QString label = QString(QObject::tr("Cannot get parted version."));
         QMessageBox::information(NULL, PROG_NAME, label);
+	showDebug("%s", "Cannot get parted version\n");
 
     	return false;
     }
@@ -534,16 +536,19 @@ bool QP_LibParted::checkForParted() {
        ((major == PARTED_REQUESTED_MAJOR) && (minor > PARTED_REQUESTED_MINOR)) ||
        ((major == PARTED_REQUESTED_MAJOR) && (minor == PARTED_REQUESTED_MINOR)
 	                                     && (micro >= PARTED_REQUESTED_MICRO))) {
+	showDebug("Parted version is okay: %d.%d.%d\n", PARTED_REQUESTED_MAJOR,
+	          PARTED_REQUESTED_MINOR, PARTED_REQUESTED_MICRO);
         return true;
     } else {
         printf ("Parted homepage: http://www.gnu.org/software/parted/\n");
-        
+
         QString label = QString(QObject::tr("Parted is too old:\n"
                     "- installed parted version: %1.%2.%3\n"
                     "- required parted version: %4.%5.%6 (or better)\n\n"
                     "Parted homepage: http://www.gnu.org/software/parted/"))
                     .arg(major) .arg(minor) .arg(micro)
                     .arg(PARTED_REQUESTED_MAJOR) .arg(PARTED_REQUESTED_MINOR) .arg(PARTED_REQUESTED_MICRO);
+	showDebug("%s", label.latin1());
         QMessageBox::information(NULL, PROG_NAME, label);
         return false;
     }

@@ -151,7 +151,7 @@ Site web officiel: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>All operations clompleted.</source>
-        <translation type="unfinished">Toutes les opérations sont terminées</translation>
+        <translation type="obsolete">Toutes les opérations sont terminées</translation>
     </message>
     <message>
         <source>Preparation for moving a partition.</source>
@@ -160,6 +160,10 @@ Site web officiel: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Moving a partition.</source>
         <translation type="unfinished">Déplacement d&apos;une partition en cours</translation>
+    </message>
+    <message>
+        <source>All operations completed.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -923,11 +927,11 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     <name>QP_dlgAbout</name>
     <message>
         <source>&amp;OK</source>
-        <translation type="obsolete">&amp;OK</translation>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
     <message>
         <source>O&amp;K</source>
-        <translation type="unfinished">&amp;OK</translation>
+        <translation type="obsolete">&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -969,7 +973,11 @@ Current operation: %3</source>
     </message>
     <message>
         <source>Operations completed sucessfull.</source>
-        <translation type="unfinished">Opérations terminées avec succès.</translation>
+        <translation type="obsolete">Opérations terminées avec succès.</translation>
+    </message>
+    <message>
+        <source>Operations completed sucessfully.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

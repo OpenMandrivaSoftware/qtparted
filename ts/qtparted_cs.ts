@@ -142,7 +142,7 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>All operations clompleted.</source>
-        <translation>Všechny operace ukončeny.</translation>
+        <translation type="obsolete">Všechny operace ukončeny.</translation>
     </message>
     <message>
         <source>Preparation for moving a partition.</source>
@@ -151,6 +151,10 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Moving a partition.</source>
         <translation>Přesun oddílu.</translation>
+    </message>
+    <message>
+        <source>All operations completed.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -870,7 +874,11 @@ Před potvrzením změn raději ODPOJTE VŠECHNY DISKOVÉ ODDÍLY!</translation>
     <name>QP_dlgAbout</name>
     <message>
         <source>O&amp;K</source>
-        <translation>O&amp;K</translation>
+        <translation type="obsolete">O&amp;K</translation>
+    </message>
+    <message>
+        <source>&amp;OK</source>
+        <translation type="unfinished">&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -913,7 +921,11 @@ Aktuální operace: %3</translation>
     </message>
     <message>
         <source>Operations completed sucessfull.</source>
-        <translation>Operace byly úspěšně dokončeny.</translation>
+        <translation type="obsolete">Operace byly úspěšně dokončeny.</translation>
+    </message>
+    <message>
+        <source>Operations completed sucessfully.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
