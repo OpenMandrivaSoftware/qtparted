@@ -44,7 +44,7 @@ public:
     virtual bool move(QString, PedSector, PedSector) {return false;}
 
     /*---mkpartfs(device, label) create a new partition---*/
-    virtual bool mkpartfs(QString, QString ) {return false;}
+    virtual bool mkpartfs(QString, QString) {return false;}
 
     /*---return a string with the latest error---*/
     virtual QString message() {return _message;}
@@ -55,12 +55,14 @@ public:
     /*---return the right wrapper (if a wrapper exist ;-))---*/
     static QP_FSWrap *fswrap(QString name);
 
-    bool wrap_resize;
+    int wrap_resize;
     bool wrap_move;
     bool wrap_copy;
     bool wrap_create;
 
 protected:
+    bool qpMount(QString device);
+    bool qpUMount(QString device);
     bool fs_open(QString cmdline);
     char *fs_getline();
     int fs_close();

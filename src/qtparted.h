@@ -27,6 +27,10 @@
 #define MEGABYTE (1024 * 1024)
 #define MEGABYTE_SECTORS (MEGABYTE / 512)
 
+#define RS_NONE 0
+#define RS_SHRINK 1
+#define RS_ENLARGE 2
+
 class Q_EXPORT QTParted {
 public:
     enum partType {

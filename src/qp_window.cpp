@@ -36,6 +36,7 @@
 #include "qp_filesystem.h"
 #include "qp_dlgabout.h"
 #include "qp_options.h"
+#include "qp_fswrap.h"
 
 #include "xpm/tool_disk.xpm"
 #include "xpm/tool_property.xpm"
@@ -626,6 +627,8 @@ void QP_MainWindow::ShowMoveResizeDialog(QTParted::actType moveresize) {
     PedSector MinPart = partinfo->min_size;
     if (partinfo->fsspec->minFsSize() >= MinPart)   //if the filesystem minsize is >... use it!
         MinPart = partinfo->fsspec->minFsSize();
+    if (partinfo->fsspec->fswrap()->wrap_resize == RS_ENLARGE) //the filesystem can only be enlarged.
+        MinPart = EndPart - StartPart;
     PedSector MaxPart = partinfo->fsspec->maxFsSize();
 
     /*---set the info that were just get---*/

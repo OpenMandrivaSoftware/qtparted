@@ -28,6 +28,7 @@
 #include "qp_debug.h"
 
 #define NOTFOUND tr("command not found")
+#define TMP_MOUNTPOINT "/tmp/mntqp"
 
 bool QP_FSWrap::fs_open(QString cmdline) {
 
@@ -77,6 +78,75 @@ QP_FSWrap * QP_FSWrap::fswrap(QString name) {
         return NULL;
 }
 
+bool QP_FSWrap::qpMount(QString device) {
+    bool error = false;
+    char szcmdline[200];
+    QString cmdline;
+
+    /*---just to be sure! :)---*/
+    qpUMount(device);
+    
+    /*---mount the partition---*/
+    sprintf(szcmdline, "%s %s", device.latin1(), TMP_MOUNTPOINT);
+    cmdline = QString("%1 %2")
+            .arg("/bin/mount")
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+
+    char *cline;
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
+
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            _message = capError;
+            error = true;
+        }
+    }
+    fs_close();
+    
+    return !error;
+}
+
+bool QP_FSWrap::qpUMount(QString device) {
+    bool error = false;
+    char szcmdline[200];
+    QString cmdline;
+
+    /*---umount the partition---*/
+    sprintf(szcmdline, "%s", device.latin1());
+    cmdline = QString("%1 %2")
+            .arg("/bin/umount")
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+
+    char *cline;
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
+
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            _message = capError;
+            error = true;
+        }
+    }
+    fs_close();
+
+    return !error;
+}
+
 
 
 /*---NTFS WRAPPER-----------------------------------------------------------------*/
@@ -102,7 +172,8 @@ QP_FSNtfs::QP_FSNtfs() {
     fs_open(cmdline);
 
     while ((cline = fs_getline()))
-        wrap_resize = true;
+        wrap_resize = RS_SHRINK | RS_ENLARGE;
+
     fs_close();
 }
 
@@ -328,7 +399,7 @@ QString QP_FSNtfs::fsname() {
 
 /*---JFS WRAPPER-----------------------------------------------------------------*/
 QP_FSJfs::QP_FSJfs() {
-    wrap_resize = true;
+    wrap_resize = RS_ENLARGE;
     wrap_move = false;
     wrap_copy = false;
     wrap_create = false;
@@ -398,7 +469,6 @@ bool QP_FSJfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinf
 
 bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     bool error = false;
-    const char *TMP_MOUNTPOINT = "/tmp/mntqp";
 
     if (!write) return true;
 
@@ -408,10 +478,11 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     /*---init of the error message---*/
     _message = QString::null;
 
+    if (!qpMount(partinfo->partname()))
+        return false;
 
-
-    /*---mount the partition---*/
-    sprintf(szcmdline, "%s %s", partinfo->partname().latin1(), TMP_MOUNTPOINT);
+    /*---to the resize!---*/
+    sprintf(szcmdline, "-o remount,resize= %s", TMP_MOUNTPOINT);
     cmdline = QString("%1 %2")
             .arg("/bin/mount")
             .arg(szcmdline);
@@ -429,70 +500,16 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
         rx = QRegExp("^mount: (.*)$");
         if (rx.search(line) == 0) {
             QString capError = rx.cap(1);
-            printf("catturato: %s\n", capError.latin1());
             _message = capError;
             error = true;
         }
     }
     fs_close();
-    
+
     if (error) return false;
-
-
-
-    /*---to the resize!---*/
-    sprintf(szcmdline, "-o remount,resize= %s", TMP_MOUNTPOINT);
-    cmdline = QString("%1 %2")
-            .arg("/bin/mount")
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
-    }
-
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
-
-        QRegExp rx;
-        rx = QRegExp("^mount: (.*)$");
-        if (rx.search(line) == 0) {
-            QString capError = rx.cap(1);
-            printf("catturato: %s\n", capError.latin1());
-            _message = capError;
-            error = true;
-        }
-    }
-    fs_close();
-
-
-
-    /*---umount the partition---*/
-    sprintf(szcmdline, "%s", partinfo->partname().latin1());
-    cmdline = QString("%1 %2")
-            .arg("/bin/umount")
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
-    }
-
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
-
-        QRegExp rx;
-        rx = QRegExp("^mount: (.*)$");
-        if (rx.search(line) == 0) {
-            QString capError = rx.cap(1);
-            printf("catturato: %s\n", capError.latin1());
-            _message = capError;
-            error = true;
-        }
-    }
-    fs_close();
     
-    if (error) return false;
+    if (!qpUMount(partinfo->partname()))
+        return false;
 
     return true;
 }
