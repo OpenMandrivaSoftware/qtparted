@@ -27,9 +27,6 @@ MAJOR-TODO (bug features):
 
 BUGS:
 -----
-- QtParted allows to create more than 4 primary partitions.
-  When we try to create a fifth primary partition, it agrees, but
-  after clicking "ok", the new partition is not shown as a virtual partition.
 - When shrinking an extended partition, the minimal size is not correct
 
 General TODO:
