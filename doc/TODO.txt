@@ -17,7 +17,7 @@ MINOR-TODO (trivial changes):
 - Check if the partition is mounted. Before working on the disk,
   it would be possible to use the isMounted() function. It tells
   us whether or not a partition is mounted.
-
+- configure script: check Qt is multithreaded (qt-mt)
 
 MAJOR-TODO (bug features):
 --------------------------
