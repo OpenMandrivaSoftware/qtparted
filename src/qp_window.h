@@ -105,6 +105,7 @@ private:
     QPopupMenu* _navpopupmenu;
     QPopupMenu *mnuOperations;
     int mnuSetActiveID;
+    int mnuSetHiddenID;
 
 protected slots:
     void slotCreate();
@@ -124,6 +125,7 @@ protected slots:
     void slotPopup(QPoint pos);
     void slotSelectDevice(QP_Device *);
     void slotSetActive();
+    void slotSetHidden();
     void slotUndo();
     void slotCommit();
     void slotDiskChanged();

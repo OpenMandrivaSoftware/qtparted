@@ -128,12 +128,33 @@ bool QP_PartInfo::isActive() {
     return _active;
 }
 
+bool QP_PartInfo::isHidden() {
+    return _hidden;
+}
+
 bool QP_PartInfo::canBeActive() {
     return _canBeActive;
 }
 
+bool QP_PartInfo::canBeHidden() {
+    /*---bad patch! it seems that libparted can only hide fat partitions :\---*/
+    if (_canBeHidden) {
+        if ((fsspec->name().compare("fat32") == 0)
+         || (fsspec->name().compare("fat16") == 0)
+         || (fsspec->name().compare("ntfs")  == 0)) {
+            return _canBeHidden;
+        }
+    }
+
+    return false;
+}
+
 bool QP_PartInfo::setActive(bool active) {
     return _libparted->partition_set_flag_active(this, active);
+}
+
+bool QP_PartInfo::setHidden(bool hidden) {
+    return _libparted->partition_set_flag_hidden(this, hidden);
 }
     
 bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
@@ -423,6 +444,7 @@ void QP_LibParted::scan_partitions() {
         partinfo->_libparted = this;
         partinfo->_active = false;
         partinfo->_canBeActive = false;
+        partinfo->_canBeHidden = false;
         partinfo->_virtual = true;
         partinfo->fsspec = filesystem->unknow();
         partinfo->type = QTParted::primary;
@@ -646,6 +668,47 @@ error:
     return false;
 }
 
+bool QP_LibParted::partition_set_flag_hidden(QP_PartInfo *partinfo, bool hidden) {
+    showDebug("%s", "libparted::partition_set_flag_hidden\n");
+
+    PedPartition *part;
+	part = ped_disk_get_partition(actlist->disk(), partinfo->num);
+    if (!part) {
+        showDebug("%s", "libparted::partition_set_flag_hidden, get_partition ko\n");
+        _message = QString(ERROR_PED_DISK_GET_PARTITION);
+        goto error;
+    }
+
+    if (!ped_partition_is_flag_available(part, PED_PARTITION_HIDDEN)) {
+        showDebug("%s", "libparted::partition_set_flag_hidden, is_fag_available ko\n");
+        _message = QString(tr("Cannot change the hidden status on this partition"));
+        goto error;
+        return false;
+    }
+
+    if (!ped_partition_set_flag(part, PED_PARTITION_HIDDEN, hidden)) {
+        showDebug("%s", "libparted::partition_set_flag_hidden, set_flag ko\n");
+        _message = QString(ERROR_PED_PARTITION_SET_FLAG);
+        goto error;
+        return false;
+    }
+
+    if (_write) {
+        if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::partition_set_flag_hidden, commit ko\n");
+            return false;
+        }
+    } else {
+        showDebug("%s", "operation added to undo/commit list\n");
+        actlist->ins_hidden(partinfo->num, hidden);
+    }
+
+    return true;
+
+error:
+    return false;
+}
+
 bool QP_LibParted::partition_set_flag_active(int num, bool active) {
     showDebug("%s", "libparted::set_flag_active\n");
 
@@ -653,6 +716,15 @@ bool QP_LibParted::partition_set_flag_active(int num, bool active) {
     QP_PartInfo *partinfo = numToPartInfo(num);
     showDebug("%s", "libparted::set_flag_active, numtopartinfo\n");
     return partition_set_flag_active(partinfo, active);
+}
+
+bool QP_LibParted::partition_set_flag_hidden(int num, bool hidden) {
+    showDebug("%s", "libparted::set_flag_hidden\n");
+
+    /*---scan to find the partinfo to resize---*/
+    QP_PartInfo *partinfo = numToPartInfo(num);
+    showDebug("%s", "libparted::set_flag_hidden, numtopartinfo\n");
+    return partition_set_flag_hidden(partinfo, hidden);
 }
 
 QP_PartInfo * QP_LibParted::numToPartInfo(int num) {

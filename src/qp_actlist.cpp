@@ -55,12 +55,12 @@ QP_ActListItem::QP_ActListItem(QTParted::actType action,
 
 QP_ActListItem::QP_ActListItem(QTParted::actType action,
                                int num,
-                               bool active) {
+                               bool status) {
     showDebug("%s", "actlistitem::actlistitem, active\n");
 
     _action = action;
     _num = num;
-    _active = active;
+    _status = status;
 }
 
 /*---for format! :)---*/
@@ -220,6 +220,7 @@ void QP_ActionList::update_listpartitions() {
             partinfo->_libparted = found->_libparted;
             partinfo->_active = found->_active;
             partinfo->_canBeActive = found->_canBeActive;
+            partinfo->_canBeHidden = found->_canBeHidden;
             partinfo->_virtual = found->_virtual;
             partinfo->fsspec = found->fsspec;
         } else {
@@ -236,6 +237,7 @@ void QP_ActionList::update_listpartitions() {
             partinfo->_libparted = _libparted;
             partinfo->_active = false;
             partinfo->_canBeActive = false;
+            partinfo->_canBeHidden = false;
             partinfo->_virtual = false;
 
 
@@ -332,6 +334,7 @@ void QP_ActionList::scan_partitions() {
         partinfo->_libparted = _libparted;
         partinfo->_active = false;
         partinfo->_canBeActive = false;
+        partinfo->_canBeHidden = false;
         partinfo->_virtual = false;
 
         if (part->type & PED_PARTITION_LOGICAL)
@@ -532,6 +535,15 @@ void QP_ActionList::ins_active(int num, bool active) {
     ins_newdisk();
 }
 
+void QP_ActionList::ins_hidden(int num, bool hidden) {
+    showDebug("%s", "actionlist::ins_hidden\n");
+    
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::hidden, num, hidden);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
 void QP_ActionList::get_partinfo(QP_PartInfo *partinfo, PedPartition *part) {
     showDebug("%s", "actionlist::get_partinfo\n");
 
@@ -666,7 +678,20 @@ void QP_ActionList::commit() {
             _libparted->scan_orig_partitions();
 
             emit sigOperations(tr("Activating a partition."), messageState, i, iTotAct);
-            if (!_libparted->partition_set_flag_active(pl->_num, pl->_active)) {
+            if (!_libparted->partition_set_flag_active(pl->_num, pl->_status)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+        //---active commit---
+        else if (pl->_action == QTParted::hidden) {
+            showDebug("%s", "actionlist::commit, want to commit an hidden\n");
+            emit sigOperations(tr("Preparation for hiding a partition."), messageState, i++, iTotAct);
+            scan_partitions();
+            _libparted->scan_orig_partitions();
+
+            emit sigOperations(tr("Hiding a partition."), messageState, i, iTotAct);
+            if (!_libparted->partition_set_flag_hidden(pl->_num, pl->_status)) {
                 messageState = _libparted->message();
                 rc = false;
             }
@@ -741,6 +766,12 @@ void QP_ActionList::partition_get_flags(QP_PartInfo *partinfo, PedPartition *par
         bool active = bool(ped_partition_get_flag(part, PED_PARTITION_BOOT));
         partinfo->_active = active;
         if (active) _partActive = partinfo;
+    }
+
+    if (ped_partition_is_flag_available(part, PED_PARTITION_HIDDEN)) {
+        partinfo->_canBeHidden = true;
+        bool hidden = bool(ped_partition_get_flag(part, PED_PARTITION_HIDDEN));
+        partinfo->_hidden = hidden;
     }
 }
 

@@ -76,8 +76,11 @@ public:
     bool isFree();                          /*---return true if the filesystem is free space  ---*/
     bool isUnknow();                        /*---return true if the filesystem is unknow space---*/
     bool isActive();                        /*---return true if the partition is active       ---*/
+    bool isHidden();                        /*---return true if the partition is hidden       ---*/
     bool canBeActive();                     /*---return true if the partition can be actived  ---*/
+    bool canBeHidden();                     /*---return true if the partition can be hidden   ---*/
     bool setActive(bool);                   /*---change the active status                     ---*/
+    bool setHidden(bool);                   /*---change the hidden status                     ---*/
     bool resize(PedSector, PedSector);      /*---resize the partition (start, end sectors     ---*/
     bool mkfs(QP_FileSystemSpec *, QString);/*---format the partition (filesystem, label)     ---*/
     bool move(PedSector, PedSector);        /*---move the partition (start, end sectors       ---*/
@@ -95,7 +98,9 @@ private:
     QP_FileSystemSpec *_free;               /*---internal pointer to the "free" flag          ---*/
     QP_FileSystemSpec *_unknow;             /*---internal pointer to the "unknow" flag        ---*/
     bool _active;                           /*---flag active                                  ---*/
+    bool _hidden;                           /*---flag hidden                                  ---*/
     bool _canBeActive;                      /*---flag can be active                           ---*/
+    bool _canBeHidden;                      /*---flag can be hidden                           ---*/
     QP_LibParted *_libparted;
     PedGeometry _geometry;                  /*---geometry of the partition                    ---*/
     bool _virtual;                          /*---if this flag is on this partinfo=virtual!    ---*/
@@ -131,7 +136,9 @@ public:
     QPtrList<QP_PartInfo> partlist;
     QPtrList<QP_PartInfo> logilist;
     bool partition_set_flag_active(QP_PartInfo *, bool);     /*---set active flag---*/
+    bool partition_set_flag_hidden(QP_PartInfo *, bool);     /*---set hidden flag---*/
     bool partition_set_flag_active(int, bool);               /*---set active flag---*/
+    bool partition_set_flag_hidden(int, bool);               /*---set hidden flag---*/
     QP_PartInfo *numToPartInfo(int);                         /*---return partinfo associated to partition num---*/
     QP_PartInfo *partActive();                               /*---return the active partition---*/
     int grow_over_small_freespace (PedGeometry* geom, PedDisk *disk);

@@ -45,7 +45,8 @@ public:
         rm,
         create,
         active,
-	format
+        hidden,
+        format
     };
 };
 

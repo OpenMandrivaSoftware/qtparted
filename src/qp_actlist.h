@@ -72,7 +72,7 @@ public:
     QString _label;
     PedGeometry _geom;
     PedPartitionType _part_type;
-    bool _active;
+    bool _status; //used for boot and hidden flags
 };
 
 
@@ -92,6 +92,7 @@ public:
     void ins_mkfs(QP_FileSystemSpec *, int, QString, PedGeometry, PedPartitionType);
     void ins_mkpart(QTParted::partType, PedSector, PedSector, QP_FileSystemSpec *, QString, PedGeometry, PedPartitionType);
     void ins_active(int, bool);
+    void ins_hidden(int, bool);
     void get_partinfo(QP_PartInfo *, PedPartition *);
     bool canUndo();  //Does the user can undo/commit?
     void undo();     //undo last operation

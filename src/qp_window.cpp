@@ -361,6 +361,10 @@ void QP_MainWindow::addMenuBar() {
     mnuOperations->connectItem(mnuSetActiveID, this, SLOT(slotSetActive()));
     mnuOperations->setItemEnabled(mnuSetActiveID, false);
 
+    mnuSetHiddenID = mnuOperations->insertItem(tr("Set Hidden..."));
+    mnuOperations->connectItem(mnuSetHiddenID, this, SLOT(slotSetHidden()));
+    mnuOperations->setItemEnabled(mnuSetHiddenID, false);
+
 
     /*---set popupmenu for the action menu!---*/
     setpopupmenu(mnuOperations);
@@ -687,6 +691,7 @@ void QP_MainWindow::InitMenu() {
     actMove->setEnabled(false);
     actDelete->setEnabled(false);
     mnuOperations->setItemEnabled(mnuSetActiveID, false);
+    mnuOperations->setItemEnabled(mnuSetHiddenID, false);
 }
 
 void QP_MainWindow::InitProgressDialog() {
@@ -872,6 +877,8 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
     ||  (diskview->canUndo() && selDevice->isBusy())) {
         mnuOperations->setItemEnabled(mnuSetActiveID, false);
         mnuOperations->setItemChecked(mnuSetActiveID, partinfo->isActive());
+        mnuOperations->setItemEnabled(mnuSetHiddenID, false);
+        mnuOperations->setItemChecked(mnuSetHiddenID, partinfo->isHidden());
 
         actCreate->setEnabled(false);
         actFormat->setEnabled(false);
@@ -885,6 +892,8 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
     /*---check/uncheck the active flag on the menu popup---*/
     mnuOperations->setItemEnabled(mnuSetActiveID, partinfo->canBeActive());
     mnuOperations->setItemChecked(mnuSetActiveID, partinfo->isActive());
+    mnuOperations->setItemEnabled(mnuSetHiddenID, partinfo->canBeHidden());
+    mnuOperations->setItemChecked(mnuSetHiddenID, partinfo->isHidden());
 
     if (diskview->selPartInfo()->fsspec == diskview->filesystem->free()) {
         /*---you cannot create more then 4 primary partions, but more then 4 logical!    ---*/
@@ -988,6 +997,14 @@ void QP_MainWindow::slotSetActive() {
         /*---refresh diskview widget!---*/
         refreshDiskView();
     }
+}
+
+void QP_MainWindow::slotSetHidden() {
+    /*------*/
+    diskview->selPartInfo()->setHidden(!diskview->selPartInfo()->isHidden());
+
+    /*---refresh diskview widget!---*/
+    refreshDiskView();
 }
 
 void QP_MainWindow::slotUndo() {
