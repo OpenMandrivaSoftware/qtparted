@@ -535,9 +535,9 @@ QString QP_FSNtfs::fsname() {
     return QString("ntfs");
 }
 
-QString QP_FSNtfs::_get_label(PedPartition *) {
+/*QString QP_FSNtfs::_get_label(PedPartition *) {
     return QString::null;
-}
+}*/
 
 
 
@@ -703,11 +703,19 @@ QString QP_FSJfs::fsname() {
     return QString("jfs");
 }
 
-QString QP_FSJfs::_get_label(PedPartition *) {
-    return QString::null;
+QString QP_FSJfs::_get_label(PedPartition *part) 
+{
+  char bootsect[2048];
+  char label[12];
+
+  if (!QP_FSWrap::read_sector(part, 64, 4, bootsect)) 
+     return QString::null;
+
+  memset(label, 0, sizeof(label));
+  strncpy(label, bootsect+101, 11);
+  
+  return QString(label);
 }
-
-
 
 /*---EXT3 WRAPPER----------------------------------------------------------------*/
 QP_FSExt3::QP_FSExt3() {
@@ -979,17 +987,30 @@ bool QP_FSXfs::xfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     return true;
 }
 
-QString QP_FSXfs::fsname() {
+QString QP_FSXfs::fsname() 
+{
     return QString("xfs");
 }
 
-QString QP_FSXfs::_get_label(PedPartition *) {
-    return QString::null;
+QString QP_FSXfs::_get_label(PedPartition *part) 
+{
+  char bootsect[2048];
+  char label[13];
+
+  if (!QP_FSWrap::read_sector(part, 0, 4, bootsect)) 
+     return QString::null;
+	
+  memset(label, 0, sizeof(label));
+  strncpy(label, bootsect+108, 12);
+  
+  printf("returned buffer ntfs: [%s]\n", label);
+
+  return QString(label);
 }
 
-
 /*---FAT16 WRAPPER---------------------------------------------------------------*/
-QString QP_FSFat16::_get_label(PedPartition *) {
+QString QP_FSFat16::_get_label(PedPartition *) 
+{
     return QString::null;
 }
 
@@ -1034,4 +1055,26 @@ QString QP_FSExt2::_get_label(PedPartition *part)
 /*---REISERFS WRAPPER------------------------------------------------------------*/
 QString QP_FSReiserFS::_get_label(PedPartition *) {
     return QString::null;
+}
+
+// ===============================================================================
+// ===============================================================================
+// ===============================================================================
+
+QString QP_FSNtfs::_get_label(PedPartition *part) 
+{
+  char bootsect[2048]; // sector number 2 (offset 1024)
+  char label[16];
+
+  if (!QP_FSWrap::read_sector(part, 2, 4, bootsect)) 
+     return QString::null;
+	
+  memset(label, 0, sizeof(label));
+  //strncpy(label, bootsect+120, 16);
+  
+  printf("returned buffer ntfs: [%s]\n", label);
+
+  //return QString(label);
+    
+  return QString::null;
 }
