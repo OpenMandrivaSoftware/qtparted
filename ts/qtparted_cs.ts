@@ -216,6 +216,14 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
         <source>Cannot enlarge a partition if the disk device is busy</source>
         <translation type="unfinished">Nelze zvětšit velikost oddílu pokud je disk zaneprázdněn</translation>
     </message>
+    <message>
+        <source>Resizing in progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_FSXfs</name>

@@ -216,6 +216,14 @@ Parted homepage: http://www.gnu.org/software/parted/</source>
         <source>Cannot enlarge a partition if the disk device is busy</source>
         <translation type="unfinished">Не можу розширити розділ, якщо пристрій зайнятий</translation>
     </message>
+    <message>
+        <source>Resizing in progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_FSXfs</name>

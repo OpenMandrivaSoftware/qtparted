@@ -216,6 +216,14 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
         <source>Cannot enlarge a partition if the disk device is busy</source>
         <translation type="unfinished">Kann keine Partition vergrößern, solange das Laufwerk beschäftigt ist</translation>
     </message>
+    <message>
+        <source>Resizing in progress.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_FSXfs</name>
