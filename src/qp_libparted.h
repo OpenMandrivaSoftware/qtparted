@@ -72,7 +72,6 @@ public:
     QString partname();
     QString shortname();
     QString longname();
-    QString label;
     bool isFree();                          /*---return true if the filesystem is free space  ---*/
     bool isUnknow();                        /*---return true if the filesystem is unknow space---*/
     bool isActive();                        /*---return true if the partition is active       ---*/
@@ -94,6 +93,7 @@ public:
     QString mountPoint();                   /*---return the mountpoint                        ---*/
 
 private:
+    QString _label;
     QP_Device *_device;                     /*---pointer to the device                        ---*/
     QP_FileSystemSpec *_free;               /*---internal pointer to the "free" flag          ---*/
     QP_FileSystemSpec *_unknow;             /*---internal pointer to the "unknow" flag        ---*/

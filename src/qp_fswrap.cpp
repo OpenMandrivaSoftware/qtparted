@@ -82,6 +82,35 @@ QP_FSWrap * QP_FSWrap::fswrap(QString name) {
         return NULL;
 }
 
+QString QP_FSWrap::get_label(QString name, QP_PartInfo *partinfo) {
+    if (name.compare("ntfs") == 0) {
+        return QP_FSNtfs::_get_label(partinfo);
+    } else
+    if (name.compare("jfs") == 0) {
+        return QP_FSJfs::_get_label(partinfo);
+    } else
+    if (name.compare("ext3") == 0) {
+        return QP_FSExt3::_get_label(partinfo);
+    } else
+    if (name.compare("xfs") == 0) {
+        return QP_FSXfs::_get_label(partinfo);
+    }
+    if (name.compare("fat16") == 0) {
+        return QP_FSFat16::_get_label(partinfo);
+    }
+    if (name.compare("fat32") == 0) {
+        return QP_FSFat32::_get_label(partinfo);
+    }
+    if (name.compare("ext2") == 0) {
+        return QP_FSExt2::_get_label(partinfo);
+    }
+    if (name.compare("reiserfs") == 0) {
+        return QP_FSExt2::_get_label(partinfo);
+    }
+    else
+        return QString::null;
+}
+
 bool QP_FSWrap::qpMount(QString device) {
     char szcmdline[200];
     bool error = false;
@@ -488,6 +517,10 @@ QString QP_FSNtfs::fsname() {
     return QString("ntfs");
 }
 
+QString QP_FSNtfs::_get_label(QP_PartInfo *) {
+    return QString::null;
+}
+
 
 
 /*---JFS WRAPPER-----------------------------------------------------------------*/
@@ -652,6 +685,10 @@ QString QP_FSJfs::fsname() {
     return QString("jfs");
 }
 
+QString QP_FSJfs::_get_label(QP_PartInfo *) {
+    return QString::null;
+}
+
 
 
 /*---EXT3 WRAPPER----------------------------------------------------------------*/
@@ -749,6 +786,10 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label) {
 
 QString QP_FSExt3::fsname() {
     return QString("ext3");
+}
+
+QString QP_FSExt3::_get_label(QP_PartInfo *) {
+    return QString::null;
 }
 
 /*---XFS WRAPPER-----------------------------------------------------------------*/
@@ -920,4 +961,32 @@ bool QP_FSXfs::xfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
 
 QString QP_FSXfs::fsname() {
     return QString("xfs");
+}
+
+QString QP_FSXfs::_get_label(QP_PartInfo *) {
+    return QString::null;
+}
+
+
+/*---FAT16 WRAPPER---------------------------------------------------------------*/
+QString QP_FSFat16::_get_label(QP_PartInfo *) {
+    return QString::null;
+}
+
+
+/*---FAT32 WRAPPER---------------------------------------------------------------*/
+QString QP_FSFat32::_get_label(QP_PartInfo *) {
+    return QString::null;
+}
+
+
+/*---EXT2 WRAPPER----------------------------------------------------------------*/
+QString QP_FSExt2::_get_label(QP_PartInfo *) {
+    return QString::null;
+}
+
+
+/*---REISERFS WRAPPER------------------------------------------------------------*/
+QString QP_FSReiserFS::_get_label(QP_PartInfo *) {
+    return QString::null;
 }

@@ -438,7 +438,7 @@ void QP_LibParted::scan_partitions() {
         partinfo->num = 1;
         partinfo->setDevice(_qpdevice);
         partinfo->min_size = -1;
-        partinfo->label = "table";
+        partinfo->_label = "table";
         partinfo->_free = filesystem->free();
         partinfo->_unknow = filesystem->unknow();
         partinfo->_libparted = this;

@@ -86,6 +86,7 @@ public:
     void update_listpartitions();
     void scan_partitions(); //scan for every partition
     bool get_partfilesystem_info(PedPartition *, QP_PartInfo *);
+    bool get_partfilesystem_label(PedPartition *part, QP_PartInfo *partinfo);
     void ins_resize(int, PedSector, PedSector, PedGeometry, PedPartitionType);
     void ins_move(int, PedSector, PedSector, PedGeometry, PedPartitionType);
     void ins_rm(int);

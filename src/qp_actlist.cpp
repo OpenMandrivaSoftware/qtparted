@@ -214,7 +214,7 @@ void QP_ActionList::update_listpartitions() {
             partinfo->_geometry = found->_geometry;
             partinfo->setDevice(found->device());
             partinfo->min_size = found->min_size;
-            partinfo->label = found->label;
+            partinfo->_label = found->_label;
             partinfo->_free = found->_free;
             partinfo->_unknow = found->_unknow;
             partinfo->_libparted = found->_libparted;
@@ -231,7 +231,7 @@ void QP_ActionList::update_listpartitions() {
             partinfo->_geometry = part->geom;
             partinfo->setDevice(_libparted->_qpdevice);
             partinfo->min_size = -1;
-            partinfo->label = QString::null;
+            partinfo->_label = QString::null;
             partinfo->_free = _libparted->filesystem->free();
             partinfo->_unknow = _libparted->filesystem->unknow();
             partinfo->_libparted = _libparted;
@@ -328,7 +328,7 @@ void QP_ActionList::scan_partitions() {
         partinfo->num = part->num;
         partinfo->setDevice(_libparted->_qpdevice);
         partinfo->min_size = -1;
-        partinfo->label = QString::null;
+        partinfo->_label = QString::null;
         partinfo->_free = _libparted->filesystem->free();
         partinfo->_unknow = _libparted->filesystem->unknow();
         partinfo->_libparted = _libparted;
@@ -401,6 +401,10 @@ void QP_ActionList::scan_partitions() {
                 part = ped_disk_get_partition(disk(), p->num);
                 if (part) get_partfilesystem_info(part, p);
                 else showDebug("%s", "actionlist::scan_partitions, get_partfilesystem_info ko\n");
+
+                /*---get the label of this primary partition---*/
+                if (part) get_partfilesystem_label(part, p);
+                else showDebug("%s", "actionlist::scan_partitions, get_partfilesystem_label ko\n");
             }
         } else {
             QP_PartInfo *logi;
@@ -417,6 +421,10 @@ void QP_ActionList::scan_partitions() {
                     part = ped_disk_get_partition(disk(), logi->num);
                     if (part) get_partfilesystem_info(part, logi);
                     else showDebug("%s", "actionlist::scan_partitions, get_partfilesystem_info ko\n");
+
+                    /*---get the label of this logical partition---*/
+                    if (part) get_partfilesystem_label(part, logi);
+                    else showDebug("%s", "actionlist::scan_partitions, get_partfilesystem_label ko\n");
                 }
             }
         }
@@ -463,6 +471,12 @@ bool QP_ActionList::get_partfilesystem_info(PedPartition *part, QP_PartInfo *par
     return true;
 }
 
+bool QP_ActionList::get_partfilesystem_label(PedPartition *part, QP_PartInfo *partinfo) {
+    if (partinfo->_virtual)
+        return true;
+
+    partinfo->_label = QP_FSWrap::get_label(partinfo->fsspec->name(), partinfo);
+}
 
 void QP_ActionList::ins_resize(int num,
                                PedSector start,

@@ -131,10 +131,10 @@ void QP_RealListView::addPrimary(QP_PartInfo *partinfo, int number) {
     if (partinfo->isActive()) status = QString(tr("Active"));
                       else status = QString::null;
 
-    /*if (partinfo->isHidden()) {
-        if (!status.isNull()) status += " ";
+    if (partinfo->isHidden()) {
+        if (!status.isNull()) status += "/";
         status += QString(tr("Hidden"));
-    }*/
+    }
     
     QString usedStr;
     if (partinfo->min_size == -1)
@@ -182,8 +182,11 @@ void QP_RealListView::addLogical(QP_PartInfo *partinfo, int number) {
     QString status;
     if (partinfo->isActive()) status = QString(tr("Active"));
                       else status = QString::null;
-    /*if (partinfo->isHidden()) status = QString(tr("Hidden"));
-                      else status = QString::null;*/
+
+    if (partinfo->isHidden()) {
+        if (!status.isNull()) status += "/";
+        status += QString(tr("Hidden"));
+    }
 
     QString usedStr;
     if (partinfo->min_size == -1)
