@@ -58,12 +58,16 @@ public:
     /*---return the right wrapper (if a wrapper exist ;-))---*/
     static QP_FSWrap *fswrap(QString name);
 
+    /*---write stdin to the process---*/
+    void writeToStdin(QString line);
+
     int wrap_resize;
     bool wrap_move;
     bool wrap_copy;
     bool wrap_create;
 
 protected slots:
+    /*---receive stdout from the process---*/
     void readFromStdout();
 
 protected:

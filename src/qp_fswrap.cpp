@@ -140,6 +140,10 @@ QP_FSWrap * QP_FSWrap::fswrap(QString name) {
         return NULL;
 }
 
+void QP_FSWrap::writeToStdin(QString line) {
+    proc->writeToStdin(line);
+}
+
 bool QP_FSWrap::qpMount(QString device) {
     bool error = false;
 
