@@ -1053,28 +1053,209 @@ QString QP_FSExt2::_get_label(PedPartition *part)
 
 
 /*---REISERFS WRAPPER------------------------------------------------------------*/
-QString QP_FSReiserFS::_get_label(PedPartition *) {
-    return QString::null;
+QString QP_FSReiserFS::_get_label(PedPartition *) 
+{
+    //return QString::null;
+    return QString("No label");
 }
 
 // ===============================================================================
 // ===============================================================================
 // ===============================================================================
 
+#include "qptypes.h"
+
+#define swab16(x) ((u16)( (((u16)(x) & (u16)0x00ffU) << 8) | (((u16)(x) & (u16)0xff00U) >> 8) ))
+
+#define swab32(x) ((u32)( (((u32)(x) & (u32)0x000000ffUL) << 24) | \
+                          (((u32)(x) & (u32)0x0000ff00UL) <<  8) | \
+                          (((u32)(x) & (u32)0x00ff0000UL) >>  8) | \
+                          (((u32)(x) & (u32)0xff000000UL) >> 24) ))
+#define swab64(x) ((u64)(  (u64)(((u64)(x) & (u64)0x00000000000000ffULL) << 56) | \
+                           (u64)(((u64)(x) & (u64)0x000000000000ff00ULL) << 40) | \
+                           (u64)(((u64)(x) & (u64)0x0000000000ff0000ULL) << 24) | \
+                           (u64)(((u64)(x) & (u64)0x00000000ff000000ULL) <<  8) | \
+                           (u64)(((u64)(x) & (u64)0x000000ff00000000ULL) >>  8) | \
+                           (u64)(((u64)(x) & (u64)0x0000ff0000000000ULL) >> 24) | \
+                           (u64)(((u64)(x) & (u64)0x00ff000000000000ULL) >> 40) | \
+                           (u64)(((u64)(x) & (u64)0xff00000000000000ULL) >> 56) )) 
+
+// ------------- CPU TO XXX ---------------
+#ifdef ENDIAN_BIG // BIG ENDIAN
+#  define CpuToLe16(a) (swab16(a))
+#  define CpuToBe16(a) (a)
+#  define CpuToLe32(a) (swab32(a)) 
+#  define CpuToBe32(a) (a)
+#  define CpuToLe64(a) (swab64(a))
+#  define CpuToBe64(a) (a)
+#else // LITTLE_ENDIAN
+#  define CpuToLe16(a) (a)
+#  define CpuToBe16(a) (swab16(a))
+#  define CpuToLe32(a) (a)
+#  define CpuToBe32(a) (swab32(a))
+#  define CpuToLe64(a) (a)
+#  define CpuToBe64(a) (swab64(a))
+#endif // ENDIAN
+
+#define CpuToLe(a) \
+    ((sizeof(a) == 8) ? CpuToLe64(a) : \
+    ((sizeof(a) == 4) ? CpuToLe32(a) : \
+    ((sizeof(a) == 2) ? CpuToLe16(a) : \
+    (a))))
+
+#define CpuToBe(a) \
+    ((sizeof(a) == 8) ? CpuToBe64(a) : \
+    ((sizeof(a) == 4) ? CpuToBe32(a) : \
+    ((sizeof(a) == 2) ? CpuToBe16(a) : \
+    (a))))
+
+// ------------- XXX TO CPU --------------
+#define Le16ToCpu(a) CpuToLe16(a)
+#define Le32ToCpu(a) CpuToLe32(a)
+#define Le64ToCpu(a) CpuToLe64(a)
+
+#define Be16ToCpu(a) CpuToBe16(a)
+#define Be32ToCpu(a) CpuToBe32(a)
+#define Be64ToCpu(a) CpuToBe64(a)
+
+#define LeToCpu(a) \
+    ((sizeof(a) == 8) ? Le64ToCpu(a) : \
+    ((sizeof(a) == 4) ? Le32ToCpu(a) : \
+    ((sizeof(a) == 2) ? Le16ToCpu(a) : \
+    (a))))
+
+#define BeToCpu(a) \
+    ((sizeof(a) == 8) ? Be64ToCpu(a) : \
+    ((sizeof(a) == 4) ? Be32ToCpu(a) : \
+    ((sizeof(a) == 2) ? Be16ToCpu(a) : \
+    (a))))
+
+#define NTFS_GETU8(p)      (*(u8*)(p))
+#define NTFS_GETU16(p)     ((u16)Le16ToCpu(*(u16*)(p)))
+#define NTFS_GETU24(p)     ((u32)NTFS_GETU16(p) | ((u32)NTFS_GETU8(((char*)(p))+2)<<16))
+#define NTFS_GETU32(p)     ((u32)Le32ToCpu(*(u32*)(p)))
+#define NTFS_GETU40(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU8(((char*)(p))+4))<<32))
+#define NTFS_GETU48(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU16(((char*)(p))+4))<<32))
+#define NTFS_GETU56(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU24(((char*)(p))+4))<<32))
+#define NTFS_GETU64(p)     ((u64)Le64ToCpu(*(u64*)(p)))
+
+#define NTFS_GETS8(p)        ((*(s8*)(p)))
+#define NTFS_GETS16(p)       ((s16)Le16ToCpu(*(s16*)(p)))
+#define NTFS_GETS24(p)       (NTFS_GETU24(p) < 0x800000 ? (s32)NTFS_GETU24(p) : (s32)(NTFS_GETU24(p) - 0x1000000))
+#define NTFS_GETS32(p)       ((s32)Le32ToCpu(*(s32*)(p)))
+#define NTFS_GETS40(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS8(((char*)(p))+4)) << 32))
+#define NTFS_GETS48(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS16(((char*)(p))+4)) << 32))
+#define NTFS_GETS56(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS24(((char*)(p))+4)) << 32))
+#define NTFS_GETS64(p)	     ((s64)NTFS_GETU64(p))
+
 QString QP_FSNtfs::_get_label(PedPartition *part) 
 {
-  char bootsect[2048]; // sector number 2 (offset 1024)
-  char label[16];
-
-  if (!QP_FSWrap::read_sector(part, 2, 4, bootsect)) 
-     return QString::null;
-	
+  u8 bootsect[16384];
+  char label[32];
   memset(label, 0, sizeof(label));
-  //strncpy(label, bootsect+120, 16);
-  
-  printf("returned buffer ntfs: [%s]\n", label);
+  BYTE cFileRecord[8192+1]; // 1024 should be enough (dwFileRecordSize)
 
-  //return QString(label);
+  QWORD qwOffset;
+  WORD nOffsetSequenceAttribute;
+  BYTE *cData;
+  DWORD dwAttribType;
+  DWORD dwAttribLen;
+  bool bAttribResident;	
+  BYTE *cDataResident;
+  WORD nAttrSize;
+  u32 dwFileRecordSize;
+  QWORD i;
+
+  if (!QP_FSWrap::read_sector(part, 0, 32, (char*)bootsect)) 
+     return QString::null;
+	  
+  // 1. check partition has an ntfs file system
+  if (memcmp(bootsect+3, "NTFS", 4) != 0)
+  {
+     printf ("NTFS-001: not an NTFS partition\n");
+     return QString::null;
+  }
+
+  u16 nBytesPerSector = NTFS_GETU16(bootsect+0xB);
+  u8 cSectorsPerCluster = NTFS_GETU8(bootsect+0xD);
+  u64 qwTotalSectorsCount = NTFS_GETU64(bootsect+0x28);
+  u64 qwLCNOfMftDataAttrib = NTFS_GETU64(bootsect+0x30);
+  s8 cClustersPerMftRecord = NTFS_GETS8(bootsect+0x40);
+  
+  // check informations validity
+  if (nBytesPerSector % 512 != 0)
+  {
+     printf ("NTFS-002: invalid nBytesPerSector value\n");
+     return QString::null;
+  }
+  
+  // Calculate clusters and misc informations
+  u32 dwClusterSize = (DWORD)nBytesPerSector * cSectorsPerCluster;
+
+  
+  if (cClustersPerMftRecord > 0)
+    dwFileRecordSize = cClustersPerMftRecord * dwClusterSize;
+  else
+    dwFileRecordSize = 1 << (-cClustersPerMftRecord);
+  
+  /*printf("m_nBytesPerSector = %d\n", nBytesPerSector);
+  printf("m_cSectorsPerCluster = %d\n", cSectorsPerCluster);
+  printf("m_qwTotalSectorsCount = %llu\n", qwTotalSectorsCount);
+  printf("m_qwLCNOfMftDataAttrib = %llu\n", qwLCNOfMftDataAttrib);
+  printf("cClustersPerMftRecord = %d\n", cClustersPerMftRecord);
+  printf("Calculated m_dwFileRecordSize = %lu\n", dwFileRecordSize);*/
+  
+  // 1. read $Volume record
+  qwOffset = ((QWORD) qwLCNOfMftDataAttrib * dwClusterSize) + ((QWORD) (3 * dwFileRecordSize));
+  
+  u32 dwOffsetToRead = (u32) (qwOffset / ((u64)512));
+  u32 dwSectorCountToRead = (u32) dwFileRecordSize/512;
+  
+  if (!QP_FSWrap::read_sector(part, dwOffsetToRead, dwSectorCountToRead, (char*)cFileRecord)) 
+    {
+      printf("readVolumeLabel(): failed in readData()\n");
+      return QString::null;
+    }
     
-  return QString::null;
+  // -------- decode the MFT File record
+  nOffsetSequenceAttribute = NTFS_GETU16(cFileRecord+0x14);
+  cData = cFileRecord + nOffsetSequenceAttribute;
+  
+  do
+    {
+      // szData points to the beginning of an attribute
+      dwAttribType = NTFS_GETU32(cData);
+      dwAttribLen = NTFS_GETU32(cData+4);
+      bAttribResident = (NTFS_GETU8(cData+8)==0);
+      
+      if(dwAttribType == 0x60) // "volume_name"
+	{
+	  if (bAttribResident == false)
+	    {
+	      printf("readVolumeLabel(): failed: $volume_name attribute is not resident\n");
+	      return QString::null;
+	    }
+	  
+	  nAttrSize = NTFS_GETU16(cData+0x10);
+	  cDataResident = cData+NTFS_GETU16(cData+0x14);
+	  
+	  for (i=0; i < (DWORD)(nAttrSize/2); i++)
+	    label[i] = cDataResident[2*i];
+	}
+      /*if(dwAttribType == 0x70) // "volume_information"
+	{	
+	  int nNtfsVersion = 0;
+	  if (bAttribResident == true)
+	    {	
+	      nAttrSize = NTFS_GETU16(cData+0x10);
+	      cDataResident = cData+NTFS_GETU16(cData+0x14);
+	      nNtfsVersion = (((BYTE) cDataResident[8]) << 8) | ((BYTE) cDataResident[9]);
+	      printf("readVolumeLabel(): version is %d.%d\n", cDataResident[8], cDataResident[9]);
+	    }
+	}*/
+      
+      cData += dwAttribLen;
+    } while(dwAttribType != (DWORD)-1); // attribute list ends with type -1
+
+  return QString(label);
 }
