@@ -15,6 +15,9 @@ TODO-for-0.4.1:
 - Support for flags: hidden, lba, ...
   (boot already supported)
 - Conversion from ext2 to ext3
+- Set maximal length of text in format/create dialogs:
+  maxname for xfs label = 12
+  maxname for ext2/ext3 = 16
 
 General TODO:
 -------------
