@@ -96,15 +96,15 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Utility for mount a filesystem.</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilitaire pour monter un système de fichiers.</translation>
     </message>
     <message>
         <source>Utility for umount a filesystem.</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilitaire pour démonter un système de fichiers.</translation>
     </message>
     <message>
         <source>Utility for grow a xfs filesystem.</source>
-        <translation type="unfinished"></translation>
+        <translation>Utilitaire pour accroître un système de fichiers xfs.</translation>
     </message>
 </context>
 <context>
@@ -167,11 +167,11 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Critical error during ped_disk_new!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur critique durant l&apos;appel ped_disk_new !</translation>
     </message>
     <message>
         <source>Critical error during ped_disk_duplicate!</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur critique durant l&apos;appel ped_disk_duplicate !</translation>
     </message>
 </context>
 <context>
@@ -201,44 +201,44 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>There was a problem with mkfs.ext3.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il y a eu un problème avec mkfs.ext3.</translation>
     </message>
 </context>
 <context>
     <name>QP_FSJfs</name>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation type="unfinished">Impossible d&apos;agrandir une partition si le disque est occupé</translation>
+        <translation>Impossible d&apos;agrandir une partition si le disque est occupé</translation>
     </message>
 </context>
 <context>
     <name>QP_FSNtfs</name>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation type="unfinished">Impossible d&apos;agrandir une partition si le disque est occupé</translation>
+        <translation>Impossible d&apos;agrandir une partition si le disque est occupé</translation>
     </message>
     <message>
         <source>Resizing in progress.</source>
-        <translation type="unfinished"></translation>
+        <translation>Redimensionnement en cours.</translation>
     </message>
     <message>
         <source>Syncing device.</source>
-        <translation type="unfinished"></translation>
+        <translation>Synchronisation du périphérique.</translation>
     </message>
 </context>
 <context>
     <name>QP_FSXfs</name>
     <message>
         <source>There was a problem with mkfs.xfs.</source>
-        <translation type="unfinished"></translation>
+        <translation>Il y a eu un problème avec mkfs.xfs.</translation>
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation type="unfinished">Impossible d&apos;agrandir une partition si le disque est occupé</translation>
+        <translation>Impossible d&apos;agrandir une partition si le disque est occupé</translation>
     </message>
     <message>
         <source>Error during xfs_grow.</source>
-        <translation type="unfinished"></translation>
+        <translation>Erreur durant xfs_grow.</translation>
     </message>
 </context>
 <context>
@@ -744,7 +744,7 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     </message>
     <message>
         <source>Label</source>
-        <translation type="unfinished"></translation>
+        <translation>Étiquette</translation>
     </message>
 </context>
 <context>
