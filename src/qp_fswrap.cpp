@@ -22,8 +22,10 @@
 #include <qregexp.h>
 
 #include "qp_fswrap.h"
+#include "qp_actlist.h"
 #include "qp_common.h"
 #include "qp_options.h"
+#include "qp_debug.h"
 
 #define NOTFOUND tr("command not found")
 
@@ -104,7 +106,79 @@ QP_FSNtfs::QP_FSNtfs() {
     fs_close();
 }
 
-bool QP_FSNtfs::resize(bool write, QString dev, PedSector newsize) {
+bool QP_FSNtfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinfo, PedSector new_start, PedSector new_end) {
+    /*---pointer to libparted---*/
+    QP_LibParted *libparted = _libparted;
+    
+	showDebug("%s", "Resizing a filesystem using a wrapper\n");
+
+    /*---the user want to shrink or enlarge the partition?---*/
+    /*---the user want to shrink!---*/
+    if (new_end < partinfo->end) {
+        /*---update the filesystem---*/
+	    showDebug("%s", "shrinking filesystem...\n");
+        if (!ntfsresize(write, partinfo->partname(), new_end - new_start)) {
+	        showDebug("%s", "shrinking filesystem ko\n");
+            return false;
+        }
+
+        /*---and now update geometry of the partition---*/
+        showDebug("%s", "update geometry...\n");
+        if (!libparted->set_geometry(partinfo, new_start, new_end + 4*MEGABYTE_SECTORS)) {
+            showDebug("%s", "update geometry ko\n");
+            _message = libparted->message();
+            return false;
+        } else {
+            /*---if you are NOT committing then add in the undo/commit list---*/
+            if (!write) {
+                showDebug("%s", "operation added to undo/commit list\n");
+                PedPartitionType parttype = libparted->type2parttype(partinfo->type);
+                PedGeometry geom = libparted->get_geometry(partinfo);
+                libparted->actlist->ins_resize(partinfo->num, new_start, new_end, geom, parttype);
+            }
+            return true;
+        }
+    /*---the user want to enlarge!---*/
+    } else {
+        /*---cannot enlarge if we cannot change disk geometry!---*/
+        if (partinfo->device()->isBusy()) {
+            showDebug("%s", "the device is busy, so you cannot enlarge it\n");
+            _message = tr("Cannot enlarge a partition if the disk device is busy");
+            return false;
+        }
+        
+        /*---first se the geometry of the partition---*/
+        showDebug("%s", "update geometry...\n");
+        if (!libparted->set_geometry(partinfo, new_start, new_end + 4*MEGABYTE_SECTORS)) {
+            showDebug("%s", "update geometry ko\n");
+            _message = libparted->message();
+            return false;
+        } else {
+            /*---if you are NOT committing then add in the undo/commit list---*/
+            if (!write) {
+                showDebug("%s", "operation added to undo/commit list\n");
+                PedPartitionType parttype = libparted->type2parttype(partinfo->type);
+                PedGeometry geom = libparted->get_geometry(partinfo);
+                libparted->actlist->ins_resize(partinfo->num, new_start, new_end, geom, parttype);
+            }
+        }
+
+        if (write) {
+            /*---and now update the filesystem!---*/
+	        showDebug("%s", "enlarge filesystem...\n");
+            if (!ntfsresize(write, partinfo->partname(), new_end - new_start)) {
+	            showDebug("%s", "enlarge filesystem ko\n");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+}
+
+bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
     char szcmdline[200];
     QString cmdline;
 

@@ -37,8 +37,8 @@ class QP_FSWrap : public QObject {
 Q_OBJECT
 
 public:
-    /*---resize(readonly?, device, sectors), resize the partition---*/
-    virtual bool resize(bool, QString, PedSector) {return false;}
+    /*---resize(libparted, readonly?, device, sectors_start, sectors_end), resize the partition---*/
+    virtual bool resize(QP_LibParted *, bool, QP_PartInfo *, PedSector, PedSector) {return false;}
 
     /*---move(device, start sectors, end sectors), move the partition---*/
     virtual bool move(QString, PedSector, PedSector) {return false;}
@@ -80,9 +80,12 @@ Q_OBJECT
 
 public:
     QP_FSNtfs();
-    bool resize(bool, QString dev, PedSector newsize);
+    bool resize(QP_LibParted *, bool, QP_PartInfo *, PedSector, PedSector);
     bool mkpartfs(QString dev, QString label);
     QString fsname();
+
+private:
+    bool ntfsresize(bool, QString dev, PedSector newsize); //this is the true ntfsresize wrapper
 };
 
 class QP_FSJfs : public QP_FSWrap {

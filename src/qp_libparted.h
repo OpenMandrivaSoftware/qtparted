@@ -109,6 +109,7 @@ class QP_LibParted : public QObject
 {
 friend class QP_PartInfo;
 friend class QP_ActionList;
+friend class QP_FSNtfs;
     Q_OBJECT
 public:
     QP_LibParted();

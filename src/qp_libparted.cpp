@@ -150,80 +150,14 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
          *---please note that this test should be a surplus!---*/
         if (fsspec->fswrap()->wrap_resize) {
 	        showDebug("%s", "Resizing a filesystem using a wrapper\n");
-            
-            bool rc;
-            /*---the user want to shrink or enlarge the partition?---*/
-
-            /*---the user want to shrink!---*/
-            if (new_end < end) {
-                /*---update the filesystem---*/
-	            showDebug("%s", "shrinking filesystem...\n");
-                rc = fsspec->fswrap()->resize(_libparted->_write, partname(), new_end - new_start);
-                if (!rc) {
-	                showDebug("%s", "shrinking filesystem ko\n");
-                    _libparted->_message = fsspec->fswrap()->message();
-                    _libparted->emitSigTimer(100, _libparted->message(), QString::null);
-                    return false;
-                }
-
-                /*---and now update geometry of the partition---*/
-                showDebug("%s", "update geometry...\n");
-                rc = _libparted->set_geometry(this, new_start, new_end + 4*MEGABYTE_SECTORS);
-                if (!rc) {
-                    showDebug("%s", "update geometry ko\n");
-                    _libparted->emitSigTimer(100, _libparted->message(), QString::null);
-                    return false;
-                } else {
-                    /*---if you are NOT committing then add in the undo/commit list---*/
-                    if (!_libparted->_write) {
-                        showDebug("%s", "operation added to undo/commit list\n");
-                        PedPartitionType parttype = _libparted->type2parttype(type);
-                        PedGeometry geom = _libparted->get_geometry(this);
-                        _libparted->actlist->ins_resize(num, new_start, new_end, geom, parttype);
-                    }
-                    _libparted->emitSigTimer(100, _libparted->message(), QString::null);
-                    return true;
-                }
-            /*---the user want to enlarge!---*/
+            bool rc = fsspec->fswrap()->resize(_libparted, _libparted->_write, this, new_start, new_end);
+            if (!rc) {
+                _libparted->_message = fsspec->fswrap()->message();
+                _libparted->emitSigTimer(100, _libparted->message(), QString::null);
+                return false;
             } else {
-                /*---cannot enlarge if we cannot change disk geometry!---*/
-                if (device()->isBusy()) {
-                    showDebug("%s", "the device is busy, so you cannot enlarge it\n");
-                    _libparted->_message = tr("Cannot enlarge a partition if the disk device is busy");
-                    return false;
-                }
-                
-                /*---first se the geometry of the partition---*/
-                showDebug("%s", "update geometry...\n");
-                if (!_libparted->set_geometry(this, new_start, new_end + 4*MEGABYTE_SECTORS)) {
-                    showDebug("%s", "update geometry ko\n");
-                    _libparted->emitSigTimer(100, _libparted->message(), QString::null);
-                    return false;
-                } else {
-                    /*---if you are NOT committing then add in the undo/commit list---*/
-                    if (!_libparted->_write) {
-                        showDebug("%s", "operation added to undo/commit list\n");
-                        PedPartitionType parttype = _libparted->type2parttype(type);
-                        PedGeometry geom = _libparted->get_geometry(this);
-                        _libparted->actlist->ins_resize(num, new_start, new_end, geom, parttype);
-                    }
-                }
-
-                if (_libparted->_write) {
-                    /*---and now update the filesystem!---*/
-	                showDebug("%s", "enlarge filesystem...\n");
-                    if (!fsspec->fswrap()->resize(_libparted->_write, partname(), new_end - new_start)) {
-	                    showDebug("%s", "enlarge filesystem ko\n");
-                        _libparted->_message = fsspec->fswrap()->message();
-                        _libparted->emitSigTimer(100, _libparted->message(), QString::null);
-                        return false;
-                    } else {
-                        _libparted->emitSigTimer(100, SUCCESS, QString::null);
-                        return true;
-                    }
-                } else {
-                    return true;
-                }
+               _libparted->emitSigTimer(100, SUCCESS, QString::null);
+               return true;
             }
         }
     } else {
