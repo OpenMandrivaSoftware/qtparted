@@ -257,7 +257,7 @@ dnl )
 
 dnl if test "$exe_static" = "yes" ; then
 dnl  QTPARTED_LDFLAGS="$QTPARTED_LDFLAGS"
-dnl  AC_SUBST(QTPARTED_LDFLAGS)
+AC_SUBST(QTPARTED_LDFLAGS)
 dnl fi
 
 AC_SUBST(QTPARTED_LIBS)
