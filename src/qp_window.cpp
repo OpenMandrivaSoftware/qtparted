@@ -896,14 +896,16 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
         bool resize = partinfo->fsspec->resize();
         bool move = partinfo->fsspec->move();
         actCreate->setEnabled(false);
-        actFormat->setEnabled(true);
         actDelete->setEnabled(true);
         actMove->setEnabled(move);
 
-        if (partinfo->type == QTParted::extended)
+        if (partinfo->type == QTParted::extended) {
             actResize->setEnabled(true);
-        else
+            actFormat->setEnabled(false);
+        } else {
             actResize->setEnabled(resize);
+            actFormat->setEnabled(true);
+        }
     }
 }
 
