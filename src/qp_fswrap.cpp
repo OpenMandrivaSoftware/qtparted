@@ -1003,7 +1003,7 @@ QString QP_FSXfs::_get_label(PedPartition *part)
   memset(label, 0, sizeof(label));
   strncpy(label, bootsect+108, 12);
   
-  printf("returned buffer ntfs: [%s]\n", label);
+  //printf("returned buffer ntfs: [%s]\n", label);
 
   return QString(label);
 }
@@ -1029,7 +1029,7 @@ QString QP_FSFat32::_get_label(PedPartition *part)
     {   
         memset(label, 0, sizeof(label));
         memcpy(label, buffer+0x47, 11);
-        printf("returned fat buffer: %s\n", label);
+        //printf("returned fat buffer: %s\n", label);
         return QString(label);
     }
 }
@@ -1046,7 +1046,7 @@ QString QP_FSExt2::_get_label(PedPartition *part)
   memset(label, 0, sizeof(label));
   strncpy(label, bootsect+120, 16);
   
-  printf("returned buffer ext2/3: [%s]\n", label);
+  //printf("returned buffer ext2/3: [%s]\n", label);
 
   return QString(label);
 }
@@ -1172,7 +1172,7 @@ QString QP_FSNtfs::_get_label(PedPartition *part)
   // 1. check partition has an ntfs file system
   if (memcmp(bootsect+3, "NTFS", 4) != 0)
   {
-     printf ("NTFS-001: not an NTFS partition\n");
+     //printf ("NTFS-001: not an NTFS partition\n");
      return QString::null;
   }
 
@@ -1185,7 +1185,7 @@ QString QP_FSNtfs::_get_label(PedPartition *part)
   // check informations validity
   if (nBytesPerSector % 512 != 0)
   {
-     printf ("NTFS-002: invalid nBytesPerSector value\n");
+     //printf ("NTFS-002: invalid nBytesPerSector value\n");
      return QString::null;
   }
   
@@ -1198,13 +1198,6 @@ QString QP_FSNtfs::_get_label(PedPartition *part)
   else
     dwFileRecordSize = 1 << (-cClustersPerMftRecord);
   
-  /*printf("m_nBytesPerSector = %d\n", nBytesPerSector);
-  printf("m_cSectorsPerCluster = %d\n", cSectorsPerCluster);
-  printf("m_qwTotalSectorsCount = %llu\n", qwTotalSectorsCount);
-  printf("m_qwLCNOfMftDataAttrib = %llu\n", qwLCNOfMftDataAttrib);
-  printf("cClustersPerMftRecord = %d\n", cClustersPerMftRecord);
-  printf("Calculated m_dwFileRecordSize = %lu\n", dwFileRecordSize);*/
-  
   // 1. read $Volume record
   qwOffset = ((QWORD) qwLCNOfMftDataAttrib * dwClusterSize) + ((QWORD) (3 * dwFileRecordSize));
   
@@ -1213,7 +1206,7 @@ QString QP_FSNtfs::_get_label(PedPartition *part)
   
   if (!QP_FSWrap::read_sector(part, dwOffsetToRead, dwSectorCountToRead, (char*)cFileRecord)) 
     {
-      printf("readVolumeLabel(): failed in readData()\n");
+      //printf("readVolumeLabel(): failed in readData()\n");
       return QString::null;
     }
     
@@ -1232,7 +1225,7 @@ QString QP_FSNtfs::_get_label(PedPartition *part)
 	{
 	  if (bAttribResident == false)
 	    {
-	      printf("readVolumeLabel(): failed: $volume_name attribute is not resident\n");
+	      //printf("readVolumeLabel(): failed: $volume_name attribute is not resident\n");
 	      return QString::null;
 	    }
 	  
