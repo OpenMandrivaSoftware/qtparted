@@ -61,7 +61,7 @@ void checkDevfs() {
 void print_usage(const char *program_name) {
     printf("Usage: %s [OPTION]...\n", program_name);
     printf("A nice QT GUI for libparted\n\n");
-    printf("Elenco opzioni supportate:\n");
+    printf("Options used by qtparted:\n");
     printf("  -l, --log=value       use 1 to enable log, 0 for disable it.\n"
            "                        [default = 1])\n");
     printf("  -h, --help            Show this usage message\n");
