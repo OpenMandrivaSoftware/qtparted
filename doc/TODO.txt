@@ -4,20 +4,33 @@ TODO for QtParted (http://qtparted.sourceforge.net)
 1) Source Code:
 ===============
 
-TODO-for-0.4.1:
-------------------
-- Support for XFS, JFS file systems:
-  - XFS: growsfs
-  - JFS: growsfs (done!)
+MINOR-TODO (trivial changes):
+-----------------------------
 - Support for Resier4 (detection only)
-- Merge convertfs
-- Bad blocks checking
 - Support for flags: hidden, lba, ...
   (boot already supported)
 - Conversion from ext2 to ext3
 - Set maximal length of text in format/create dialogs:
   maxname for xfs label = 12
   maxname for ext2/ext3 = 16
+- allow to resize ext3 without converting to ext2
+- Check if the partition is mounted. Before working on the disk,
+  it would be possible to use the isMounted() function. It tells
+  us whether or not a partition is mounted.
+
+
+MAJOR-TODO (bug features):
+--------------------------
+- Merge convertfs
+- Bad blocks checking
+
+
+BUGS:
+-----
+- QtParted allows to create more than 4 primary partitions.
+  When we try to create a fifth primary partition, it agrees, but
+  after clicking "ok", the new partition is not shown as a virtual partition.
+- When shrinking an extended partition, the minimal size is not correct
 
 General TODO:
 -------------
