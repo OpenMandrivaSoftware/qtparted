@@ -1,0 +1,275 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>QP_UIResize</class>
+<widget class="QDialog">
+    <property name="name">
+        <cstring>QP_UIResize</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>495</width>
+            <height>280</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Resize partition</string>
+    </property>
+    <vbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>11</number>
+        </property>
+        <property name="spacing">
+            <number>6</number>
+        </property>
+        <widget class="QFrame">
+            <property name="name">
+                <cstring>container</cstring>
+            </property>
+            <property name="sizePolicy">
+                <sizepolicy>
+                    <hsizetype>5</hsizetype>
+                    <vsizetype>0</vsizetype>
+                    <horstretch>0</horstretch>
+                    <verstretch>0</verstretch>
+                </sizepolicy>
+            </property>
+            <property name="minimumSize">
+                <size>
+                    <width>0</width>
+                    <height>50</height>
+                </size>
+            </property>
+            <property name="frameShape">
+                <enum>StyledPanel</enum>
+            </property>
+            <property name="frameShadow">
+                <enum>Sunken</enum>
+            </property>
+            <property name="lineWidth">
+                <number>3</number>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout1</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>lblMinimumSize</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>5</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>Minimum Size:</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <spacer>
+            <property name="name">
+                <cstring>spacer5</cstring>
+            </property>
+            <property name="orientation">
+                <enum>Vertical</enum>
+            </property>
+            <property name="sizeType">
+                <enum>Fixed</enum>
+            </property>
+            <property name="sizeHint">
+                <size>
+                    <width>20</width>
+                    <height>20</height>
+                </size>
+            </property>
+        </spacer>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout26</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>lbl1</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Free Space &amp;Before:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>spinFreeBefore</cstring>
+                    </property>
+                </widget>
+                <widget class="QP_ComboSpin">
+                    <property name="name">
+                        <cstring>spinFreeBefore</cstring>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout27</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>lbl2</cstring>
+                    </property>
+                    <property name="text">
+                        <string>New Size:</string>
+                    </property>
+                </widget>
+                <widget class="QP_ComboSpin">
+                    <property name="name">
+                        <cstring>spinNewSize</cstring>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>layout28</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>lbl4</cstring>
+                    </property>
+                    <property name="text">
+                        <string>Free Space &amp;After:</string>
+                    </property>
+                    <property name="buddy" stdset="0">
+                        <cstring>spinFreeAfter</cstring>
+                    </property>
+                </widget>
+                <widget class="QP_ComboSpin">
+                    <property name="name">
+                        <cstring>spinFreeAfter</cstring>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+        <widget class="QLabel">
+            <property name="name">
+                <cstring>lblMessage</cstring>
+            </property>
+            <property name="text">
+                <string>It is recommended to backup your data before do this operation!</string>
+            </property>
+        </widget>
+        <widget class="QLayoutWidget">
+            <property name="name">
+                <cstring>Layout26</cstring>
+            </property>
+            <hbox>
+                <property name="name">
+                    <cstring>unnamed</cstring>
+                </property>
+                <property name="margin">
+                    <number>0</number>
+                </property>
+                <property name="spacing">
+                    <number>6</number>
+                </property>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnOk</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>&amp;OK</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>btnCancel</cstring>
+                    </property>
+                    <property name="sizePolicy">
+                        <sizepolicy>
+                            <hsizetype>0</hsizetype>
+                            <vsizetype>0</vsizetype>
+                            <horstretch>0</horstretch>
+                            <verstretch>0</verstretch>
+                        </sizepolicy>
+                    </property>
+                    <property name="text">
+                        <string>&amp;Cancel</string>
+                    </property>
+                </widget>
+            </hbox>
+        </widget>
+    </vbox>
+</widget>
+<customwidgets>
+    <customwidget>
+        <class>QP_ComboSpin</class>
+        <header location="local">qp_combospin.h</header>
+        <sizehint>
+            <width>-1</width>
+            <height>-1</height>
+        </sizehint>
+        <container>0</container>
+        <sizepolicy>
+            <hordata>5</hordata>
+            <verdata>5</verdata>
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+        </sizepolicy>
+        <pixmap>image0</pixmap>
+    </customwidget>
+</customwidgets>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="8366">789cbd99d78e25b71186eff5140bf14e30e8ce01862f26e79d1c0d5f148bdd93f339930cbfbbebd45fdd2befec0a360c584758ec2792c56245b2f5e7dfbe9cec6c7df9edcfbf3c4f6872c95ff8829ebefc16a7b7b7ef7ffbfb5ffff1cbaf79f665f66f537cc97efdd32fbfee4ebef097aff777dd0cbc137089fe33639a1b3955ee8d5370dc504e87f9f1d43805fbd79131df2b67c3382d19cb4fc7cf9473611de71de31c1ce2c83adfd3c8f98c5dab5ccc7e3aff40b914863c37b2ce8f039798efaf462e95b3912bd577d9b832be51ae06f6d723d7ca5bc675d2eafedbcab548803e1fc60dce13f68d2989ca9d72233f5d1f5e8d39e955ff27e5567eba7f781859f777cfc69cc23f8932c94fc769db38603f4a8d4d3ebf18f7a9da871795c3b0de81394dd346f75f336eb2a0f26ae5987639c673e54ee4c3dfad71347d709e2e8db9da9fe1df3e4d139517b68dcb94d5be6164d53fdecd58822b5abc76e02ccd49b91959d7d3a171667cae9c66790e792bca9948443c5c1a53a6fa06b5679aa70df4f36fc63183ff4ae522eb4aac577ba6a5eca7ec02b8281a5d1f5795ab3483feee1d5c948deac7d1b86a543edf2bd76969fb9f8087f1901ad70df25be355bcd3e4ca6e32b2fadb2d18b785fa8712632a907fc3faae44fcf6e0bca9d4bf7e0f3cece7608fb6681a954f64dcb690c7ca941529ec337028609fce980b954fb7c65d81f3d6e0411e9d18538b7a030ee21ff5bf3f050fe3818c438b7a72a1cc590ff90eeb791877365e708b7aa3f19ec681e9de38b6c817d8bfcbab12f98278ebc6f18971d722de115f7d9e156a2fffd5382f757f5e352e4bacbf326e4ad867c3b8ab10cff0673fc8a775e3be45bdd0f12c11fd909f4fe061dcef82cba445bc6f2aa77905ff843b63aef4fc7e1f3cce5f314e5b95cf47cad9b0def5c654229f8fc16586f95ee35db231946a8f706cdc5790ff0c96f95a1ffd9271deaabf83d6efacc88b42f3c16f1a47e8ebf68cbb4aed4953f0b09ede8c0b70d4f8cbca3cb5fa38679ca3befadcb8afd47e0c7dcb22ab908fb5715123bfe68dcb1af1bf0c96fd34fef8d9b804d3e5c8f0afc647561579a5f94607c6a1413c06f030df57c6550b7b68bdcbea22ad60bfd4b8a8606f9cbf16fbaabcb0676ceb1df491e86b513f102f6d51d7888745f0301e9c710b66d88bf22a457fbb376e53f4c343e3bed27ce5045c50adf35d66cc35e45f83cba4d171da326e09f566c79808f2b49f6621b3fb82efc045532b3bf83b0cf35d6d1cc0617764d40fc433172dfc193c78180ff077cc9314fb3f1a7719fa15f4917a52c35ff0672c9910af2bc611ecbf31ea01fcdde57d8af85f058bbde1df23e3613ef2bd2f73b3d7b3b1f523fa30ae51ff786a6cfb3b32ee08f545fb5d9e943d21fed53f795a54e8af7c022ead9fd13bb84a08f9acf924d5afc9b01f83cba17f1d82ab9450aff4be98e759b4fcbb058b7c95c7365e5aff71b971407d73d82faf72c2fd4ceb592efddae44dc1b21ef9b5684cd60f0ec0b25eededb68d0b42fe6abd9d55eb06e7393566db1ffb95c37c0f7b54225ff7778d71c47cda34ee2d9f17c0b200f6d5f8cdebaa22e4e7a9714db01fec21dd9ad08fb17f3b70d07a9293d433c4e703b88829fa610a167d515fae8cdb80fb25c6435ea4b85fc37f5c74b8afd10a58f443bd7d1919fde06964f427f833961dee33740d96f3a09fde1873c07eb05797d7d83f7c802b32fbac8d8cfab76a1c03f4d933eec0acf7d35cfa2fde0bbc6bdca4ba7f84febdd807f57d092ceb910fa7c63d38687d28928a6dff1de33ee879a3fa578c4729ce1fc0a21fee376be03a0d38bfee27dd85113f41f7937657423f3e04977506ff2e82eb2c20deb15efa21e687165c92dda7e78de506affb435fe95ed0d755c67940fc6bbd956e5604c4bffabb90f8cd703ff160590ffb64c605f4a1cab80aea2fa7f544ba491570dfd5fb57d1e4847a4dbbe0ba0ed0efd1b809781f697e146d99a588f7081679e83757c6369f0b65cad9e4c31e24e3c8b779e396919ff7c604668d9f426eafc897007b043930e69f83653efa87d663a9f681f11ed2fa5fc4aacd50dfb7c1328e7ab461cc98efe647c67ccde7a21bc6fdc43832dec31aaf455f67963fabc61de3fea9f2e431dcc2df6102ae7b463cbe83e5010affab3d4bb95e33e2a7324ec1be1c59fdefb4ff97d9c0e1d238b3f1f591e11ff547991739fce1a6e0613eb991d1df343fa4dae68cfb5b6e5c30ea97dec7a43b187bbd4f94555332ead3b17105f6d8bf1646fd3933ae19f554eb8b7407637765dc182f8f8cfcd3fa54b6b5e5232f1b53867cbc310ef6be843dda413ead1a0ff2ce8ddb88f8d27a5bd2c074644c36fe3a32eabbd6fb32142ddeb7bc0fae6386f7d23d78981fb47f973c8ecf819b10116fcfc60c76c9c8a8cf981feb0edf071cf68bc3b8d77e33abf611f7b147e32eaa7e11feefcb06fb3b9caf1fc6fd93710f763b23235e555e950cecd7c16d12512f35bf2a797dc11eb1069735ea47c0faac4da3c65f04e7a57d1fe06b70232f24b5ff03b8cd23eeab6aefaa1056fd59f349aee7a9ed776c4cd8cf6d82db22a29e6c189751e3336afd9cb57fab2f2fe0715cefef55dd30e2cd419fbaad22e2f9c2b806bbb39111df1aaf55333015c60d98b5beceb6b3faca6019c77e1fc66d07fd601f1a98f68d091ca623e3fdaefdaf0a5582fee15bf030ee368c4387faa9f7d18a65bec64fc4f9243ef17d23421f79ade7b8bf7a635b4f1363ee707fc0fa3870d4f8aeba2a83fcb00c6e6387fa541877e0a8fead93b6c9719fd0fdeab42a70bf8d9abf75d666f8dec27adf997dbec9701fd07e2dcf2dc6f7a278096eab02f2f4fe59cbeb04df73a2d6e39aa9c1f7aea8f5b049aa1adfd7a2d6e72697071dbe3769bd6a0a921794b2de4f1ab94de2fb47d4fad9849af13d2b6abf6de4b565fb697d6893ba48900f6a8f56ea7d8ef369fd97eb6565bc63dc14f0efdec838bfc69b944732796a4f09a716fe8a7abf6d8909df43a2d6cb96399618d7f86a2333be6744edbf525c13fb9ea8f6a6a229f13d356afe5339b2c6a3842715608d07a2d6be9745ad37216b7bbc67a2f6e7905366f6d2fb54e888f17d2caa7f3884a6843f35ff994383ef3bacfa71477502797a5f93cb36e33cacf6ebda10f17d96b51e75911363cd6f51a64ca09fe6775f710d66ad1f7de468acfeef7beef1fd6277f2bffdfe7f32bc1b7effbd0c59453e78f6d177bef7e7fec25ffaabef25fd5c86acbff637fed6dff97bff20bf47ffe49ffdc44ffd8ba7ff44867ff56ffedd7ff8393fef17fca25ff2cb7ec5affa35bfee37fca6dffaa6cd8f6588be5ffdb6ecbae377fd9edff707fed01ff9637fe24ffd99e895f8d4677f24c3673ef7852f7de56bd1a1f08d6f6706f58d738e5cf0478e5d74dda0c967199e5cef3fdcb9bb7097eeca5dfbc4ddc8aa5b77e7eedd83c8b97141fefee89edcf38f6578e7266e2a963bf587eec5bdfa03f7a66739f0fbee5d24b1fb70737ecfcd8bec0568f2bd0cb7e896dcb2cc5f710f6ed5adf945b72e7b6fc85936dd96485e745fc5d2b5db763b6ed7bf7e96215aecb97d77e00edd913b7627eed49db9c4a52e73b95f73852b45974aac538b9f1e5ce3dacf32dc228939885ce51e28c85fe445471df5b308a57331e8055dcae93c5d897ca66bbaf95e86ccbbf5f77447f7f4408fa2b7f8909ebec5393dd3c41dd0d47d489c9c8a8c177ff549c62bbdfa077aa377dfaa155bfaa0b9dfc99897531c887ed7fe8c16fc1c2dd2d2f7326899564876a03539c9babb91936cfc4e424f9bb2ba7233d95bee5676fbfa0319dbb423b1bc47bbe28335daa37d3af89d8c433aa263b1d5aa3ba2133aa5334a3edb9452ca2817df5754f8252ac57615d526a1a1d637c18ba1d9af06f2f2be0c1ce2f7324217fa70ee4efc42b8a03b5f87cb7011aec275b8f12edc4ac42f48bc4816ba13199d0b77e13e3c7cd263c94f252e6efd7e7894d2fd149ec3244c9d0f2f22e335bcb9b5f02eb17b1b9e65f423cc85f9cf67f1af61c12561d185b01496dd6a58919c5d14ad5667a7096b613d6cd0bb3b091317c366d80a5f3fc7baccdba64ca4ecb8377a0c17527576c22e4dc35ed80f62dd702891be168ec416c7e1249c86b3cf3927b312bf49ab128fd390d2959c7ca6c07598862ce4a190f1325422a10e4d68d9f30f72df4be8716076fb921bc45162f1563ad6959b6389763ee70bf9f392aff89a6ff896ef7e543f64c63d3ff0233f495e1f4905b9e3679eb8439af2945ff895dff85de67cf01ccff302e2eb73cef1222ff132aff02aafcde4f8479748457c70fbbc2eab377893b7f82b6fcbdf77bef58aef739f77798ff7f9800ff9888ff9844ff98c134e39e35c460b2e59faa73c59dae87f2c6377125da418a4adc6d8c53e9ec78b7819afe275bc91ff721b7dbc8bf7f141e454f1f16732bc8b4ff1394ee234bec4d7f816dfe3479c8bf371212ec6a5b81c5764c66a5c8beb71e3e735592a511b37e356fc1ab7e34edc8d7b713f1ec4c378148fe3c96cef78aa7f9efd910cd52689b3ff6d99c72296b18a756c62fbad2bfd7beffda37e2bf35e3d4916fda4578f32fef9975ffe05c4f5c93a</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>btnCancel</sender>
+        <signal>clicked()</signal>
+        <receiver>QP_UIResize</receiver>
+        <slot>reject()</slot>
+    </connection>
+    <connection>
+        <sender>btnOk</sender>
+        <signal>clicked()</signal>
+        <receiver>QP_UIResize</receiver>
+        <slot>accept()</slot>
+    </connection>
+</connections>
+<layoutdefaults spacing="6" margin="11"/>
+<includehints>
+    <includehint>qp_combospin.h</includehint>
+    <includehint>qp_combospin.h</includehint>
+    <includehint>qp_combospin.h</includehint>
+</includehints>
+</UI>

@@ -1,0 +1,78 @@
+Installation
+------------
+
+If this is a source package, then you need to compile.
+
+
+Compiling
+---------
+
+Requirements:
+  - Qt 3.1.0 multithreaded, nothing less!
+  - libparted >= 1.6.6
+  - header of libparted
+  - (optional, for reiserfs) progsreiserfs >= 3.0.4
+  - (optional, for ntfs) ntfsprogs 1.7.1 (tested only with this release)
+
+
+
+NOTE ON QT 3.0 COMPATIBILITY:
+QTParted can compile also with QT 3.0, just type "./configure --help" for
+more information!
+
+
+You can obtain Qt at http://www.trolltech.com/
+If you use Debian just type:
+apt-get install libqt3-mt-dev qt3-tools
+
+If you want to install libparted and you use Debian testing/unstable i'm happy
+to say that it exist also a deb of the libparted-dev :)
+
+If you use another distribution... don't bother me but your mantainer! :)
+
+To build QTParted, do:
+
+  % ./configure
+  % make
+
+If you want to install QTParted in other path than /usr/local you must pass
+some option to configure, like "./configure --prefix=/usr". For more information
+about configure script type "./configure --help"
+
+(Do not stop here.  Please read the rest of this file.)
+
+Configure script has several options: the most useful are those that able to
+change the path of external tools. For example if you want to change the path
+of mkfs.ext3 just use "./configure --mkfs.ext3=/new/path/mkfs.ext3". I want
+to underline that it is possible to change the path also when qtparted is
+compiled, using the configuration dialog.
+
+If you get an error running qmake, then you don't have a proper Qt3
+development environment setup.  Please make sure you have Qt3 installed,
+and direct any questions towards the package maintainer of wherever you
+got Qt3.  Please don't ask me how to setup Qt3, I get enough mail already.
+
+Now, if the compile fails, then you're allowed to email me :)
+
+If you use Debian just try to export these before run qmake:
+export QTDIR=/usr/share/qt
+export QMAKESPEC=linux-g++
+
+Notes about compiling:
+    * QTParted is developed using g++ 3.2
+      Actually it should compile fine also with the good old 2.95
+
+    * When you compile the source you'll get a lot of warning about libparted,
+      however using g++ 3.2 of Debian SID this doesn't happen... why?
+
+    * QTParted is developed using QT 3.1.1, however i'm almost sure that
+      it compile also under QT 3.0.3, 'cause when i started to develop it
+      i used that release.
+
+
+Alright, if the compile succeeded, you should have an executable called
+"qtparted". Just run it (as root).
+
+If you like it... just "make install" :)
+
+-Vanni

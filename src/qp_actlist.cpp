@@ -1,0 +1,668 @@
+/*
+    qtparted - a frontend to libparted for manipulating disk partitions
+    Copyright (C) 2002-2003 Vanni Brutto
+
+    Vanni Brutto <zanac (-at-) libero dot it>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
+
+#include <qapplication.h>
+#include "qp_filesystem.h"
+#include "qp_actlist.h"
+#include "qp_options.h"
+#include "statistics.h"
+
+/*---type (move+resize), num, start, end---*/
+QP_ActListItem::QP_ActListItem(QTParted::actType action,
+                               int num,
+                               PedSector start,
+                               PedSector end,
+                               PedGeometry geom,
+                               PedPartitionType part_type) {
+    _action = action;
+    _num = num;
+    _start = start;
+    _end = end;
+    _geom = geom;
+    _part_type = part_type;
+}
+
+/*---type, num---*/
+QP_ActListItem::QP_ActListItem(QTParted::actType action,
+                               int num) {
+    _action = action;
+    _num = num;
+}
+
+QP_ActListItem::QP_ActListItem(QTParted::actType action,
+                               int num,
+                               bool active) {
+    _action = action;
+    _num = num;
+    _active = active;
+}
+
+/*---for format! :)---*/
+QP_ActListItem::QP_ActListItem(QTParted::actType action,
+                               int num,
+                               QP_FileSystemSpec *fsspec,
+                               QString label,
+                               PedGeometry geom,
+                               PedPartitionType part_type) {
+    _action = action;
+    _num = num;
+    _fsspec = fsspec;
+    _label = label;
+    _geom = geom;
+    _part_type = part_type;
+}
+
+/*---type, logical/extended, start, end, typoFS, label---*/
+QP_ActListItem::QP_ActListItem(QTParted::actType action,
+                               QTParted::partType type,
+                               PedSector start,
+                               PedSector end,
+                               QP_FileSystemSpec *fsspec,
+                               QString label,
+                               PedGeometry geom,
+                               PedPartitionType part_type) {
+    _action = action;
+    _type = type;
+    _start = start;
+    _end = end;
+    _fsspec = fsspec;
+    _label = label;
+    _geom = geom;
+    _part_type = part_type;
+}
+
+QP_ActionList::QP_ActionList(QP_LibParted *libparted) {
+    /*---prevent from memory leak: when list are cleared destroy actlistitem object!---*/
+    actlist.setAutoDelete(true);
+
+    /*---prevent from memory leak: when list are cleared destroy partinfo object!---*/
+    orig_logilist.setAutoDelete(true);
+    orig_partlist.setAutoDelete(true);
+
+
+    PedDisk *disk;
+    _libparted = libparted;
+
+    /*---save of the original device state---*/
+    disk = ped_disk_new(_libparted->dev);
+    listdisk.append(disk);
+
+    /*---make a backup of the disk (we will use this)---*/
+    _disk = ped_disk_duplicate(disk);
+
+    /*---make the partlist of the disk---*/
+    scan_partitions();
+}
+
+QP_ActionList::~QP_ActionList() {
+    actlist.clear();
+    orig_logilist.clear();
+    orig_partlist.clear();
+    
+}
+
+void QP_ActionList::update_listpartitions() {
+    /*---initialize active partition---*/
+    _partActive = NULL;
+
+    logilist.clear();
+    partlist.clear();
+
+    _libparted->has_extended = false;
+
+    PedConstraint* constraint = NULL;
+	PedPartition*	part = NULL;
+	for (part = ped_disk_next_partition(disk(), NULL); part;
+	     part = ped_disk_next_partition(disk(), part)) {
+
+        if (part->type & PED_PARTITION_METADATA)
+            continue;
+
+        QP_PartInfo *found = NULL;
+        
+        /*---if not freespace...*/
+        if (!(part->type & PED_PARTITION_FREESPACE)) {
+            /*---loop for all partition of the disk---*/
+            QP_PartInfo *p;
+            for (p = (QP_PartInfo*)orig_partlist.first(); p; p = (QP_PartInfo*)orig_partlist.next()) {
+                if (p->type != QTParted::extended) {
+                    if ((p->_geometry.start == part->geom.start)
+                    &&  (p->_geometry.end == part->geom.end)
+                    &&  (p->_geometry.length == part->geom.length)) {
+                        found = p;
+                    }
+                } else {
+                    QP_PartInfo *logi;
+                    /*---loop for every logical partitions---*/
+                    for (logi = (QP_PartInfo*)orig_logilist.first(); logi; logi = (QP_PartInfo*)orig_logilist.next()) {
+                        if ((logi->_geometry.start == part->geom.start)
+                        &&  (logi->_geometry.end == part->geom.end)
+                        &&  (logi->_geometry.length == part->geom.length)) {
+                            found = logi;
+                        }
+                    }
+                }
+            }
+        }
+        
+        /*if (part->type & PED_PARTITION_EXTENDED) {
+            const char *part_filesystem = part->fs_type ? part->fs_type->name : "";
+        }*/
+
+        QP_PartInfo *partinfo;
+        if (found) {
+            partinfo = new QP_PartInfo();
+            partinfo->start = found->start;
+            partinfo->end = found->end;
+            partinfo->_geometry = found->_geometry;
+            //partinfo->num = found->num;
+            partinfo->setDevice(found->device());
+            partinfo->min_size = found->min_size;
+            partinfo->label = found->label;
+            partinfo->_free = found->_free;
+            partinfo->_unknow = found->_unknow;
+            partinfo->_libparted = found->_libparted;
+            partinfo->_active = found->_active;
+            partinfo->_canBeActive = found->_canBeActive;
+            partinfo->_virtual = found->_virtual;
+            //partinfo->type = found->type;
+            partinfo->fsspec = found->fsspec;
+            //partinfo->t_start = found->t_start;
+            //partinfo->t_end = found->t_end;
+        } else {
+            partinfo = new QP_PartInfo();
+            partinfo->start = part->geom.start;
+            partinfo->end = part->geom.end;
+            partinfo->_geometry = part->geom;
+            //partinfo->num = part->num;
+            partinfo->setDevice(_libparted->_qpdevice);
+            partinfo->min_size = -1;
+            partinfo->label = QString::null;
+            partinfo->_free = _libparted->filesystem->free();
+            partinfo->_unknow = _libparted->filesystem->unknow();
+            partinfo->_libparted = _libparted;
+            partinfo->_active = false;
+            partinfo->_canBeActive = false;
+            partinfo->_virtual = false;
+            //partinfo->t_start = -1;
+            //partinfo->t_end = -1;
+
+            /*if (part->type & PED_PARTITION_LOGICAL)
+                partinfo->type = QTParted::logical;
+            else if (part->type & PED_PARTITION_EXTENDED) {
+                partinfo->type = QTParted::extended;
+                _libparted->has_extended = true;
+            }
+            else partinfo->type = QTParted::primary;*/
+
+            const char *part_filesystem = part->fs_type ? part->fs_type->name : "";
+            if (part->type & PED_PARTITION_FREESPACE) {
+                partinfo->fsspec = _libparted->filesystem->free();
+            } else {
+                partinfo->fsspec = _libparted->filesystem->nameToFSSpec(part_filesystem); //fat16, fat32 etc etc
+            }
+        }
+
+        //'cause the number can change use ALWAYS the right PedPartition number!
+        partinfo->num = part->num;
+        
+        if (part->type & PED_PARTITION_LOGICAL)
+            partinfo->type = QTParted::logical;
+        else if (part->type & PED_PARTITION_EXTENDED) {
+            partinfo->type = QTParted::extended;
+            _libparted->has_extended = true;
+        }
+        else partinfo->type = QTParted::primary;
+
+
+        //---get how much the partition can grow at left and at right
+        //---get also if the partiton is "active"
+        //---of course do all this stuff only if this is not freespace ;)
+        if (!partinfo->isFree()) {
+            constraint = ped_constraint_any(_libparted->dev);
+            PedGeometry *geometry = ped_disk_get_max_partition_geometry(disk(), part, constraint);
+            if (geometry != NULL) {
+                partinfo->t_start = geometry->start;
+                partinfo->t_end = geometry->end;
+            } else {
+                partinfo->t_start = -1;
+                partinfo->t_end = -1;
+            }
+
+            /*---get if the partition is active---*/
+            partition_get_flags(partinfo, part);
+        }
+
+
+        /*---compare if the partition has not committed... and if so update
+         *   some field (ie filesystem, and active flag, to reflect the change that
+         *   use made on listchart but that are not saved on the disk!---*/
+        get_partinfo(partinfo, part);
+
+        /*---if this is a virtual partition do not show how space fill the device---*/
+        if (partinfo->isVirtual()) {
+            partinfo->min_size = -1;
+        }
+
+        if (partinfo->type == QTParted::logical)
+             logilist.append(partinfo);
+        else partlist.append(partinfo);
+
+    }
+
+}
+
+void QP_ActionList::scan_partitions() {
+    /*---initialize active partition---*/
+    _partActive = NULL;
+
+    orig_logilist.clear();
+    orig_partlist.clear();
+
+    PedConstraint *constraint = NULL;
+	PedPartition *part = NULL;
+	for (part = ped_disk_next_partition(disk(), NULL); part;
+	     part = ped_disk_next_partition(disk(), part)) {
+
+        if (part->type & PED_PARTITION_METADATA)
+            continue;
+
+        QP_PartInfo *partinfo = new QP_PartInfo();
+        partinfo->start = part->geom.start;
+        partinfo->end = part->geom.end;
+        partinfo->_geometry = part->geom;
+        partinfo->num = part->num;
+        partinfo->setDevice(_libparted->_qpdevice);
+        partinfo->min_size = -1;
+        partinfo->label = QString::null;
+        partinfo->_free = _libparted->filesystem->free();
+        partinfo->_unknow = _libparted->filesystem->unknow();
+        partinfo->_libparted = _libparted;
+        partinfo->_active = false;
+        partinfo->_canBeActive = false;
+        partinfo->_virtual = false;
+
+        if (part->type & PED_PARTITION_LOGICAL)
+            partinfo->type = QTParted::logical;
+        else if (part->type & PED_PARTITION_EXTENDED) {
+            partinfo->type = QTParted::extended;
+        }
+        else partinfo->type = QTParted::primary;
+                         
+        const char *part_filesystem = part->fs_type ? part->fs_type->name : "";
+
+        if (part->type & PED_PARTITION_FREESPACE) {
+            partinfo->fsspec = _libparted->filesystem->free();
+            partinfo->t_start = -1;
+            partinfo->t_end = -1;
+        } else {
+            /*---get if the partition is active---*/
+            partition_get_flags(partinfo, part);
+
+            partinfo->fsspec = _libparted->filesystem->nameToFSSpec(part_filesystem); //fat16, fat32 etc etc
+
+            //---get how much the partition can grow at left and at right, but only if the partition is not free space!
+            constraint = ped_constraint_any(_libparted->dev);
+            PedGeometry *geometry =
+                ped_disk_get_max_partition_geometry(disk(), part, constraint);
+            if (geometry != NULL) {
+                partinfo->t_start = geometry->start;
+                partinfo->t_end = geometry->end;
+            } else {
+                partinfo->t_start = -1;
+                partinfo->t_end = -1;
+            }
+        }
+
+        if (partinfo->type == QTParted::logical)
+             orig_logilist.append(partinfo);
+        else orig_partlist.append(partinfo);
+    }
+
+
+
+    /*---count how partition are in the disk---*/
+    int totPart = orig_partlist.count() + orig_logilist.count();
+
+    /*---loop for all partition of the disk---*/
+    QP_PartInfo *p;
+    int i = 0;
+    for (p = (QP_PartInfo*)orig_partlist.first(); p; p = (QP_PartInfo*)orig_partlist.next()) {
+        if (p->type != QTParted::extended) {
+            i++;
+            if (!p->isFree()) {
+                /*---emit a signal for update the progressbar---*/
+                _libparted->_message = QString(tr("Getting info about partition %1."))
+                                   .arg(p->partname());
+                _libparted->emitSigTimer(i*100/totPart, _libparted->message(), QString::null);
+
+                /*---get info about this primary partition---*/
+                part = ped_disk_get_partition(disk(), p->num);
+                if (part) get_partfilesystem_info(part, p);
+            }
+        } else {
+            QP_PartInfo *logi;
+            /*---loop for every logical partitions---*/
+            for (logi = (QP_PartInfo*)orig_logilist.first(); logi; logi = (QP_PartInfo*)orig_logilist.next()) {
+                i++;
+                if (!logi->isFree()) {
+                    /*---emit a signal for update the progressbar---*/
+                    _libparted->_message = QString(tr("Getting info about partition %1."))
+                                       .arg(logi->partname());
+                    _libparted->emitSigTimer(i*100/totPart, _libparted->message(), QString::null);
+                
+                    /*---get info about this logical partition---*/
+                    part = ped_disk_get_partition(disk(), logi->num);
+                    if (part) get_partfilesystem_info(part, logi);
+                }
+            }
+        }
+    }
+    
+    _libparted->emitSigTimer(100, _libparted->message(), QString::null);
+}
+
+bool QP_ActionList::get_partfilesystem_info(PedPartition *part, QP_PartInfo *partinfo) {
+    /*---if the partition is virtual (ie change not committed) we cannot determinate
+     *   how much the filesystem is fill---*/
+    if (partinfo->_virtual) {
+        partinfo->min_size = -1;
+        return true;
+    }
+
+    /*---is the filesystem supported by parted?---*/
+    PedFileSystem *fs = ped_file_system_open(&part->geom);
+    if (!fs) {
+        /*---get the min_size from space_stats (that is a "df" wrapper)---*/
+        partinfo->min_size = space_stats(partinfo);
+
+        return true;
+    }
+
+    /*---get the minimum filesystem size---*/
+    PedConstraint *resize_constraint = ped_file_system_get_resize_constraint(fs);
+    if (resize_constraint) {
+        partinfo->min_size = resize_constraint->min_size;
+        ped_constraint_destroy (resize_constraint);
+    }
+
+    ped_file_system_close(fs);
+
+    return true;
+}
+
+
+void QP_ActionList::ins_resize(int num,
+                               PedSector start,
+                               PedSector end,
+                               PedGeometry geom,
+                               PedPartitionType part_type) {
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::resize, num, start, end,
+                                                     geom, part_type);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
+void QP_ActionList::ins_move(int num,
+                             PedSector start,
+                             PedSector end,
+                             PedGeometry geom,
+                             PedPartitionType part_type) {
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::move, num, start, end,
+                                                     geom, part_type);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
+void QP_ActionList::ins_rm(int num) {
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::rm, num);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
+void QP_ActionList::ins_mkfs(QP_FileSystemSpec *fsspec, int num, QString label, PedGeometry geom, PedPartitionType part_type) {
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::format, num, fsspec, label, geom, part_type);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
+void QP_ActionList::ins_mkpart(QTParted::partType type,
+                               PedSector start,
+                               PedSector end,
+                               QP_FileSystemSpec *fsspec,
+                               QString label,
+                               PedGeometry geom,
+                               PedPartitionType part_type) {
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::create, type,
+                                                     start, end, fsspec, label, geom, part_type);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
+void QP_ActionList::ins_active(int num, bool active) {
+    QP_ActListItem *actlistitem = new QP_ActListItem(QTParted::active, num, active);
+    actlist.append(actlistitem);
+
+    ins_newdisk();
+}
+
+void QP_ActionList::get_partinfo(QP_PartInfo *partinfo, PedPartition *part) {
+    /*---loop for every action saved---*/
+    QP_ActListItem *pl;
+    for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
+        /*---if you saved a mkpart (Create) and the geometry match... man: we have a virtual!---*/
+        if ((pl->_action == QTParted::create)
+        ||  (pl->_action == QTParted::resize)
+        ||  (pl->_action == QTParted::move)
+        ||  (pl->_action == QTParted::format)) {
+            if ((part->geom.start == pl->_geom.start)
+            &&  (part->geom.end == pl->_geom.end)
+            &&  (part->geom.length == pl->_geom.length)
+            &&  (part->type == pl->_part_type)) {
+                partinfo->_virtual = true;
+
+                if (pl->_action == QTParted::create) partinfo->fsspec = pl->_fsspec;
+                if (pl->_action == QTParted::format) partinfo->fsspec = pl->_fsspec;
+            }
+        }
+    }
+}
+
+bool QP_ActionList::canUndo() {
+    return (listdisk.first() != listdisk.last());
+}
+
+void QP_ActionList::undo() {
+    /*---destroy the state of the disk in this moment---*/
+    ped_disk_destroy(_disk);
+
+    /*---undo last operation---*/
+    PedDisk *disk = (PedDisk *)listdisk.last();
+    ped_disk_destroy(disk);
+    listdisk.removeLast();
+
+    /*---restore last state---*/
+    _disk = ped_disk_duplicate((PedDisk *)listdisk.last());
+
+    /*---remove last operation---*/
+    actlist.removeLast();
+
+    /*---the state of the disk... is of course changed---*/
+    emit sigDiskChanged();
+}
+
+void QP_ActionList::commit() {
+    //messageState, used to keep "error message" returned by libparted
+    QString messageState = QString::null;
+    
+    /*---undo all disk state---*/
+    while (listdisk.first() != listdisk.last()) {
+        PedDisk *disk = (PedDisk *)listdisk.last();
+        ped_disk_destroy(disk);
+        listdisk.removeLast();
+    }
+    _disk = ped_disk_duplicate((PedDisk *)listdisk.first());
+    
+    /*---commit the operations in "batch" mode---*/
+    _libparted->setWrite(true);
+
+    bool rc = true;
+    
+    //counter of how much operations are done!
+    int i = 0;
+    int iTotAct = actlist.count() + 1;
+        
+    QP_ActListItem *pl;
+    for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
+        //---mkpart commit---
+        if (pl->_action == QTParted::create) {
+            emit sigOperations(tr("Creating partition."), messageState, i++, iTotAct);
+            if (!_libparted->mkpartfs(pl->_type, pl->_fsspec, pl->_start, pl->_end, pl->_label)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+        //---rm commit---
+        else if (pl->_action == QTParted::rm) {
+            emit sigOperations(tr("Preparation for removing a partition."), messageState, i++, iTotAct);
+            scan_partitions();
+            _libparted->scan_orig_partitions();
+
+            emit sigOperations(tr("Removing a partition."), messageState, i, iTotAct);
+            if (!_libparted->rm(pl->_num)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+        //---resize commit---
+        else if (pl->_action == QTParted::resize) {
+            emit sigOperations(tr("Preparation for resizing a partition."), messageState, i++, iTotAct);
+            scan_partitions();
+            _libparted->scan_orig_partitions();
+
+            emit sigOperations(tr("Resizing a partition."), messageState, i, iTotAct);
+            if (!_libparted->resize(pl->_num, pl->_start, pl->_end)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+        //---move commit---
+        else if (pl->_action == QTParted::move) {
+            emit sigOperations(tr("Preparation for moving a partition."), messageState, i++, iTotAct);
+            scan_partitions();
+            _libparted->scan_orig_partitions();
+
+            emit sigOperations(tr("Moving a partition."), messageState, i, iTotAct);
+            if (!_libparted->move(pl->_num, pl->_start, pl->_end)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+        //---active commit---
+        else if (pl->_action == QTParted::active) {
+            emit sigOperations(tr("Preparation for activating a partition."), messageState, i++, iTotAct);
+            scan_partitions();
+            _libparted->scan_orig_partitions();
+
+            emit sigOperations(tr("Activating a partition."), messageState, i, iTotAct);
+            if (!_libparted->partition_set_flag_active(pl->_num, pl->_active)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+        //---active commit---
+        else if (pl->_action == QTParted::format) {
+            emit sigOperations(tr("Preparation for formatting a partition."), messageState, i++, iTotAct);
+            scan_partitions();
+            _libparted->scan_orig_partitions();
+
+            emit sigOperations(tr("Formatting a partition."), messageState, i, iTotAct);
+            if (!_libparted->mkfs(pl->_num, pl->_fsspec, pl->_label)) {
+                messageState = _libparted->message();
+                rc = false;
+            }
+        }
+
+        /*---just update GUI---*/
+        qApp->processEvents();
+        
+        if (rc == false) {
+            break;
+        }
+    }
+
+    actlist.clear();
+
+    /*---return in test mode---*/
+    _libparted->setWrite(false);
+
+    /*---remove the disk used---*/
+    ped_disk_destroy(_disk);
+
+    /*---remove also the original disk---*/
+    ped_disk_destroy((PedDisk *)listdisk.first());
+    listdisk.clear();
+
+    /*---prepare the list and the _disk---*/
+    PedDisk *disk = ped_disk_new(_libparted->dev);
+    listdisk.append(disk);
+    _disk = ped_disk_duplicate(disk);
+
+    emit sigOperations(tr("Rescan of the disk."), messageState, i, iTotAct);
+    
+    /*---make a new scan of the partitions---*/
+    scan_partitions();
+
+    emit sigOperations(tr("All operations completed."), messageState, iTotAct, iTotAct);
+
+    /*---the state of the disk... is of course changed---*/
+    emit sigDiskChanged();
+}
+
+PedDisk * QP_ActionList::disk() {
+    return _disk;
+}
+
+QP_PartInfo * QP_ActionList::partActive() {
+    return _partActive;
+}
+
+/*---this will get if the partition has active flag (ie is bootable)---*/
+void QP_ActionList::partition_get_flags(QP_PartInfo *partinfo, PedPartition *part) {
+    if (ped_partition_is_flag_available(part, PED_PARTITION_BOOT)) {
+        partinfo->_canBeActive = true;
+        bool active = bool(ped_partition_get_flag(part, PED_PARTITION_BOOT));
+        partinfo->_active = active;
+        if (active) _partActive = partinfo;
+    }
+}
+
+void QP_ActionList::ins_newdisk() {
+    listdisk.append(_disk);
+    _disk = ped_disk_duplicate(_disk);
+
+    emit sigDiskChanged();
+}

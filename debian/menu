@@ -1,0 +1,5 @@
+?package(qtparted): needs=X11 section="Apps/System"\
+  title="QTParted" \
+  command="/usr/bin/X11/xterm /usr/sbin/qtparted" \
+  hints="A tool for partitioning your hard drives." \
+  icon="/usr/share/pixmaps/qtparted.xpm"

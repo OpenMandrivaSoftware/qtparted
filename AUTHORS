@@ -1,0 +1,31 @@
+Vanni Brutto:
+QTParted program and Italian localization 
+
+François Dupoux <fdupoux@dupoux.com>
+Automake/autoconf porting, source code patch, beta testing
+
+David Rodríguez García <david-at-livux.com>:
+José "L. Redrejo"  <jredrejo-at-merida.uned.es>:
+Spanish localization
+
+Kai Lahmann <kl-at-3dots.de>
+German localization
+
+Alain PORTAL <aportal@univ-montp2.fr>
+French localization
+
+Radek Vybiral <Radek.Vybiral@vsb.cz>
+Czech localization
+
+<kaneda@bohater.org>
+Polish localization
+
+Justin Karneges <infiniti-at-affinix.com>
+Author of the configure file of PSI (a very nice jabber client).
+I used him configure file as prototype for mine :)
+
+Crispin <crispin@veall.com>
+Splash screen and icons
+
+Ralf Nolden <nolden@kde.org>
+Fix of the Debian package

@@ -1,0 +1,12 @@
+Begin3
+Title:          QtParted 
+Version:        0.4.0-beta1
+Entered-date:   
+Description:    
+Keywords:       Qt Partition tool based on GNU-Parted
+Author:         Vanni Brutto <zanac@libero.it> 
+Maintained-by:  Vanni Brutto <zanac@libero.it> 
+Home-page:      http://qtparted.sourceforge.net/ 
+Platforms:      Linux and other Unices
+Copying-policy: GNU Public License
+End

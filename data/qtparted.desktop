@@ -1,0 +1,12 @@
+[Desktop Entry]
+Exec=kdesu qtparted
+Name=QTParted
+Icon=qtparted.xpm
+Terminal=false
+Type=Application
+Comment=Application for partitioning a disk
+Comment[it]=Applicazione per il partizionamento di un disco
+Comment[fr]=Application pour partitionner un disque
+Comment[fi]=Kiintolevyn partitiointityökalu
+Encoding=UTF-8
+Categories=Application;System;QT;
