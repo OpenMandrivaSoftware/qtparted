@@ -258,14 +258,14 @@ bool QP_FSNtfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partin
     if (new_end < partinfo->end) {
         /*---update the filesystem---*/
 	    showDebug("%s", "shrinking filesystem...\n");
-        if (!ntfsresize(write, partinfo->partname(), new_end - new_start)) {
+        if (!ntfsresize(write, partinfo->partname(), new_end - new_start - 4*MEGABYTE_SECTORS)) {
 	        showDebug("%s", "shrinking filesystem ko\n");
             return false;
         }
 
         /*---and now update geometry of the partition---*/
         showDebug("%s", "update geometry...\n");
-        if (!libparted->set_geometry(partinfo, new_start, new_end + 4*MEGABYTE_SECTORS)) {
+        if (!libparted->set_geometry(partinfo, new_start, new_end)) {
             showDebug("%s", "update geometry ko\n");
             _message = libparted->message();
             return false;
@@ -290,7 +290,7 @@ bool QP_FSNtfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partin
         
         /*---first se the geometry of the partition---*/
         showDebug("%s", "update geometry...\n");
-        if (!libparted->set_geometry(partinfo, new_start, new_end + 4*MEGABYTE_SECTORS)) {
+        if (!libparted->set_geometry(partinfo, new_start, new_end)) {
             showDebug("%s", "update geometry ko\n");
             _message = libparted->message();
             return false;
@@ -307,7 +307,7 @@ bool QP_FSNtfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partin
         if (write) {
             /*---and now update the filesystem!---*/
 	        showDebug("%s", "enlarge filesystem...\n");
-            if (!ntfsresize(write, partinfo->partname(), new_end - new_start)) {
+            if (!ntfsresize(write, partinfo->partname(), new_end - new_start - 4*MEGABYTE_SECTORS)) {
 	            showDebug("%s", "enlarge filesystem ko\n");
                 return false;
             } else {
