@@ -8,8 +8,13 @@ TODO-for-0.4.1:
 ------------------
 - Support for XFS, JFS file systems:
   - XFS: growsfs
-- Support for Resier4
+  - JFS: growsfs
+- Support for Resier4 (detection only)
 - Merge convertfs
+- Bad blocks checking
+- Support for flags: hidden, lba, ...
+  (boot already supported)
+- Conversion from ext2 to ext3
 
 General TODO:
 -------------
