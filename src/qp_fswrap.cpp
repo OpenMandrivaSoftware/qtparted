@@ -34,6 +34,7 @@
 #define NOTFOUND tr("command not found")
 #define TMP_MOUNTPOINT "/tmp/mntqp"
 
+#define my_min(a,b) ((a)<(b) ? (a):(b))
 
 bool QP_FSWrap::fs_open(QString cmdline) {
 
@@ -992,12 +993,16 @@ QString QP_FSFat16::_get_label(PedPartition *) {
 
 
 /*---FAT32 WRAPPER---------------------------------------------------------------*/
-QString QP_FSFat32::_get_label(PedPartition *part) {
+QString QP_FSFat32::_get_label(PedPartition *part) 
+{
     char buffer[PED_SECTOR_SIZE];
     
-    if (!QP_FSWrap::read_sector(part, 0, 1, buffer)) {
+    if (!QP_FSWrap::read_sector(part, 0, 1, buffer)) 
+    {
         return QString::null;
-    } else {
+    } 
+    else 
+    {
         buffer[PED_SECTOR_SIZE-1] = 0;
         printf("returned buffer: %s\n", buffer);
         return QString::null;
@@ -1006,8 +1011,18 @@ QString QP_FSFat32::_get_label(PedPartition *part) {
 
 
 /*---EXT2 WRAPPER----------------------------------------------------------------*/
-QString QP_FSExt2::_get_label(PedPartition *) {
-    return QString::null;
+QString QP_FSExt2::_get_label(PedPartition *part) 
+{
+  char bootsect[512]; // sector number 2 (offset 1024)
+  char label[12];
+
+  if (!QP_FSWrap::read_sector(part, 2, 1, bootsect)) 
+     return QString::null;
+	
+  memset(label, 0, sizeof(label));
+  strncpy(label, bootsect+120, 11);
+
+  return QString(label);
 }
 
 
