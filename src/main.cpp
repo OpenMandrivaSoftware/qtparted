@@ -74,7 +74,7 @@ void print_usage(const char *program_name) {
 int main(int argc, char *argv[]) {
 // This allows to run QtParted with QtEmbedded without having
 // to pass parameters "-qws".
-#ifdef Q_WS_QWS // Frame Buffer 
+#ifdef Q_WS_QWS // Frame Buffer
     QApplication app(argc, argv, QApplication::GuiServer);
 #else // X11
     QApplication app(argc, argv);
@@ -166,6 +166,12 @@ int main(int argc, char *argv[]) {
     splash->show();
 
     mainwindow->init();
+
+#ifdef Q_WS_QWS // Frame Buffer
+    mainwindow->showMaximized();
+#endif // Q_WS_QWS
+
+
     mainwindow->show();
 
     bool rc = app.exec();
