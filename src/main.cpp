@@ -26,6 +26,7 @@
  * Of course i'm joking! Here QTParted create the mainwindow and show it.
  */
 
+#include <getopt.h>
 #include <qapplication.h>
 #include <qtranslator.h>
 #include <qmessagebox.h>
@@ -57,17 +58,83 @@ void checkDevfs() {
     }
 }
 
+void print_usage(const char *program_name) {
+    printf("Usage: %s [OPTION]...\n", program_name);
+    printf("A nice QT GUI for libparted\n\n");
+    printf("Elenco opzioni supportate:\n");
+    printf("  -l, --log=value       use 1 to enable log, 0 for disable it.\n"
+           "                        [default = 1])\n");
+    printf("  -h, --help            Show this usage message\n");
+    printf("\n\n%s by Zanac copyright 2003\n", program_name);
 
-int main(int argc, char *argv[])
-{
+    exit(EXIT_SUCCESS);
+}
+
+
+int main(int argc, char *argv[]) {
 // This allows to run QtParted with QtEmbedded without having
 // to pass parameters "-qws".
 #ifdef Q_WS_QWS // Frame Buffer 
-   QApplication app(argc, argv, QApplication::GuiServer);
+    QApplication app(argc, argv, QApplication::GuiServer);
 #else // X11
-   QApplication app(argc, argv);
+    QApplication app(argc, argv);
 #endif // Q_WS_QWS
-   //QApplication app(argc, argv, "qtparted");
+
+    /*---program name ;)---*/
+    const char *program_name = argv[0];
+
+    int next_option;
+
+    /*---Flag log on/off, default 1 = on---*/
+    int iLog = 1;
+
+    /*---valid short options---*/
+    const char *const short_options = "hl:";
+
+    /*---valid long options---*/
+    const struct option long_options[] = {
+        { "help",    0, NULL, 'h' },
+        { "log",     1, NULL, 'l' },
+        { NULL,      0, NULL, 0   } // end of getopt array
+    };
+
+    do {
+        next_option = getopt_long(argc, 
+                                  argv, 
+                                  short_options, 
+                                  long_options, 
+                                  NULL);
+
+        switch (next_option) {
+            case 'h': // -h ... --help
+                print_usage(program_name);
+                break;
+                
+            case 'l': // -l ... --log
+                if (!sscanf(optarg, "%d", &iLog)) {
+                    printf("You must specify a numeric value.\n"
+                           "Parameter \"%s\" is not valid for --log\n\n", optarg);
+                    print_usage(program_name);
+                }
+                
+                if ((iLog != 0) && (iLog != 1)) {
+                    printf("You must use 1/0 to set log on/off.\n"
+                           "Parameter \"%s\" is not valid for --log\n\n", optarg);
+                    print_usage(program_name);
+                }
+
+                break;
+                
+            case '?': // opzione invalida :(
+                print_usage(program_name);
+
+            case -1:  // opzioni concluse
+                break;
+
+            default:  // errore! inaspettato pure!
+                abort();
+        }
+    } while (next_option != -1);
 
     /*---install translation file for application strings---*/
     QTranslator *translator = new QTranslator(0);
@@ -75,7 +142,7 @@ int main(int argc, char *argv[])
     app.installTranslator(translator);
 
     /*---initialize the debug system---*/
-    g_debug.open();
+    if (iLog) g_debug.open();
     showDebug("QtParted debug logfile (http://qtparted.sf.net) version %s\n---------\n", VERSION);
 
     /*---check the Parted version---*/
@@ -85,7 +152,7 @@ int main(int argc, char *argv[])
     /*---check if the kernel support devfs---*/
     checkDevfs();
 
-     QP_Settings settings;
+    QP_Settings settings;
 
     mainwindow = new QP_MainWindow(&settings, 0, "QP_MainWindow");
     app.setMainWidget(mainwindow);
@@ -105,6 +172,7 @@ int main(int argc, char *argv[])
 
     delete mainwindow;
 
-    g_debug.close();
+    if (iLog) g_debug.close();
+
     return rc;
 }
