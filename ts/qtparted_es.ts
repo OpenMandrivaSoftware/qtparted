@@ -142,10 +142,6 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
         <translation>Nuevo examen del disco.</translation>
     </message>
     <message>
-        <source>All operations clompleted.</source>
-        <translation type="obsolete">Todas las operaciones han sido completadas.</translation>
-    </message>
-    <message>
         <source>Preparation for moving a partition.</source>
         <translation>Preparación para mover una partición.</translation>
     </message>
@@ -155,7 +151,7 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>All operations completed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Todas las operaciones han sido completadas.</translation>
     </message>
 </context>
 <context>
@@ -877,12 +873,8 @@ En otras palabras, ¡POR FAVOR DESMONTE TODAS LAS PARTICIONES antes de efectuar 
 <context>
     <name>QP_dlgAbout</name>
     <message>
-        <source>O&amp;K</source>
-        <translation type="obsolete">O&amp;K</translation>
-    </message>
-    <message>
         <source>&amp;OK</source>
-        <translation type="unfinished">&amp;Aceptar</translation>
+        <translation>&amp;Aceptar</translation>
     </message>
 </context>
 <context>
@@ -924,12 +916,8 @@ Current operation: %3</source>
 Operación actual: %3</translation>
     </message>
     <message>
-        <source>Operations completed sucessfull.</source>
-        <translation type="obsolete">Las operaciones se han completado con éxito.</translation>
-    </message>
-    <message>
         <source>Operations completed sucessfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Las operaciones se han completado con éxito.</translation>
     </message>
 </context>
 <context>

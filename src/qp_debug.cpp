@@ -1,5 +1,5 @@
 /***************************************************************************
-                         debug.cpp  -  description
+                         qp_debug.cpp  -  description
                              -------------------
     begin                : Wed Sep  4 19:21:54 UTC 2002
     copyright            : (C) 2002 by Francois Dupoux
@@ -22,31 +22,31 @@
 #include <stdarg.h>
 //#include <qmessagebox.h>
 
-#include "debug.h"
+#include "qp_debug.h"
 
 // define the global debug object
-QPDebug g_debug;
+QP_Debug g_debug;
 
 // =====================================
-QPDebug::QPDebug()
+QP_Debug::QP_Debug()
 {
    m_fDebug = NULL;
 }
 
 // =====================================
-QPDebug::~QPDebug()
+QP_Debug::~QP_Debug()
 {
 
 }
 
 // =====================================
-int QPDebug::isOpen()
+int QP_Debug::isOpen()
 {
    return (m_fDebug != NULL);
 }
 
 // =====================================
-int QPDebug::write(const char *fmt, ...)
+int QP_Debug::write(const char *fmt, ...)
 {
    va_list args;
 
@@ -62,7 +62,7 @@ int QPDebug::write(const char *fmt, ...)
 }
 
 // =====================================
-int QPDebug::write(const char *szFile, const char *szFunction, int nLine, const char *fmt, ...)
+int QP_Debug::write(const char *szFile, const char *szFunction, int nLine, const char *fmt, ...)
 {
    va_list args;
 
@@ -82,7 +82,7 @@ int QPDebug::write(const char *szFile, const char *szFunction, int nLine, const 
 }
 
 // =====================================
-int QPDebug::open()
+int QP_Debug::open()
 {
    QDateTime dt;
    QString strFilename;
@@ -105,7 +105,7 @@ int QPDebug::open()
 }
 
 // =====================================
-int QPDebug::close()
+int QP_Debug::close()
 {
    if (m_fDebug == NULL)
      return -1;

@@ -141,10 +141,6 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
         <translation>Scansionamento del disco.</translation>
     </message>
     <message>
-        <source>All operations clompleted.</source>
-        <translation type="obsolete">Tutte le operazioni sono state compiute con successo.</translation>
-    </message>
-    <message>
         <source>Preparation for moving a partition.</source>
         <translation>Preparazione per lo spostamento di una partizione.</translation>
     </message>
@@ -154,7 +150,7 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>All operations completed.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tutte le operazioni sono state compiute con successo.</translation>
     </message>
 </context>
 <context>
@@ -873,12 +869,8 @@ In altre parole PER FAVORE SMONTA TUTTE LE PARTIZIONI prima di applicare cambiam
 <context>
     <name>QP_dlgAbout</name>
     <message>
-        <source>O&amp;K</source>
-        <translation type="obsolete">O&amp;K</translation>
-    </message>
-    <message>
         <source>&amp;OK</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -920,12 +912,8 @@ Current operation: %3</source>
 Operazione corrente: %3</translation>
     </message>
     <message>
-        <source>Operations completed sucessfull.</source>
-        <translation type="obsolete">Operazioni compiute con successo.</translation>
-    </message>
-    <message>
         <source>Operations completed sucessfully.</source>
-        <translation type="unfinished"></translation>
+        <translation>Operazioni compiute con successo.</translation>
     </message>
 </context>
 <context>

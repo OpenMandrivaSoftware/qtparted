@@ -45,8 +45,8 @@ qtparted_SOURCES = qp_ui_config.ui      \
 				   qp_fswrap.cpp        \
 				   qp_sizepart.cpp      \
 				   qp_spinbox.cpp       \
+	               qp_debug.cpp         \
 				   runprog.cpp          \
-	                           debug.cpp            \
                    statistics.cpp
 
 noinst_HEADERS =   qtparted.h           \

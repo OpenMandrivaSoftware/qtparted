@@ -1,5 +1,5 @@
 /***************************************************************************
-                          debug.h  -  description
+                          qp_debug.h  -  description
                              -------------------
     begin                : Wed Sep  4 19:21:54 UTC 2002
     copyright            : (C) 2002 by Francois Dupoux
@@ -15,21 +15,21 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef DEBUG_H
-#define DEBUG_H
+#ifndef QP_DEBUG_H
+#define QP_DEBUG_H
 
 #include <stdio.h>
 
-class QPDebug;
-extern QPDebug g_debug;
+class QP_Debug;
+extern QP_Debug g_debug;
 
 #define showDebug(format, args...) g_debug.write(__FILE__, __FUNCTION__, __LINE__, format, ## args)
 
-class QPDebug
+class QP_Debug
 {
    public:
-      QPDebug();
-      ~QPDebug();
+      QP_Debug();
+      ~QP_Debug();
 
       int open();
       int close();

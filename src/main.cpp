@@ -37,7 +37,7 @@
 #include "qp_settings.h"
 #include "qp_common.h"
 #include "qp_options.h"
-#include "debug.h"
+#include "qp_debug.h"
 
 QP_MainWindow *mainwindow;
 

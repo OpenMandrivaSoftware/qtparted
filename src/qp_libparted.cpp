@@ -28,7 +28,7 @@
 #include "qp_actlist.h"
 #include "qp_common.h"
 #include "qp_options.h"
-#include "debug.h"
+#include "qp_debug.h"
 
 #define MIN_FREESPACE		(1000 * 2)	/* 1000k */
 #define PED_ASSERT(cond, action)        while (0) {}
@@ -65,14 +65,17 @@ QP_Device *QP_PartInfo::device() {
 }
 
 void QP_PartInfo::setDevice(QP_Device *device) {
+    showDebug("%s", "partinfo::setDevice\n");
     _device = device;
 }
 
 float QP_PartInfo::mb_t_start() {
+    showDebug("%s", "partinfo::mb_t_start\n");
     return t_start * 1.0 / MEGABYTE_SECTORS;
 }
 
 float QP_PartInfo::mb_t_end() {
+    showDebug("%s", "partinfo::mb_t_end\n");
     return t_end * 1.0 / MEGABYTE_SECTORS;
 }
 
@@ -128,6 +131,7 @@ bool QP_PartInfo::setActive(bool active) {
 }
     
 bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
+    showDebug("%s", "partinfo::resize\n");
     if (isVirtual()) {
         _libparted->_message = QString(tr("This is a virtual partition. You cannot alter it: use undo instead."));
         return false;
@@ -145,6 +149,7 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
         /*---does it exist a resize wrapper?                ---
          *---please note that this test should be a surplus!---*/
         if (fsspec->fswrap()->wrap_resize) {
+	        showDebug("%s", "Resizing a filesystem using a wrapper\n");
             
             bool rc;
             /*---the user want to shrink or enlarge the partition?---*/
@@ -152,21 +157,26 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
             /*---the user want to shrink!---*/
             if (new_end < end) {
                 /*---update the filesystem---*/
+	            showDebug("%s", "shrinking filesystem...\n");
                 rc = fsspec->fswrap()->resize(_libparted->_write, partname(), new_end - new_start);
                 if (!rc) {
+	                showDebug("%s", "shrinking filesystem ko\n");
                     _libparted->_message = fsspec->fswrap()->message();
                     _libparted->emitSigTimer(100, _libparted->message(), QString::null);
                     return false;
                 }
 
                 /*---and now update geometry of the partition---*/
+                showDebug("%s", "update geometry...\n");
                 rc = _libparted->set_geometry(this, new_start, new_end + 4*MEGABYTE_SECTORS);
                 if (!rc) {
+                    showDebug("%s", "update geometry ko\n");
                     _libparted->emitSigTimer(100, _libparted->message(), QString::null);
                     return false;
                 } else {
                     /*---if you are NOT committing then add in the undo/commit list---*/
                     if (!_libparted->_write) {
+                        showDebug("%s", "operation added to undo/commit list\n");
                         PedPartitionType parttype = _libparted->type2parttype(type);
                         PedGeometry geom = _libparted->get_geometry(this);
                         _libparted->actlist->ins_resize(num, new_start, new_end, geom, parttype);
@@ -178,17 +188,21 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
             } else {
                 /*---cannot enlarge if we cannot change disk geometry!---*/
                 if (device()->isBusy()) {
+                    showDebug("%s", "the device is busy, so you cannot enlarge it\n");
                     _libparted->_message = tr("Cannot enlarge a partition if the disk device is busy");
                     return false;
                 }
                 
                 /*---first se the geometry of the partition---*/
+                showDebug("%s", "update geometry...\n");
                 if (!_libparted->set_geometry(this, new_start, new_end + 4*MEGABYTE_SECTORS)) {
+                    showDebug("%s", "update geometry ko\n");
                     _libparted->emitSigTimer(100, _libparted->message(), QString::null);
                     return false;
                 } else {
                     /*---if you are NOT committing then add in the undo/commit list---*/
                     if (!_libparted->_write) {
+                        showDebug("%s", "operation added to undo/commit list\n");
                         PedPartitionType parttype = _libparted->type2parttype(type);
                         PedGeometry geom = _libparted->get_geometry(this);
                         _libparted->actlist->ins_resize(num, new_start, new_end, geom, parttype);
@@ -197,7 +211,9 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
 
                 if (_libparted->_write) {
                     /*---and now update the filesystem!---*/
+	                showDebug("%s", "enlarge filesystem...\n");
                     if (!fsspec->fswrap()->resize(_libparted->_write, partname(), new_end - new_start)) {
+	                    showDebug("%s", "enlarge filesystem ko\n");
                         _libparted->_message = fsspec->fswrap()->message();
                         _libparted->emitSigTimer(100, _libparted->message(), QString::null);
                         return false;
@@ -212,10 +228,13 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
         }
     } else {
         /*---the filesystem is supported by libparted, :)---*/
+        showDebug("%s", "resize a filesystem using libparted\n");
         bool rc = _libparted->resize(this, new_start, new_end);
         if (!rc) {
+            showDebug("%s", "resize ko\n");
             _libparted->emitSigTimer(100, _libparted->message(), QString::null);
         } else {
+            showDebug("%s", "resize ok\n");
             _libparted->emitSigTimer(100, SUCCESS, QString::null);
         }
         return rc;
@@ -226,14 +245,18 @@ bool QP_PartInfo::resize(PedSector new_start, PedSector new_end) {
 }
 
 bool QP_PartInfo::mkfs(QP_FileSystemSpec *fsspec, QString label) {
+    showDebug("%s", "partinfo::mkfs\n");
     if (isVirtual()) {
         _libparted->_message = QString(tr("Bug during mkfs! Cannot format virtual partitions!"));
         return false;
-    } else
+    } else {
+        showDebug("%s", "qp_partinfo::mkfs\n");
         return _libparted->mkfs(this, fsspec, label);
+    }
 }
 
 bool QP_PartInfo::move(PedSector new_start, PedSector new_end) {
+    showDebug("%s", "partinfo::move\n");
     if (isVirtual()) {
         _libparted->_message = QString(tr("This is a virtual partition. You cannot alter it: use undo instead."));
         return false;
@@ -242,32 +265,40 @@ bool QP_PartInfo::move(PedSector new_start, PedSector new_end) {
     /*---set the virtual flag---*/
     _virtual = true;
 
+    showDebug("%s", "qp_partinfo::move\n");
     bool rc = _libparted->move(this, new_start, new_end);
     if (!rc) {
+        showDebug("%s", "qp_partinfo::move ko\n");
         _libparted->emitSigTimer(100, _libparted->message(), QString::null);
     } else {
+        showDebug("%s", "qp_partinfo::move ok\n");
         _libparted->emitSigTimer(100, SUCCESS, QString::null);
     }
     return rc;
 }
 
 bool QP_PartInfo::partition_is_busy() {
+    showDebug("%s", "partinfo::partition_is_busy\n");
     return _libparted->partition_is_busy(this->num);
 }
 
 bool QP_PartInfo::set_system(QP_FileSystemSpec *fsspec) {
+    showDebug("%s", "partinfo::set_system\n");
     return _libparted->set_system(this, fsspec);
 }
 
 bool QP_PartInfo::fswrap() {
+    showDebug("%s", "partinfo::fswrap\n");
     return fsspec->fswrap();
 }
 
 QString QP_PartInfo::message() {
+    showDebug("%s", "partinfo::message\n");
     return fsspec->fswrap()->message();
 }
 
 bool QP_PartInfo::isVirtual() {
+    showDebug("%s", "partinfo::isVirtual\n");
     return _virtual;
 }
 /*-end of QP_PartInfo----------------------------------------------------------------------------*/
@@ -317,6 +348,8 @@ void _timer_handler(PedTimer *timer, void *context) {
 
 
 QP_LibParted::QP_LibParted() {
+    showDebug("%s", "libparted::libparted\n");
+
     /*---get all filesystem supported by libparted---*/
     filesystem = new QP_FileSystem();
     get_filesystem(filesystem);
@@ -328,6 +361,7 @@ QP_LibParted::QP_LibParted() {
     _write = false;
 
     /*tacc*/
+    showDebug("%s", "creating timer for progressbar\n");
     timer_context.libparted = this;
 	timer = ped_timer_new (_timer_handler, &timer_context);
     if (!timer) printf("no timer!\n");
@@ -335,14 +369,19 @@ QP_LibParted::QP_LibParted() {
 }
 
 QP_LibParted::~QP_LibParted() {
+    showDebug("%s", "libparted::~libparted\n");
+
     /*TODO FIXME static void
     _done (PedDevice* dev)   in destroy!
     */
+    showDebug("%s", "destroy timer\n");
 	ped_timer_destroy(timer);
 
+    showDebug("%s", "destroy partlist\n");
     logilist.clear();
     partlist.clear();
 
+    showDebug("%s", "destroy filesystem wrapper\n");
     delete filesystem;
 
 //    if (disk) ped_disk_destroy(disk);
@@ -351,12 +390,15 @@ QP_LibParted::~QP_LibParted() {
 
 
 void QP_LibParted::setDevice(QP_Device *device) {
+    showDebug("%s", "libparted::setDevice\n");
+
     /*---set the device---*/
     _qpdevice = device;
     if (actlist) delete actlist;
 
     /*---the device has not partition table: return!---*/
     if (!device->partitionTable()) {
+        showDebug("%s", "the device has not partition table!\n");
         dev = NULL;
         actlist = NULL;
 
@@ -386,6 +428,8 @@ void QP_LibParted::setDevice(QP_Device *device) {
 
 /*--- update the partlist/logilist the the latest PedDisk of actlist---*/
 void QP_LibParted::scan_partitions() {
+    showDebug("%s", "libparted::scan_partitions\n");
+
     /*---delete old partition list---*/
     logilist.clear();
     partlist.clear();
@@ -394,6 +438,7 @@ void QP_LibParted::scan_partitions() {
     
     /*---if doesn't exist a partition table...---*/
     if (!_qpdevice->partitionTable()) {
+        showDebug("%s", "no partition table: make a fake partlist\n");
         /*---make a "fake" partition table---*/
         _mb_hdsize = 1;
         
@@ -424,11 +469,13 @@ void QP_LibParted::scan_partitions() {
 
     _message = QString(tr("Scanning all disk partitions."));
 
+    showDebug("%s", "call: update partlist of actlist\n");
     actlist->update_listpartitions();
 
     /*---loop for all partition of the disk---*/
     QP_PartInfo *p;
     for (p = (QP_PartInfo*)actlist->partlist.first(); p; p = (QP_PartInfo*)actlist->partlist.next()) {
+        showDebug("%s", "update partlist of libparted using last partlist of actlist\n");
         partlist.append(p);
 
         if (p->type == QTParted::extended) {
@@ -446,6 +493,8 @@ void QP_LibParted::scan_partitions() {
 
 /*--- update the partlist/logilist the the original PedDisk of actlist---*/
 void QP_LibParted::scan_orig_partitions() {
+    showDebug("%s", "libparted::scan_orig_partitions\n");
+    
     /*---delete old partition list---*/
     logilist.clear();
     partlist.clear();
@@ -459,6 +508,7 @@ void QP_LibParted::scan_orig_partitions() {
     /*---loop for all partition of the disk---*/
     QP_PartInfo *p;
     for (p = (QP_PartInfo*)actlist->orig_partlist.first(); p; p = (QP_PartInfo*)actlist->orig_partlist.next()) {
+        showDebug("%s", "update partlist of libparted using \"orig\" partlist of actlist\n");
         partlist.append(p);
 
         if (p->type == QTParted::extended) {
@@ -474,24 +524,27 @@ void QP_LibParted::scan_orig_partitions() {
 }
 
 QStrList QP_LibParted::device_probe() {
+    showDebug("%s", "libparted::device_probe\n");
     QStrList tmp;
 
     PedDevice *dev = NULL;
     ped_device_probe_all();
+    showDebug("%s", "probed all device\n");
     while((dev = ped_device_get_next(dev))) {
-      if ( dev->type == PED_DEVICE_IDE )
-        tmp.append(dev->path);
-        //addDevice( dev, ideRoot );
-      else if ( dev->type == PED_DEVICE_SCSI )
-        tmp.append(dev->path);
-        //addDevice( dev, scsiRoot );
-      else if ( dev->type == PED_DEVICE_DAC960 )
-        tmp.append(dev->path);
-        //addDevice( dev, dacRoot );
-      else
-        //printf("non so\n");
-        tmp.append(dev->path);
-        //addDevice( dev, unknownRoot );
+        showDebug("%s", "test the device type\n");
+        if ( dev->type == PED_DEVICE_IDE )
+          tmp.append(dev->path);
+          //addDevice( dev, ideRoot );
+        else if ( dev->type == PED_DEVICE_SCSI )
+          tmp.append(dev->path);
+          //addDevice( dev, scsiRoot );
+        else if ( dev->type == PED_DEVICE_DAC960 )
+          tmp.append(dev->path);
+          //addDevice( dev, dacRoot );
+        else
+          //printf("non so\n");
+          tmp.append(dev->path);
+          //addDevice( dev, unknownRoot );
     };
 
     return tmp;
@@ -499,6 +552,7 @@ QStrList QP_LibParted::device_probe() {
 
 
 qtp_DriveInfo QP_LibParted::device_info(QString strdev) {
+    showDebug("%s", "libparted::device_info\n");
     qtp_DriveInfo driveinfo;
     
     PedDevice *dev = ped_device_get((const char *)strdev.latin1());
@@ -520,6 +574,7 @@ qtp_DriveInfo QP_LibParted::device_info(QString strdev) {
 
 
 bool QP_LibParted::checkForParted() {
+    showDebug("%s", "libparted::checkForParted\n");
     int major, minor, micro;
     const char *version;
 
@@ -527,7 +582,7 @@ bool QP_LibParted::checkForParted() {
 	    printf ("Cannot get parted version\n");
         QString label = QString(QObject::tr("Cannot get parted version."));
         QMessageBox::information(NULL, PROG_NAME, label);
-	showDebug("%s", "Cannot get parted version\n");
+        showDebug("%s", "Cannot get parted version\n");
 
     	return false;
     }
@@ -536,8 +591,9 @@ bool QP_LibParted::checkForParted() {
        ((major == PARTED_REQUESTED_MAJOR) && (minor > PARTED_REQUESTED_MINOR)) ||
        ((major == PARTED_REQUESTED_MAJOR) && (minor == PARTED_REQUESTED_MINOR)
 	                                     && (micro >= PARTED_REQUESTED_MICRO))) {
-	showDebug("Parted version is okay: %d.%d.%d\n", PARTED_REQUESTED_MAJOR,
-	          PARTED_REQUESTED_MINOR, PARTED_REQUESTED_MICRO);
+        showDebug("Parted version is okay: %d.%d.%d\n", PARTED_REQUESTED_MAJOR,
+                                                        PARTED_REQUESTED_MINOR,
+                                                        PARTED_REQUESTED_MICRO);
         return true;
     } else {
         printf ("Parted homepage: http://www.gnu.org/software/parted/\n");
@@ -548,13 +604,15 @@ bool QP_LibParted::checkForParted() {
                     "Parted homepage: http://www.gnu.org/software/parted/"))
                     .arg(major) .arg(minor) .arg(micro)
                     .arg(PARTED_REQUESTED_MAJOR) .arg(PARTED_REQUESTED_MINOR) .arg(PARTED_REQUESTED_MICRO);
-	showDebug("%s", label.latin1());
+        showDebug("%s", label.latin1());
         QMessageBox::information(NULL, PROG_NAME, label);
         return false;
     }
 }
 
 void QP_LibParted::get_filesystem(QP_FileSystem *filesystem) {
+    showDebug("%s", "libparted::get_filesystem\n");
+
     /*---scan all filesystem supported by parted---*/
     PedFileSystemType* walk = NULL;
     for (walk = ped_file_system_type_get_next (NULL); walk;
@@ -579,20 +637,25 @@ void QP_LibParted::get_filesystem(QP_FileSystem *filesystem) {
 }
 
 bool QP_LibParted::partition_set_flag_active(QP_PartInfo *partinfo, bool active) {
+    showDebug("%s", "libparted::partition_set_flag_active\n");
+
     PedPartition *part;
 	part = ped_disk_get_partition(actlist->disk(), partinfo->num);
     if (!part) {
+        showDebug("%s", "libparted::partition_set_flag_active, get_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
 
     if (!ped_partition_is_flag_available(part, PED_PARTITION_BOOT)) {
+        showDebug("%s", "libparted::partition_set_flag_active, is_fag_available ko\n");
         _message = QString(tr("Cannot change the active status on this partition"));
         goto error;
         return false;
     }
 
     if (!ped_partition_set_flag(part, PED_PARTITION_BOOT, active)) {
+        showDebug("%s", "libparted::partition_set_flag_active, set_flag ko\n");
         _message = QString(ERROR_PED_PARTITION_SET_FLAG);
         goto error;
         return false;
@@ -600,9 +663,11 @@ bool QP_LibParted::partition_set_flag_active(QP_PartInfo *partinfo, bool active)
 
     if (_write) {
         if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::partition_set_flag_active, commit ko\n");
             return false;
         }
     } else {
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_active(partinfo->num, active);
     }
 
@@ -613,18 +678,24 @@ error:
 }
 
 bool QP_LibParted::partition_set_flag_active(int num, bool active) {
+    showDebug("%s", "libparted::set_flag_active\n");
+
     /*---scan to find the partinfo to resize---*/
     QP_PartInfo *partinfo = numToPartInfo(num);
+    showDebug("%s", "libparted::set_flag_active, numtopartinfo\n");
     return partition_set_flag_active(partinfo, active);
 }
 
 QP_PartInfo * QP_LibParted::numToPartInfo(int num) {
+    showDebug("%s", "libparted::numToPartInfo\n");
+
     /*---scan to find the partinfo to resize---*/
     
     /*---loop for all partition of the disk---*/
     QP_PartInfo *partinfo = NULL;
     QP_PartInfo *p;
     for (p = (QP_PartInfo*)partlist.first(); p; p = (QP_PartInfo*)partlist.next()) {
+        showDebug("%s", "libparted::numToPartInfo, scan for every partition\n");
         /*---does this partition match?---*/
         if (p->num == num)
             partinfo = p;
@@ -645,37 +716,44 @@ QP_PartInfo * QP_LibParted::numToPartInfo(int num) {
 }
 
 QP_PartInfo * QP_LibParted::partActive() {
+    showDebug("%s", "libparted::partActive\n");
+
     return actlist->partActive();
 }
 
-PedSector QP_LibParted::get_left_bound (PedSector sector, PedDisk *disk) {
-	PedPartition*	under_sector;
+PedSector QP_LibParted::get_left_bound(PedSector sector, PedDisk *disk) {
+    showDebug("%s", "libparted::get_left_bound\n");
 
-	under_sector = ped_disk_get_partition_by_sector (disk, sector);
-	PED_ASSERT (under_sector != NULL, return sector);
+    PedPartition *under_sector;
 
-	if (under_sector->type & PED_PARTITION_FREESPACE)
-		return under_sector->geom.start;
-	else
-		return sector;
+    under_sector = ped_disk_get_partition_by_sector (disk, sector);
+    PED_ASSERT (under_sector != NULL, return sector);
+
+    if (under_sector->type & PED_PARTITION_FREESPACE)
+        return under_sector->geom.start;
+    else
+        return sector;
 }
 
 PedSector QP_LibParted::get_right_bound (PedSector sector, PedDisk *disk) {
-	PedPartition*	under_sector;
+    showDebug("%s", "libparted::get_right_bound\n");
 
-	under_sector = ped_disk_get_partition_by_sector (disk, sector);
-	PED_ASSERT (under_sector != NULL, return sector);
+    PedPartition *under_sector;
 
-	if (under_sector->type & PED_PARTITION_FREESPACE)
-		return under_sector->geom.end;
-	else
-		return sector;
+    under_sector = ped_disk_get_partition_by_sector (disk, sector);
+    PED_ASSERT (under_sector != NULL, return sector);
+
+    if (under_sector->type & PED_PARTITION_FREESPACE)
+        return under_sector->geom.end;
+    else
+        return sector;
 }
 
 /* if the gap between the new partition and the partition-to-be-aligned is
  * less than MIN_FREESPACE, then gobble up the gap!
  */
 int QP_LibParted::grow_over_small_freespace (PedGeometry* geom, PedDisk *disk) {
+    showDebug("%s", "libparted::grow_oever_small_freespace\n");
 	PedSector	start;
 	PedSector	end;
 
@@ -696,6 +774,7 @@ int QP_LibParted::grow_over_small_freespace (PedGeometry* geom, PedDisk *disk) {
 }
 
 bool QP_LibParted::set_system(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec) {
+    showDebug("%s", "libparted::set_system\n");
     PedPartition *part;
     const PedFileSystemType *fs_type = NULL;
 
@@ -730,18 +809,22 @@ error:
 }
 
 bool QP_LibParted::mkfs(int num, QP_FileSystemSpec *fsspec, QString label) {
+    showDebug("%s", "libparted::mkfs(num)\n");
     /*---scan to find the partinfo to resize---*/
     QP_PartInfo *partinfo = numToPartInfo(num);
     
     if (partinfo) {
+        showDebug("%s", "libparted::mkfs, partinfo found\n");
         return partinfo->mkfs(fsspec, label);
     } else {
+        showDebug("%s", "libparted::mkfs, partinfo not found (ko)\n");
         _message = QString(tr("A bug was found in QTParted during \"mkfs\" scan, please report it!"));
         return false;
     }
 }
 
 int QP_LibParted::mkfs(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QString label) {
+    showDebug("%s", "libparted::mkfs(partinfo)\n");
     PedPartition *part;
     PedFileSystem *fs = NULL;
     PedFileSystemType *fs_type = NULL;
@@ -749,6 +832,7 @@ int QP_LibParted::mkfs(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QString
 
     part = ped_disk_get_partition(actlist->disk(), partinfo->num);
     if (!part) {
+        showDebug("%s", "libparted::mkfs, get_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
@@ -759,18 +843,23 @@ int QP_LibParted::mkfs(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QString
     /*---if there are not wrapper for write---*/
     if (!fsspec->fswrap()
     && _write) {
+        showDebug("%s", "libparted::mkfs, (NOT wrapper and want to commit)\n");
         /*---and change the filesystem id ;)---*/
         if (!ped_partition_set_system(part, fs_type)) {
+            showDebug("%s", "libparted::mkfs, set_system ko\n");
             _message = QString(ERROR_PED_PARTITION_SET_SYSTEM);
             goto error;
         }
 
     	fs = ped_file_system_create(&part->geom, fs_type, timer);
-	    if (!fs) 
+	    if (!fs) {
+            showDebug("%s", "libparted::mkfs, file_system_create ko\n");
             goto error;
+        }
     	ped_file_system_close(fs);
 
     	if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::mkfs, commit ko\n");
             goto error;
         }
     }
@@ -778,22 +867,29 @@ int QP_LibParted::mkfs(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QString
     /*---if it exist a wrapper just make the filesystem---*/
     if (fsspec->fswrap()
     && _write) {
+        showDebug("%s", "libparted::mkfs, (wrapper and want to commit)\n");
         bool rc = fsspec->fswrap()->mkpartfs(partinfo->partname(), label);
-        if (!rc) _message = fsspec->fswrap()->message();
+        if (!rc) {
+            showDebug("%s", "libparted::mkfs, file_system_create ko\n");
+            _message = fsspec->fswrap()->message();
+        }
         return rc;
 
         /*---and change the filesystem id ;)---*/
         if (!ped_partition_set_system(part, fs_type)) {
+            showDebug("%s", "libparted::mkfs, set_system ko\n");
             _message = QString(ERROR_PED_PARTITION_SET_SYSTEM);
             goto error;
         }
 
     	if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::mkfs, commit ko\n");
             goto error;
         }
     }
 
     if (!_write) {
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_mkfs(fsspec, partinfo->num, label, part->geom, part->type);
     }
 
@@ -804,6 +900,7 @@ error:
 }
 
 int QP_LibParted::mkpart(QTParted::partType type, PedSector start, PedSector end, QP_FSWrap *fswrap, QString label) {
+    showDebug("%s", "libparted::mkpart\n");
     PedPartition *part;
     PedFileSystemType *fs_type = NULL;
     PedConstraint *constraint;
@@ -829,22 +926,28 @@ int QP_LibParted::mkpart(QTParted::partType type, PedSector start, PedSector end
     }
 
 	constraint = ped_constraint_any(dev);
-	if (!constraint)
+	if (!constraint) {
+        showDebug("%s", "libparted::mkpart, ped_constraint_any ko\n");
 		goto error;
+    }
 
     /*---if it exist a wrapper change the file_system_id---*/
     if (fswrap) fs_type = ped_file_system_type_get(fswrap->fsname().latin1());
 
 	part = ped_partition_new (actlist->disk(), part_type, fs_type, start, end);
 	if (!part) {
+        showDebug("%s", "libparted::mkpart, ped_partition_new ko\n");
         _message = QString(ERROR_PED_PARTITION_NEW);
 		goto error_destroy_constraint;
     }
     
-	if (!grow_over_small_freespace (&part->geom, actlist->disk()))
+	if (!grow_over_small_freespace (&part->geom, actlist->disk())) {
+        showDebug("%s", "libparted::mkpart, grow_over ko\n");
 		goto error_destroy_part;
+    }
     
 	if (!ped_disk_add_partition (actlist->disk(), part, constraint)) {
+        showDebug("%s", "libparted::mkpart, add_partition ko\n");
         _message = QString(ERROR_PED_DISK_ADD_PARTITION);
 		goto error_destroy_part;
     }
@@ -880,28 +983,37 @@ int QP_LibParted::mkpart(QTParted::partType type, PedSector start, PedSector end
 		goto error_remove_part;*/
 
 	if (!ped_partition_set_system(part, fs_type)) {
+        showDebug("%s", "libparted::mkpart, set_system ko\n");
         _message = QString(ERROR_PED_PARTITION_SET_SYSTEM);
 		goto error;
     }
 
     if (_write)
     	if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::mkpart, commit ko\n");
             goto error;
         }
 
     /*---if it exist a wrapper just make the filesystem---*/
     if (fswrap
     && _write) {
+        showDebug("%s", "libparted::mkpart, (wrap + commit)\n");
         bool rc = fswrap->mkpartfs(devstr, label);
-        if (!rc) _message = fswrap->message();
+        if (!rc) {
+            showDebug("%s", "libparted::mkpart, mkpartfs ko\n");
+            _message = fswrap->message();
+        }
         return rc;
     }
 
     if (!_write) {
+        showDebug("%s", "libparted::mkpart, do in virtual actlist\n");
         QP_FileSystemSpec *fsspec = NULL;
         
         if (fswrap) fsspec = filesystem->nameToFSSpec(fswrap->fsname());
         else fsspec = filesystem->nameToFSSpec("extended");
+
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_mkpart(type, start, end, fsspec, label, part_geom, part_type);
     }
 
@@ -922,7 +1034,7 @@ int QP_LibParted::mkpartfs(QTParted::partType type,
                            PedSector start,
                            PedSector end,
                            QString label) {
-
+    showDebug("%s", "libparted::mkpartfs\n");
     _message = QString::null;
 
     /*---want to make an extended partition? Than call mkpart!---*/
@@ -947,14 +1059,18 @@ int QP_LibParted::mkpartfs(QTParted::partType type,
 
     /*---if it exist a wrapper maybe libparted doesn't support this filesystem...---*/
     if (fsspec->fswrap()) {
+        showDebug("%s", "libparted::mkpartfs, has a wrapper\n");
         bool rc = false;
         /*---the wrapper support the mkpartfs?---*/
         if (fsspec->fswrap()->wrap_create) {
             rc = mkpart(type, start, end, fsspec->fswrap(), label);
-            if (!rc) emitSigTimer(100, message(), QString::null);
-            else     emitSigTimer(100, SUCCESS, QString::null);
+            if (!rc) {
+                showDebug("%s", "libparted::mkpartfs, mkpart ko\n");
+                emitSigTimer(100, message(), QString::null);
+            } else     emitSigTimer(100, SUCCESS, QString::null);
             return rc;
         }
+        showDebug("%s", "libparted::mkpartfs, the wrapper doesn't support wrap_create\n");
     }
     
 	PedPartition *part;
@@ -963,20 +1079,26 @@ int QP_LibParted::mkpartfs(QTParted::partType type,
 	PedFileSystem *fs;
 
 	fs_type = ped_file_system_type_get (fsspec->name().latin1());
-	if (!fs_type)
+	if (!fs_type) {
+        showDebug("%s", "libparted::mkpartfs, ped_file_system_type_get ko\n");
         goto error;
+    }
 	constraint = ped_file_system_get_create_constraint (fs_type, dev);
 
 	part = ped_partition_new (actlist->disk(), part_type, fs_type, (int)start, (int)end);
 	if (!part) {
+        showDebug("%s", "libparted::mkpartfs, ped_partition_new ko\n");
         _message = QString(ERROR_PED_PARTITION_NEW);
 		goto error_destroy_constraint;
     }
 
-	if (!grow_over_small_freespace (&part->geom, actlist->disk()))
+	if (!grow_over_small_freespace (&part->geom, actlist->disk())) {
+        showDebug("%s", "libparted::mkpartfs, grow_over_small ko\n");
 		goto error_destroy_part;
+    }
 
 	if (!ped_disk_add_partition (actlist->disk(), part, constraint)) {
+        showDebug("%s", "libparted::mkpartfs, add_partition ko\n");
         _message = QString(ERROR_PED_DISK_ADD_PARTITION);
 		goto error_destroy_part;
     }
@@ -989,21 +1111,29 @@ int QP_LibParted::mkpartfs(QTParted::partType type,
 		goto error_remove_part;*/
 
     if (_write) {
+        showDebug("%s", "libparted::mkpartfs, want to commit\n");
     	fs = ped_file_system_create(&part->geom, fs_type, timer);
-	    if (!fs) 
+	    if (!fs) {
+            showDebug("%s", "libparted::mkpartfs, ped_file_system_create ko\n");
     		goto error_remove_part;
+        }
     	ped_file_system_close(fs);
     } else {
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_mkpart(type, start, end, fsspec, label, part->geom, part_type);
     }
     
 	ped_constraint_destroy(constraint);
 
-	if (!ped_partition_set_system(part, fs_type))
+	if (!ped_partition_set_system(part, fs_type)) {
+        showDebug("%s", "libparted::mkpartfs, set_system ko\n");
 		goto error;
+    }
 
     if (_write) {
+        showDebug("%s", "libparted::mkpartfs, want to commit\n");
     	if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::mkpartfs, commit ko\n");
             goto error;
         }
     }
@@ -1023,6 +1153,8 @@ error:
 }
 
 bool QP_LibParted::rm(int num) {
+    showDebug("%s", "libparted::rm\n");
+
     /*---scan to find the partinfo to resize---*/
     QP_PartInfo *partinfo = numToPartInfo(num);
     
@@ -1035,26 +1167,32 @@ bool QP_LibParted::rm(int num) {
 
 	part = ped_disk_get_partition(actlist->disk(), num);
     if (!part) {
+        showDebug("%s", "libparted::rm, get_partition\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
 
 	if (ped_partition_is_busy(part)) {
+        showDebug("%s", "libparted::rm, partition is mounted\n");
         _message = QString(tr("The partition is mounted."));
         goto error;
     }
 
     if (!ped_disk_delete_partition(actlist->disk(), part)) {
+        showDebug("%s", "libparted::rm, delete_partition ko\n");
         _message = QString(ERROR_PED_DISK_DELETE_PARTITION);
         goto error;
     }
 
     if (_write) {
+        showDebug("%s", "libparted::rm, want to commit\n");
         if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::rm, commit ko\n");
             goto error;
         }
     } else {
         /*---insert remove in the undo_action list---*/
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_rm(num);
     }
     
@@ -1065,12 +1203,14 @@ error:
 }
 
 bool QP_LibParted::partition_is_busy(int num) {
+    showDebug("%s", "libparted::partition_is_busy\n");
     PedPartition *part;
     _message = QString::null;
 
     /*---get the partition structure---*/
     part = ped_disk_get_partition(actlist->disk(), num);
     if (!part) {
+        showDebug("%s", "libparted::partition_is_busy, get_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
@@ -1088,18 +1228,23 @@ error:
 }
 
 bool QP_LibParted::move(int num, PedSector start, PedSector end) {
+    showDebug("%s", "libparted::move(num)\n");
+
     /*---scan to find the partinfo to resize---*/
     QP_PartInfo *partinfo = numToPartInfo(num);
     
     if (partinfo) {
         return partinfo->move(start, end);
     } else {
+        showDebug("%s", "libparted::move(num), numtopartinfo ko\n");
         _message = QString(tr("A bug was found in QTParted during \"move\" scan, please report it!"));
         return false;
     }
 }
 
 bool QP_LibParted::move(QP_PartInfo *partinfo, PedSector start, PedSector end) {
+    showDebug("%s", "libparted::move(partinfo)\n");
+
     PedPartition *part;
     PedGeometry old_geom;
     PedGeometry new_geom;
@@ -1116,18 +1261,21 @@ bool QP_LibParted::move(QP_PartInfo *partinfo, PedSector start, PedSector end) {
     /*---do the move in "readonly mode". The move dirty PedDisk, so i choosed---
      *---to do it in a PedDisk clone... this is the reason of this _test_move---*/
     if (!_test_move(partinfo, start, end)) {
+        showDebug("%s", "libparted::move, _test_move ko\n");
         goto error;
     }
 
     /*---get the partition info---*/
     part = ped_disk_get_partition(actlist->disk(), partinfo->num);
     if (!part) {
+        showDebug("%s", "libparted::move, get_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
 
     /*---if a partition is used...---*/
     if (!_partition_warn_busy(part)) {
+        showDebug("%s", "libparted::move, warn_busy ko\n");
         goto error;
     }
 
@@ -1135,26 +1283,32 @@ bool QP_LibParted::move(QP_PartInfo *partinfo, PedSector start, PedSector end) {
 
     /* open fs, and get copy constraint */
     fs = ped_file_system_open(&old_geom);
-    if (!fs)
+    if (!fs) {
+        showDebug("%s", "libparted::move, file_system open ko\n");
         goto error;
+    }
 
 
     constraint = ped_file_system_get_copy_constraint(fs, dev);
 
     /* set / test on "disk" */
-    if (!ped_geometry_init(&new_geom, dev, start, end - start + 1))
+    if (!ped_geometry_init(&new_geom, dev, start, end - start + 1)) {
+        showDebug("%s", "libparted::move, geometry_init ko\n");
         goto error_destroy_constraint;
+    }
 
     /*TODO 
     if (!_grow_over_small_freespace (&new_geom, disk))
         goto error_destroy_constraint;*/
 
     if (!ped_disk_set_partition_geom(actlist->disk(), part, constraint, new_geom.start, new_geom.end)) {
+        showDebug("%s", "libparted::move, set_partition_geom ko\n");
         goto error_destroy_constraint;
     }
 	ped_constraint_destroy (constraint);
     
     if (ped_geometry_test_overlap (&old_geom, &part->geom)) {
+        showDebug("%s", "libparted::move, test_overlap ko\n");
         _message = QString(tr("Can't move a partition onto itself. Try using resize, perhaps?"));
         goto error_close_fs;
     }
@@ -1169,22 +1323,30 @@ bool QP_LibParted::move(QP_PartInfo *partinfo, PedSector start, PedSector end) {
 
 /* do the move */
     if (_write) {
+        showDebug("%s", "libparted::move, want to commit\n");
     	fs_copy = ped_file_system_copy(fs, &part->geom, timer);
-    	if (!fs_copy)
+    	if (!fs_copy) {
+            showDebug("%s", "libparted::move, file_system_copy ko\n");
 	    	goto error_close_fs;
+        }
+        
     	ped_file_system_close(fs_copy);
     }
 	ped_file_system_close(fs);
 
     if (_write) {
+        showDebug("%s", "libparted::move, want to commit\n");
         if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::move, commit ko\n");
             goto error;
         }
     } else {
+        showDebug("%s", "libparted::move, do in virtual actlist\n");
         /*---it is not possible that part_type is different than primary and logical... 'cause
          *---the only case is when a partition is extended, but just above i tested if it was!---*/
         PedPartitionType part_type = type2parttype(partinfo->type);
 
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_move(partinfo->num, start, end, part->geom, part_type);
     }
 
@@ -1199,6 +1361,7 @@ error:
 }
 
 bool QP_LibParted::_test_move(QP_PartInfo *partinfo, PedSector start, PedSector end) {
+    showDebug("%s", "libparted::_test_move\n");
     PedPartition *part;
     PedGeometry old_geom;
     PedGeometry new_geom;
@@ -1210,18 +1373,21 @@ bool QP_LibParted::_test_move(QP_PartInfo *partinfo, PedSector start, PedSector 
     /*---make a backup of the disk---*/
     disk = ped_disk_duplicate(actlist->disk());
     if (!disk) {
+        showDebug("%s", "libparted::_test_move, disk_duplicate ko\n");
         goto error;
     }
     
     /*---get the partition info---*/
     part = ped_disk_get_partition(disk, partinfo->num);
     if (!part) {
+        showDebug("%s", "libparted::_test_move, get_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
 
     /*---if a partition is used...---*/
     if (!_partition_warn_busy(part)) {
+        showDebug("%s", "libparted::_test_move, device is mounted ko\n");
         goto error;
     }
 
@@ -1229,26 +1395,32 @@ bool QP_LibParted::_test_move(QP_PartInfo *partinfo, PedSector start, PedSector 
 
     /* open fs, and get copy constraint */
     fs = ped_file_system_open(&old_geom);
-    if (!fs)
+    if (!fs) {
+        showDebug("%s", "libparted::_test_move, file_system_open ko\n");
         goto error;
+    }
 
 
     constraint = ped_file_system_get_copy_constraint(fs, dev);
 
     /* set / test on "disk" */
-    if (!ped_geometry_init(&new_geom, dev, start, end - start + 1))
+    if (!ped_geometry_init(&new_geom, dev, start, end - start + 1)) {
+        showDebug("%s", "libparted::_test_move, geometry_init ko\n");
         goto error_destroy_constraint;
+    }
 
     /*TODO 
     if (!_grow_over_small_freespace (&new_geom, disk))
         goto error_destroy_constraint;*/
 
     if (!ped_disk_set_partition_geom(disk, part, constraint, new_geom.start, new_geom.end)) {
+        showDebug("%s", "libparted::_test_move, set_partition_geom ko\n");
         goto error_destroy_constraint;
     }
 	ped_constraint_destroy (constraint);
     
     if (ped_geometry_test_overlap (&old_geom, &part->geom)) {
+        showDebug("%s", "libparted::_test_move, _test_overlap ko\n");
         _message = QString(tr("Can't move a partition onto itself. Try using resize, perhaps?"));
         goto error_close_fs;
     }
@@ -1266,18 +1438,22 @@ error:
 }
 
 bool QP_LibParted::resize(int num, PedSector start, PedSector end) {
+    showDebug("%s", "libparted::resize(num)\n");
     /*---scan to find the partinfo to resize---*/
     QP_PartInfo *partinfo = numToPartInfo(num);
     
     if (partinfo) {
         return partinfo->resize(start, end);
     } else {
+        showDebug("%s", "libparted::resize ko\n");
         _message = QString(tr("A bug was found in QTParted during \"resize\" scan, please report it!"));
         return false;
     }
 }
 
 bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end) {
+    showDebug("%s", "libparted::resize(partinfo)\n");
+     
     _message = QString::null;
 
     PedPartition *part;
@@ -1288,15 +1464,19 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
     /*---get the partition info---*/
     part = ped_disk_get_partition(actlist->disk(), partinfo->num);
     if (!part) {
+        showDebug("%s", "libparted::resize, get_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
 
     /*---if a partition is used...---*/
-    if (!_partition_warn_busy(part))
+    if (!_partition_warn_busy(part)) {
+        showDebug("%s", "libparted::resize, warn_busy ko\n");
         goto error;
+    }
 
     if (!ped_geometry_init (&new_geom, dev, start, end - start + 1)) {
+        showDebug("%s", "libparted::resize, geometry_init ko\n");
         _message = QString(tr("An error happen during ped_geometry_init call."));
         goto error;
     }
@@ -1306,8 +1486,10 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
         goto error; */
 
     if (part->type == PED_PARTITION_EXTENDED) {
+        showDebug("%s", "libparted::resize, type extended\n");
         constraint = ped_constraint_any(dev);
         if (!ped_disk_set_partition_geom(actlist->disk(), part, constraint, new_geom.start, new_geom.end)) {
+            showDebug("%s", "libparted::resize, set_partition_geom ko\n");
             _message = QString(tr("An error happen during ped_disk_set_partition_geom call."));
             goto error_destroy_constraint;
         }
@@ -1320,9 +1502,11 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
             goto error_destroy_constraint;*/
         ped_partition_set_system(part, NULL);
     } else {
+        showDebug("%s", "libparted::resize, not extended\n");
         /*---n.b. the filesystem will be resized only during commit!---*/
         fs = ped_file_system_open(&part->geom);
         if (!fs) {
+            showDebug("%s", "libparted::resize, file_system_open ko\n");
             _message = QString(tr("An error happen during ped_file_system_open call."));
             goto error;
         }
@@ -1330,6 +1514,7 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
         constraint = ped_file_system_get_resize_constraint (fs);
         if (!ped_disk_set_partition_geom (actlist->disk(), part, constraint,
                           new_geom.start, new_geom.end)) {
+            showDebug("%s", "libparted::resize, set_partition_geom ko\n");
             _message = QString(tr("An error happen during ped_disk_set_partition_geom call."));
                 goto error_close_fs;
         }
@@ -1342,7 +1527,9 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
             goto error_close_fs;*/
 
         if (_write) {
+            showDebug("%s", "libparted::resize, want to commit\n");
             if (!ped_file_system_resize(fs, &part->geom, timer)) {
+                showDebug("%s", "libparted::resize, file_system_resize ko\n");
                 _message = QString(tr("An error happen during ped_file_system_resize call."));
                 goto error_close_fs;
             }
@@ -1356,7 +1543,9 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
     }
 
     if (_write) {
+        showDebug("%s", "libparted::resize, want to commit\n");
         if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::resize, commit ko\n");
             goto error;
         }
     } else {
@@ -1364,6 +1553,7 @@ bool QP_LibParted::resize(QP_PartInfo *partinfo, PedSector start, PedSector end)
          *---the only case is when a partition is extended, but just above i tested if it was!---*/
         PedPartitionType part_type = type2parttype(partinfo->type);
 
+        showDebug("%s", "operation added to undo/commit list\n");
         actlist->ins_resize(partinfo->num, start, end, part->geom, part_type);
     }
 
@@ -1379,14 +1569,19 @@ error:
 }
 
 PedGeometry QP_LibParted::get_geometry(QP_PartInfo *partinfo) {
+    showDebug("%s", "libparted::get_geometry\n");
+    
     /*---get the partition info---*/
     PedPartition *part = ped_disk_get_partition(actlist->disk(), partinfo->num);
+    
+    if (!part) showDebug("%s", "libparted::get_geometry ko\n");
     //FIXME: test if part != NULL
 
     return part->geom;
 }
 
 PedPartitionType QP_LibParted::type2parttype(QTParted::partType type) {
+    showDebug("%s", "libparted::type2parttype\n");
     PedPartitionType part_type;
     if (type == QTParted::primary)
         part_type = (PedPartitionType)0;
@@ -1399,6 +1594,7 @@ PedPartitionType QP_LibParted::type2parttype(QTParted::partType type) {
 }
 
 bool QP_LibParted::set_geometry(QP_PartInfo *partinfo, PedSector start, PedSector end) {
+    showDebug("%s", "libparted::set_geometry\n");
     _message = QString::null;
 
     PedPartition *part;
@@ -1408,14 +1604,18 @@ bool QP_LibParted::set_geometry(QP_PartInfo *partinfo, PedSector start, PedSecto
     /*---get the partition info---*/
     part = ped_disk_get_partition(actlist->disk(), partinfo->num);
     if (!part) {
+        showDebug("%s", "libparted::set_geometry, pet_partition ko\n");
         _message = QString(ERROR_PED_DISK_GET_PARTITION);
         goto error;
     }
 
-    if (!_partition_warn_busy(part))
+    if (!_partition_warn_busy(part)) {
+        showDebug("%s", "libparted::set_geometry, warn_busy ko\n");
         goto error;
+    }
 
     if (!ped_geometry_init (&new_geom, dev, start, end - start + 1)) {
+        showDebug("%s", "libparted::set_geometry, geometry_init ko\n");
         _message = QString(tr("An error happen during ped_geometry_init call."));
         goto error;
     }
@@ -1426,6 +1626,7 @@ bool QP_LibParted::set_geometry(QP_PartInfo *partinfo, PedSector start, PedSecto
 
     constraint = ped_constraint_any(dev);
     if (!ped_disk_set_partition_geom(actlist->disk(), part, constraint, new_geom.start, new_geom.end)) {
+        showDebug("%s", "libparted::set_geometry, set_partition_geom ko\n");
         _message = QString(tr("An error happen during ped_disk_set_partition_geom call."));
         goto error_destroy_constraint;
     }
@@ -1437,10 +1638,13 @@ bool QP_LibParted::set_geometry(QP_PartInfo *partinfo, PedSector start, PedSecto
           "%.3f-%.3fMb.")))
         goto error_destroy_constraint;*/
 
-    if (_write)
+    if (_write) {
+        showDebug("%s", "libparted::set_geometry, want to commit\n");
         if (disk_commit(actlist->disk()) == 0) {
+            showDebug("%s", "libparted::set_geometry, commit ko\n");
             goto error;
         }
+    }
     ped_constraint_destroy(constraint);
     return true;
 
@@ -1451,48 +1655,59 @@ error:
 }
 
 QString QP_LibParted::message() {
+    showDebug("%s", "libparted::message\n");
     return _message;
 }
 
 void QP_LibParted::emitSigTimer(int percent, QString state, QString timer) {
+    showDebug("%s", "libparted::emitSigTimer\n");
     emit sigTimer(percent, state, timer);
 }
 
 void QP_LibParted::setWrite(bool write) {
+    showDebug("%s", "libparted::setWrite\n");
     _write = write;
 }
 
 bool QP_LibParted::write() {
+    showDebug("%s", "libparted::write\n");
     return _write;
 }
     
 bool QP_LibParted::canUndo() {
+    showDebug("%s", "libparted::canUndo\n");
     return actlist->canUndo();
 }
 
 void QP_LibParted::undo() {
+    showDebug("%s", "libparted::undo\n");
     actlist->undo();
 }
 
 void QP_LibParted::commit() {
+    showDebug("%s", "libparted::commit\n");
     actlist->commit();
     _qpdevice->commit();
 }
 
 float QP_LibParted::mb_hdsize() {
+    showDebug("%s", "libparted::mb_hdsize\n");
     return _mb_hdsize;
 }
 
 void QP_LibParted::setFastScan(bool FastScan) {
+    showDebug("%s", "libparted::setFastScan\n");
     _FastScan = FastScan;
 }
 
 /*---code bring from parted.c---*/
 /*---return if a partition is used!---*/
 bool QP_LibParted::_partition_warn_busy(PedPartition* part) {
+    showDebug("%s", "libparted::_partition_warn_busy\n");
     char *path = ped_partition_get_path(part);
 
     if (ped_partition_is_busy(part)) {
+        showDebug("%s", "libparted::_partition_warn_busy, the partition is busy\n");
         QString label = QString(tr("Partition %s is being used."));
         if (ped_exception_throw(PED_EXCEPTION_ERROR,
                                 (PedExceptionOption)PED_EXCEPTION_IGNORE_CANCEL,
@@ -1510,9 +1725,11 @@ error_free_path:
 }
 
 int QP_LibParted::disk_commit(PedDisk *disk) {
+    showDebug("%s", "libparted::disk_commit\n");
     int rc = ped_disk_commit(disk);
 
     if (rc == 0) {
+        showDebug("%s", "libparted::disk_commit error (maybe busy?)\n");
         _message = QString(tr("Error committing device.\nThis can happen when a device is mounted in the disk.\n\
 Try to unmount all partitions on this disk.\nPlease read the FAQ for this kind of error!"));
     }
