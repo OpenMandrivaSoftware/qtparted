@@ -844,9 +844,11 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
 
     QP_Device *selDevice = navview->selDevice();
 
-    /*---if the device is in "readonly"...                               ---
+    /*---if the device has not partition table                           ---
+     *---or if the device is in "readonly"...                            ---
      *---or the user made some not commited change and the device is busy---*/
-    if (!selDevice->canUpdateGeometry()
+    if (!selDevice->partitionTable()
+    ||  !selDevice->canUpdateGeometry()
     ||  (diskview->canUndo() && selDevice->isBusy())) {
         mnuOperations->setItemEnabled(mnuSetActiveID, false);
         mnuOperations->setItemChecked(mnuSetActiveID, partinfo->isActive());
@@ -890,6 +892,7 @@ void QP_MainWindow::slotDevicePopup(QPoint pos) {
 }
 
 void QP_MainWindow::slotPopup(QPoint pos) {
+    //TODO: check, can i remove _navpopupmenu->popup?
     if (!navview->selDevice()->partitionTable())
         _navpopupmenu->popup(pos);
     else
