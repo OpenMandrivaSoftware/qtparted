@@ -157,6 +157,7 @@ QP_FSNtfs::QP_FSNtfs() {
     wrap_move = false;
     wrap_copy = false;
     wrap_create = false;
+    wrap_min_size = false;
 
     /*---check if the wrapper is installed---*/
     QString cmdline = QString("which %1")
@@ -173,8 +174,10 @@ QP_FSNtfs::QP_FSNtfs() {
     fs_open(cmdline);
 
 
-    while ((cline = fs_getline()))
+    while ((cline = fs_getline())) {
         wrap_resize = RS_SHRINK | RS_ENLARGE;
+        wrap_min_size = true;
+    }
     fs_close();
 }
 
@@ -317,7 +320,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 
        //BETA: change could with might with ntfsresize 1.9
        //rx = QRegExp("^Now You could resize at \\d* bytes or (\\d*) .*");
-       rx = QRegExp("^Now You might resize at \\d* bytes or (\\d*) .*");
+       rx = QRegExp("^.*You ..... resize at \\d* bytes or (\\d*) .*");
        if (rx.search(line) == 0) {
            QString captured = rx.cap(1);
            _message = QString("The partition is fragmented. Try to defragment it, or resize to %1MB")
@@ -338,7 +341,6 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
     cmdline = QString("%1 %2")
             .arg(lstExternalTools->getPath(NTFSRESIZE))
             .arg(szcmdline);
-    printf("ora eseguo: %s\n", cmdline.latin1());
     if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
@@ -360,7 +362,6 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
        rx = QRegExp("^.* (\\d*),(\\d*) percent completed.*$");
        if (rx.search(linesub) == 0) {
            QString capIntPercent = rx.cap(1);
-           printf("letto: %s\n", capIntPercent.latin1());
            //QString capFloatPercent = rx.cap(2);
            
            bool rc;
@@ -442,6 +443,47 @@ bool QP_FSNtfs::mkpartfs(QString dev, QString label) {
     return success;
 }
 
+PedSector QP_FSNtfs::min_size(QString dev) {
+    char szcmdline[200];
+    QString cmdline;
+    PedSector size = -1;
+
+    /*---init of the error message---*/
+    _message = QString::null;
+
+    /*---prepare the command line---*/
+    sprintf(szcmdline, "-f -i %s", dev.latin1());
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(NTFSRESIZE))
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+    
+
+    bool success = false;
+    char *cline;
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
+
+       QRegExp rx;
+       rx = QRegExp("^.*You ..... resize at (\\d*) bytes or (\\d*) .*");
+       if (rx.search(line) == 0) {
+           QString captured = rx.cap(1);
+           sscanf(captured.latin1(), "%lld", &size);
+           size/=512;
+           size+=8*MEGABYTE_SECTORS;
+
+           success = true;
+       }
+    }
+    fs_close();
+
+    return size;
+}
+
 QString QP_FSNtfs::fsname() {
     return QString("ntfs");
 }
@@ -454,6 +496,7 @@ QP_FSJfs::QP_FSJfs() {
     wrap_move = false;
     wrap_copy = false;
     wrap_create = false;
+    wrap_min_size = false;
 
     /*---check if the wrapper is installed---*/
     QString cmdline = QString("which %1")
@@ -471,13 +514,13 @@ bool QP_FSJfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinf
     /*---pointer to libparted---*/
     QP_LibParted *libparted = _libparted;
     
-	showDebug("%s", "Resizing a filesystem using a wrapper\n");
+    showDebug("%s", "Resizing a filesystem using a wrapper\n");
 
     /*---the user want to shrink or enlarge the partition?---*/
     /*---the user want to shrink!---*/
     if (new_end < partinfo->end) {
         /*---update the filesystem---*/
-	    showDebug("%s", "shrinking filesystem not supported with jfs...\n");
+        showDebug("%s", "shrinking filesystem not supported with jfs...\n");
         return false;
     /*---the user want to enlarge!---*/
     } else {
@@ -506,9 +549,9 @@ bool QP_FSJfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinf
 
         if (write) {
             /*---and now update the filesystem!---*/
-	        showDebug("%s", "enlarge filesystem...\n");
+            showDebug("%s", "enlarge filesystem...\n");
             if (!jfsresize(write, partinfo, new_end - new_start)) {
-	            showDebug("%s", "enlarge filesystem ko\n");
+                showDebug("%s", "enlarge filesystem ko\n");
                 return false;
             } else {
                 return true;
@@ -613,6 +656,7 @@ QString QP_FSJfs::fsname() {
 
 /*---EXT3 WRAPPER----------------------------------------------------------------*/
 QP_FSExt3::QP_FSExt3() {
+    wrap_min_size = false;
     wrap_resize = false;
     wrap_move = false;
     wrap_copy = false;
@@ -709,6 +753,7 @@ QString QP_FSExt3::fsname() {
 
 /*---XFS WRAPPER-----------------------------------------------------------------*/
 QP_FSXfs::QP_FSXfs() {
+    wrap_min_size = false;
     wrap_resize = false;
     wrap_move = false;
     wrap_copy = false;

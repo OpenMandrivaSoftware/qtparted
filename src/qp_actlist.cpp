@@ -435,8 +435,15 @@ bool QP_ActionList::get_partfilesystem_info(PedPartition *part, QP_PartInfo *par
     /*---is the filesystem supported by parted?---*/
     PedFileSystem *fs = ped_file_system_open(&part->geom);
     if (!fs) {
-        /*---get the min_size from space_stats (that is a "df" wrapper)---*/
-        partinfo->min_size = space_stats(partinfo);
+        /*---exist a wrapper for min_size?---*/
+        if (partinfo->fswrap() && partinfo->fsspec->fswrap()->wrap_min_size) {
+            /*---get the min_size from the wrapper---*/
+            partinfo->min_size = partinfo->fsspec->fswrap()->min_size(partinfo->partname());
+            if (partinfo->min_size > (partinfo->end-partinfo->start)) partinfo->min_size=partinfo->end-partinfo->start;
+	}
+        else
+            /*---get the min_size from space_stats (that is a "df" wrapper)---*/
+            partinfo->min_size = space_stats(partinfo);
 
         return true;
     }

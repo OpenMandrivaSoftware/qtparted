@@ -194,7 +194,7 @@ void QP_FileSystem::addFileSystem(QString name, bool create,
                 fswrap->wrap_resize,
                 fswrap->wrap_move,
                 fswrap->wrap_copy,
-                true,
+                fswrap->wrap_min_size,
                 fswrap);
         fswraplist.append(fswrap);
     }

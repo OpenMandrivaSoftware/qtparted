@@ -53,6 +53,9 @@ public:
 
     /*---return the name of the filesystem---*/
     virtual QString fsname() {return QString::null;}
+    
+    /*---return the "resize" minimal size---*/
+    virtual PedSector min_size(QString) {return _min_size;}
 
     /*---return the right wrapper (if a wrapper exist ;-))---*/
     static QP_FSWrap *fswrap(QString name);
@@ -61,6 +64,7 @@ public:
     bool wrap_move;
     bool wrap_copy;
     bool wrap_create;
+    bool wrap_min_size;
 
 protected:
     bool qpMount(QString device);
@@ -69,6 +73,7 @@ protected:
     char *fs_getline();
     int fs_close();
     QString _message;
+    PedSector _min_size;
 
 private:
     char line[255];
@@ -86,6 +91,7 @@ public:
     QP_FSNtfs();
     bool resize(QP_LibParted *, bool, QP_PartInfo *, PedSector, PedSector);
     bool mkpartfs(QString dev, QString label);
+    PedSector min_size(QString);
     QString fsname();
 
 private:

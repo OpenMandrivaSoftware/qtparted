@@ -761,7 +761,7 @@ void QP_MainWindow::slotProperty() {
     else if (diskview->selPartInfo()->type == QTParted::logical)
          type.sprintf(tr("logical"));
     else type.sprintf(tr("extended"));
-
+    
     label = QString(tr("this is a %1 partition\n"
                     "it start at: %2 and "
                     "end at: %3\n"
