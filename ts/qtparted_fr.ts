@@ -48,10 +48,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>A script that return space used by a partition.</source>
-        <translation type="obsolete">Un script qui renvoie l&apos;espace occupé par une partition.</translation>
-    </message>
-    <message>
         <source>A program that create NTFS partitions.</source>
         <translation>Un programme qui crée des partitions NTFS.</translation>
     </message>
@@ -62,10 +58,6 @@
     <message>
         <source>A program that create EXT3 partitions.</source>
         <translation>Un programme qui crée des partitions EXT3.</translation>
-    </message>
-    <message>
-        <source>A program that create JFS partition.</source>
-        <translation type="obsolete">Un programme qui crée des partitions JFS.</translation>
     </message>
     <message>
         <source>A program that create JFS partitions.</source>
@@ -150,10 +142,6 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
         <translation>Rafraichissement du disque.</translation>
     </message>
     <message>
-        <source>All operations clompleted.</source>
-        <translation type="obsolete">Toutes les opérations sont terminées</translation>
-    </message>
-    <message>
         <source>Preparation for moving a partition.</source>
         <translation>Préparation au déplacement d&apos;une partition.</translation>
     </message>
@@ -225,10 +213,6 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Scanning all disk partitions.</source>
         <translation>Scannage des partitions du disque.</translation>
-    </message>
-    <message>
-        <source>Getting info about partition %1.</source>
-        <translation type="obsolete">Récupérer les informations de la partition %1.</translation>
     </message>
     <message>
         <source>Partition %s is being used.</source>
@@ -352,12 +336,6 @@ Merci de lire la FAQ pour ce type d&apos;erreur !</translation>
         <translation>&amp;Opérations</translation>
     </message>
     <message>
-        <source>WARNING
-Are you really sure to remove the selected partition?</source>
-        <translation type="obsolete">ATTENTION
-Êtes-vous vraiment sûr de vouloir effacer la partition sélectionnée ?</translation>
-    </message>
-    <message>
         <source>this is a %1 partition
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
@@ -382,12 +360,6 @@ Son système de fichier est : %6</translation>
     <message>
         <source>What&apos;s This</source>
         <translation>Qu&apos;est-ce que c&apos;est</translation>
-    </message>
-    <message>
-        <source>WARNING
-Are you really sure to process?</source>
-        <translation type="obsolete">ATTENTION
-Êtes-vous vraiment sûr de vouloir lancer l&apos;opération ?</translation>
     </message>
     <message>
         <source>About QT</source>
@@ -458,22 +430,6 @@ Il n&apos;est pas possible de redimensionner ou de déplacer cette partition.</t
     <message>
         <source>Ready</source>
         <translation>Prêt</translation>
-    </message>
-    <message>
-        <source>WARNING</source>
-        <translation type="obsolete">ATTENTION</translation>
-    </message>
-    <message>
-        <source>Are you sure to process?</source>
-        <translation type="obsolete">Êtes-vous vraiment sûr de vouloir effectuer l&apos;opération ?</translation>
-    </message>
-    <message>
-        <source>LAST CHANCE TO QUIT</source>
-        <translation type="obsolete">DERNIÈRE CHANCE D&apos;ABANDONNER</translation>
-    </message>
-    <message>
-        <source>Are you really sure to remove the selected partition?</source>
-        <translation type="obsolete">Êtes-vous vraiment sûr de vouloir effacer la partition sélectionnée ?</translation>
     </message>
     <message>
         <source>primary</source>
@@ -690,10 +646,6 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
         <translation>Type</translation>
     </message>
     <message>
-        <source>Size (Mb)</source>
-        <translation type="obsolete">Taille (Mo)</translation>
-    </message>
-    <message>
         <source>Start</source>
         <translation>Début</translation>
     </message>
@@ -778,10 +730,6 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     <message>
         <source>&amp;Size:</source>
         <translation>&amp;Taille :</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation type="obsolete">Mo</translation>
     </message>
     <message>
         <source>Create &amp;as:</source>
@@ -900,10 +848,6 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
         <translation>Espace libre a&amp;vant :</translation>
     </message>
     <message>
-        <source>MB</source>
-        <translation type="obsolete">MB</translation>
-    </message>
-    <message>
         <source>New Size:</source>
         <translation>Nouvelle taille :</translation>
     </message>
@@ -929,10 +873,6 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     <message>
         <source>&amp;OK</source>
         <translation>&amp;OK</translation>
-    </message>
-    <message>
-        <source>O&amp;K</source>
-        <translation type="obsolete">&amp;OK</translation>
     </message>
 </context>
 <context>
@@ -972,10 +912,6 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
 Current operation: %3</source>
         <translation>Opération : %1 sur %2.
 Opération actuelle : %3</translation>
-    </message>
-    <message>
-        <source>Operations completed sucessfull.</source>
-        <translation type="obsolete">Opérations terminées avec succès.</translation>
     </message>
     <message>
         <source>Operations completed sucessfully.</source>
