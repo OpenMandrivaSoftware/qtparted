@@ -1,6 +1,7 @@
 qtparted (0.4.1) unstable; urgency=low
 
   * Added jfs/xfs resize
+  * Added russian localization
   * Lot of bugfixes
 
  -- Vanni Brutto <zanac@libero.it>  Sat, 05 Oct 2003 15:43:34 +0100
