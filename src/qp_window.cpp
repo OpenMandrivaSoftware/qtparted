@@ -787,7 +787,7 @@ void QP_MainWindow::slotAbout() {
     content += "<br>\n";
     content += "Copyright (C) 2003<br>\n";
     content += "By Vanni Brutto<br>\n";
-    content += "zanac@libero.it<br>\n";
+    content += "zanac4ever@virgilio.it<br>\n";
     content += HOMEPAGE;
     content += "<br>\n";
     content += "<br>\n";

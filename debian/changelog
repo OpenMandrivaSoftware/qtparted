@@ -3,13 +3,13 @@ qtparted (0.4.3) unstable; urgency=low
   * Improved stability with fs wrappers
   * New ntfsresize wrapper (tested with 1.8 and 1.9)
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 03 Mar 2004 11:17:56 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 03 Mar 2004 11:17:56 +0100
 
 qtparted (0.4.2) unstable; urgency=low
 
   * Fixed QT 3.3 stuff (by François Dupoux)
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 04 Mar 2004 10:10:10 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 04 Mar 2004 10:10:10 +0100
 
 qtparted (0.4.1) unstable; urgency=low
 
@@ -17,14 +17,14 @@ qtparted (0.4.1) unstable; urgency=low
   * Added russian localization
   * Lot of bugfixes
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 05 Oct 2003 15:43:34 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 05 Oct 2003 15:43:34 +0100
 
 qtparted (0.4.0) unstable; urgency=low
 
   * Fixed compile problems
   * Fixed minor bugs
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 20 Sep 2003 10:27:23 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 20 Sep 2003 10:27:23 +0100
 
 qtparted (0.4.0-rc1) unstable; urgency=low
 
@@ -33,7 +33,7 @@ qtparted (0.4.0-rc1) unstable; urgency=low
   * Fixed configure script
   * Added debug log in /var/log (switch --log, default=1)
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 23 Aug 2003 17:24:50 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 23 Aug 2003 17:24:50 +0100
 
 qtparted (0.4.0-beta2) unstable; urgency=low
 
@@ -45,7 +45,7 @@ qtparted (0.4.0-beta2) unstable; urgency=low
   * Updated other localizations .ts files
   * Updated project file (qtparted.pro)
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 23 Aug 2003 17:24:50 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 23 Aug 2003 17:24:50 +0100
 
 qtparted (0.4.0-beta1) unstable; urgency=low
 
@@ -59,7 +59,7 @@ qtparted (0.4.0-beta1) unstable; urgency=low
   * Fixed a crash that happen on empty partition table
   * Other stuff that i don't remember :)
 
- -- Vanni Brutto <zanac@libero.it>  Wed, 30 Jul 2003 19:56:31 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Wed, 30 Jul 2003 19:56:31 +0100
 
 qtparted (0.3.2-1) unstable; urgency=low
 
@@ -67,7 +67,7 @@ qtparted (0.3.2-1) unstable; urgency=low
   * Port the source code to autoconf/automake (by François Dupoux)
   * Added xfs support
 
- -- Vanni Brutto <zanac@libero.it>  Fri, 30 May 2003 08:55:41 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Fri, 30 May 2003 08:55:41 +0100
 
 qtparted (0.3.1-1) unstable; urgency=low
 
@@ -76,7 +76,7 @@ qtparted (0.3.1-1) unstable; urgency=low
   * Fixed a segmentation fault
   * Fixed some compile problems on dialog box
 
- -- Vanni Brutto <zanac@libero.it>  Fri, 30 May 2003 08:55:41 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Fri, 30 May 2003 08:55:41 +0100
 
 qtparted (0.3.0-1) unstable; urgency=low
 
@@ -88,7 +88,7 @@ qtparted (0.3.0-1) unstable; urgency=low
   * Added French localization
   * Fixed some compile problems with QT 3.0
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 24 May 2003 13:22:52 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 24 May 2003 13:22:52 +0100
 
 qtparted (0.2.3-1) unstable; urgency=low
 
@@ -98,7 +98,7 @@ qtparted (0.2.3-1) unstable; urgency=low
   * Updated INSTALL documentation
   * Code clean up ;)
 
- -- Vanni Brutto <zanac@libero.it>  Thu, 09 May 2003 19:55:17 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Thu, 09 May 2003 19:55:17 +0100
 
 qtparted (0.2.2-1) unstable; urgency=low
 
@@ -112,7 +112,7 @@ qtparted (0.2.2-1) unstable; urgency=low
   * Fixed a bug in configure that 'cause wrong "make install"
   * Fixed a little bug that appare when you use QT with font <= 8
 
- -- Vanni Brutto <zanac@libero.it>  Thu, 01 May 2003 11:52:49 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Thu, 01 May 2003 11:52:49 +0100
 
 qtparted (0.2.1-1) unstable; urgency=low
 
@@ -124,7 +124,7 @@ qtparted (0.2.1-1) unstable; urgency=low
   * Fixed the resize of the drive list
   * Fixed a segmentation fault introduced with 0.2.0
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 24 Apr 2003 17:36:02 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 24 Apr 2003 17:36:02 +0100
 
 qtparted (0.2.0-1) unstable; urgency=low
 
@@ -136,7 +136,7 @@ qtparted (0.2.0-1) unstable; urgency=low
   * Improved ProgressBar implementation
   * A warning shown when QTParted run with no superuser privileges
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 19 Apr 2003 11:28:31 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 19 Apr 2003 11:28:31 +0100
 
 qtparted (0.1.8-2) unstable; urgency=low
 
@@ -144,7 +144,7 @@ qtparted (0.1.8-2) unstable; urgency=low
   * Fixed configure for localization
   * Added German localization
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 12 Apr 2003 22:10:15 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 12 Apr 2003 22:10:15 +0100
 
 qtparted (0.1.8-1) unstable; urgency=low
 
@@ -154,14 +154,14 @@ qtparted (0.1.8-1) unstable; urgency=low
   * Added Spanish localization
   * Added confirmation before move/resize partition
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 12 Apr 2003 15:51:02 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 12 Apr 2003 15:51:02 +0100
 
 qtparted (0.1.7-1) unstable; urgency=low
 
   * Added internationalization support
   * Added Italian localization
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 29 Mar 2003 19:14:52 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 29 Mar 2003 19:14:52 +0100
 
 qtparted (0.1.6-1) unstable; urgency=low
 
@@ -169,7 +169,7 @@ qtparted (0.1.6-1) unstable; urgency=low
   * Fixed some bug in the listchart widget
   * Added a messagebox when the resize failed with the reason
 
- -- Vanni Brutto <zanac@libero.it>  Sat, 29 Mar 2003 11:31:15 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 29 Mar 2003 11:31:15 +0100
 
 qtparted (0.1.5-1) unstable; urgency=low
 
@@ -177,7 +177,7 @@ qtparted (0.1.5-1) unstable; urgency=low
   * Fixed some broken code (segfault with g++ 3.2)
   * Removed the "fast scan" checkbox
 
- -- Vanni Brutto <zanac@libero.it>  Sun, 16 Mar 2003 13:16:06 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sun, 16 Mar 2003 13:16:06 +0100
 
 qtparted (0.1.4-1) unstable; urgency=low
 
@@ -185,25 +185,25 @@ qtparted (0.1.4-1) unstable; urgency=low
   * Fixed (another) small compile problem in some distribution
   * Added some display in console of the "time left" during long operations
 
- -- Vanni Brutto <zanac@libero.it>  Sun, 23 Feb 2003 18:32:59 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sun, 23 Feb 2003 18:32:59 +0100
 
 qtparted (0.1.3-1) unstable; urgency=low
 
   * Fixed compile problem with some g++ version
   * Added a small work-around for a segmentation fault
 
- -- Vanni Brutto <zanac@libero.it>  Sun, 26 Jan 2003 20:29:44 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sun, 26 Jan 2003 20:29:44 +0100
 
 qtparted (0.1.2-1) unstable; urgency=low
 
   * Minor enhancement
 
- -- Vanni Brutto <zanac@libero.it>  Sun, 26 Jan 2003 20:29:44 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sun, 26 Jan 2003 20:29:44 +0100
 
 qtparted (0.1.1-1) unstable; urgency=low
 
   * Initial Release.
   * Added files to make this debian package ;)
 
- -- Vanni Brutto <zanac@libero.it>  Sun, 26 Jan 2003 20:29:44 +0100
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sun, 26 Jan 2003 20:29:44 +0100
 
