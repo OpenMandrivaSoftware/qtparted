@@ -693,6 +693,8 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label) {
     }
     fs_close();
 
+    if (!success) _message = QString(tr("There was a problem with mkfs.ext3."));
+
     return success;
 }
 
@@ -724,14 +726,14 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label) {
 
     /*---prepare the command line---*/
     if (label.isEmpty()) {
-        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-q", "-f", dev.latin1(), NULL)) {
+        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-f", dev.latin1(), NULL)) {
             _message = QString(NOTFOUND);
             return false;
         }
     } else {
         char sLabel[200];
         sprintf(sLabel, "%s", label.latin1());
-        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-q", "-f", "-L", sLabel, dev.latin1(), NULL)) {
+        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-f", "-L", sLabel, dev.latin1(), NULL)) {
             _message = QString(NOTFOUND);
             return false;
         }
@@ -745,13 +747,14 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label) {
             QString line = QString(cline);
 
             QRegExp rx;
-            rx = QRegExp("^Format completed successfully.");
+            rx = QRegExp("^realtime =.*");
             if (rx.search(line) == 0)
                 success = true;
         }
     }
     fs_close();
 
+    if (!success) _message = QString(tr("There was a problem with mkfs.xfs."));
     return success;
 }
 
