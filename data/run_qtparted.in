@@ -51,6 +51,13 @@ getmousetype
 echo "QTDIR=$QTDIR"
 echo "LD_LIBRARY_PATH=$LD_LIBRARY_PATH"
 
+if ! fbset > /dev/null 2>&1 ; then 
+   echo "Frame buffer not loaded, cannot run QT/Embedded." 
+   echo "You may need to choose a different vga video mode "
+   echo "at the boot prompt."
+   exit 1
+fi
+
 # disable kernel messages
 echo 0 > /proc/sys/kernel/printk
 
