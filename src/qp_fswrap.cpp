@@ -806,8 +806,10 @@ QString QP_FSExt3::fsname() {
     return QString("ext3");
 }
 
-QString QP_FSExt3::_get_label(PedPartition *) {
-    return QString::null;
+QString QP_FSExt3::_get_label(PedPartition *p) 
+{
+    return QP_FSExt2::_get_label(p);
+    //return QString::null;
 }
 
 /*---XFS WRAPPER-----------------------------------------------------------------*/
@@ -996,31 +998,34 @@ QString QP_FSFat16::_get_label(PedPartition *) {
 QString QP_FSFat32::_get_label(PedPartition *part) 
 {
     char buffer[PED_SECTOR_SIZE];
+    char label[12];
     
     if (!QP_FSWrap::read_sector(part, 0, 1, buffer)) 
     {
         return QString::null;
     } 
     else 
-    {
-        buffer[PED_SECTOR_SIZE-1] = 0;
-        printf("returned buffer: %s\n", buffer);
-        return QString::null;
+    {   
+        memset(label, 0, sizeof(label));
+        memcpy(label, buffer+0x47, 11);
+        printf("returned fat buffer: %s\n", label);
+        return QString(label);
     }
 }
-
 
 /*---EXT2 WRAPPER----------------------------------------------------------------*/
 QString QP_FSExt2::_get_label(PedPartition *part) 
 {
-  char bootsect[512]; // sector number 2 (offset 1024)
-  char label[12];
+  char bootsect[2048]; // sector number 2 (offset 1024)
+  char label[16];
 
-  if (!QP_FSWrap::read_sector(part, 2, 1, bootsect)) 
+  if (!QP_FSWrap::read_sector(part, 2, 4, bootsect)) 
      return QString::null;
 	
   memset(label, 0, sizeof(label));
-  strncpy(label, bootsect+120, 11);
+  strncpy(label, bootsect+120, 16);
+  
+  printf("returned buffer ext2/3: [%s]\n", label);
 
   return QString(label);
 }
