@@ -1682,7 +1682,9 @@ bool QP_LibParted::set_geometry(QP_PartInfo *partinfo, PedSector start, PedSecto
     if (!_grow_over_small_freespace (&new_geom, disk))
         goto error; */
 
-    constraint = ped_constraint_any(dev);
+    /*---don't align the start/end position---*/
+    constraint = ped_constraint_exact(&new_geom);
+    
     if (!ped_disk_set_partition_geom(actlist->disk(), part, constraint, new_geom.start, new_geom.end)) {
         showDebug("%s", "libparted::set_geometry, set_partition_geom ko\n");
         _message = QString(tr("An error happen during ped_disk_set_partition_geom call."));
