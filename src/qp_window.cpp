@@ -551,6 +551,9 @@ void QP_MainWindow::slotCreate() {
 }
 
 void QP_MainWindow::slotFormat() {
+    /*---there are not selected partitions!---*/
+    if (!diskview->selPartInfo()) return;
+
     if (diskview->selPartInfo()->isVirtual()) {
         QString label = QString(tr("This is a virtual partition. You cannot alter it: use undo instead."));
         QMessageBox::information(this, PROG_NAME, label);
@@ -590,10 +593,16 @@ void QP_MainWindow::slotFormat() {
 }
 
 void QP_MainWindow::slotResize() {
+    /*---there are not selected partitions!---*/
+    if (!diskview->selPartInfo()) return;
+
     ShowMoveResizeDialog(QTParted::resize);
 }
 
 void QP_MainWindow::slotMove() {
+    /*---there are not selected partitions!---*/
+    if (!diskview->selPartInfo()) return;
+
     ShowMoveResizeDialog(QTParted::move);
 }
 
@@ -697,6 +706,9 @@ void QP_MainWindow::DoneProgressDialog() {
 }
 
 void QP_MainWindow::slotDelete() {
+    /*---there are not selected partitions!---*/
+    if (!diskview->selPartInfo()) return;
+
     if (diskview->selPartInfo()->isVirtual()) {
         QString label = QString(tr("This is a virtual partition. You cannot alter it: use undo instead."));
         QMessageBox::information(this, PROG_NAME, label);
@@ -737,6 +749,9 @@ void QP_MainWindow::slotConfig() {
 }
 
 void QP_MainWindow::slotProperty() {
+    /*---there are not selected partitions!---*/
+    if (!diskview->selPartInfo()) return;
+
     /*---make a label with information about the partition selected---*/
     QString label;
     
