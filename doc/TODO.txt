@@ -8,7 +8,7 @@ TODO-for-0.4.1:
 ------------------
 - Support for XFS, JFS file systems:
   - XFS: growsfs
-  - JFS: growsfs
+  - JFS: growsfs (done!)
 - Support for Resier4 (detection only)
 - Merge convertfs
 - Bad blocks checking
