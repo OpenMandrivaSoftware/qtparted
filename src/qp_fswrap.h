@@ -28,6 +28,7 @@
 #define QP_FSWRAP_H
 
 #include <qstring.h>
+#include <stdarg.h>
 #include <qobject.h>
 #include "qp_libparted.h"
 
@@ -63,14 +64,17 @@ public:
 protected:
     bool qpMount(QString device);
     bool qpUMount(QString device);
-    bool fs_open(QString cmdline);
+    bool fs_open(QString cmdline, const char *arg, ...);
     char *fs_getline();
     int fs_close();
     QString _message;
 
 private:
     char line[255];
-    FILE *fp;
+    FILE *fp_read;
+    FILE *fp_write;
+    int pipe1[2];
+    int pipe2[2];
 
 signals:
     /*---emitted when there is need to update a progress bar---*/

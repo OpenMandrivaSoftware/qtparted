@@ -20,6 +20,8 @@
 */
 
 #include <qregexp.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "qp_fswrap.h"
 #include "qp_actlist.h"
@@ -30,31 +32,103 @@
 #define NOTFOUND tr("command not found")
 #define TMP_MOUNTPOINT "/tmp/mntqp"
 
-bool QP_FSWrap::fs_open(QString cmdline) {
-
+bool QP_FSWrap::fs_open(QString cmdline, const char *arg, ...) {
     /*---this force stderr to stdout---*/
-    QString dupcmdline = QString("%1 %2")
-                    .arg(cmdline)
-                    .arg(QString("2>&1"));
+    int iTot = 0;
+    char *t = NULL;
+    va_list ap;
+    va_start(ap, arg);
+    iTot++; //cmdline
+    while ((t = (char *)va_arg(ap, const char *))) {
+       iTot++;
+    }
+    iTot++; //NULL
+    va_end(ap);
 
-    /*---open a pipe from the command line---*/
-    fp = popen(dupcmdline, "r");
+    char **argomenti = new char*[iTot];
+    int i = 0;
+    argomenti[i++] = (char *)cmdline.latin1();
+    va_start(ap, arg);
+    argomenti[i++] = (char *)arg;
+    while ((t = (char *)va_arg(ap, const char *))) {
+        argomenti[i++] = (char *)t;
+    }
+    argomenti[i] = NULL;
+    va_end(ap);
 
-    if (fp)
-        return true;
-    else
-        return false;
+    pid_t pid;
+    int help; 
+
+    pipe(pipe1);
+    pipe(pipe2);
+
+    pid = fork();
+
+    if (pid == 0) {                      /* child                     */
+      close(pipe1[1]);                   /* close write end of pipe 1 */
+      close(pipe2[0]);                   /* close read end of pipe 2  */
+
+      dup2(pipe1[0],STDIN_FILENO);       /* pipe1 reading */
+      dup2(pipe2[1],STDOUT_FILENO);      /* pipe2 writing */
+      dup2(pipe2[1],STDERR_FILENO);      /* pipe2 writing */
+
+      help = execv(argomenti[0], argomenti);
+    /*  popen("ftp\n","w");             */
+      perror("ftp");
+      //printf("\n\n%d\n\n",help);      
+      //TODO: test on "help"
+    }
+
+    if (pid > 0) {                /* parent  */
+      close(pipe1[0]);
+      close(pipe2[1]);
+
+      fp_write = fdopen(pipe1[1], "w");
+      if (!fp_write) {
+          //delete argomenti;
+          return false;
+      }
+
+      fp_read = fdopen(pipe2[0], "r");
+      if (!fp_read) {
+          //delete argomenti;
+          return false;
+      }
+
+    /*    for ( ;; ) {
+       printf("\nGive me a Command: ");
+       scanf("%s", command);
+       printf("priam\n");
+       i = 0;
+       while (fgets(line, sizeof line, fp)) {
+           printf("linea: %s\n", line);
+           i++;
+           if (i == 3) {
+              fprintf(fp2, "%s\n", command);
+              fflush(fp2);
+           }
+          }
+      }*/
+    }
+
+    //delete argomenti;
+
+    return true;
 }
 
 char * QP_FSWrap::fs_getline() {
-    bool rc = fgets(line, sizeof line, fp);
+    bool rc = fgets(line, sizeof line, fp_read);
 
     if (rc) return line;
     else    return NULL;
 }
 
 int QP_FSWrap::fs_close() {
-    return fclose(fp);
+    int rc1 = fclose(fp_read);
+    int rc2 = fclose(fp_write);
+
+    if (rc1 || rc2) return true;
+    else return false;
 }
 
 QP_FSWrap * QP_FSWrap::fswrap(QString name) {
@@ -80,19 +154,15 @@ QP_FSWrap * QP_FSWrap::fswrap(QString name) {
 
 bool QP_FSWrap::qpMount(QString device) {
     bool error = false;
-    char szcmdline[200];
-    QString cmdline;
 
     /*---just to be sure! :)---*/
+    printf("chiama umount\n");
     qpUMount(device);
+    printf("uscito da umount\n");
     
     /*---mount the partition---*/
-    sprintf(szcmdline, "%s %s", device.latin1(), TMP_MOUNTPOINT);
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(MOUNT))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
+    printf("desso fa\n");
+    if (!fs_open(lstExternalTools->getPath(MOUNT), device.latin1(), TMP_MOUNTPOINT, NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
@@ -116,16 +186,10 @@ bool QP_FSWrap::qpMount(QString device) {
 
 bool QP_FSWrap::qpUMount(QString device) {
     bool error = false;
-    char szcmdline[200];
-    QString cmdline;
 
     /*---umount the partition---*/
-    sprintf(szcmdline, "%s", device.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(UMOUNT))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
+    printf("prima primax\n");
+    if (!fs_open(lstExternalTools->getPath(UMOUNT), device.latin1(), NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
@@ -157,9 +221,7 @@ QP_FSNtfs::QP_FSNtfs() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    QString cmdline = QString("which %1")
-                    .arg(lstExternalTools->getPath(MKNTFS));
-    fs_open(cmdline);
+    fs_open("which", lstExternalTools->getPath(MKNTFS), NULL);
 
     char *cline;
     while ((cline = fs_getline()))
@@ -167,9 +229,7 @@ QP_FSNtfs::QP_FSNtfs() {
     fs_close();
 
     /*---check if the wrapper is installed---*/
-    cmdline = QString("which %1")
-            .arg(lstExternalTools->getPath(NTFSRESIZE));
-    fs_open(cmdline);
+    fs_open("which", lstExternalTools->getPath(NTFSRESIZE), NULL);
 
     while ((cline = fs_getline()))
         wrap_resize = RS_SHRINK | RS_ENLARGE;
@@ -250,9 +310,6 @@ bool QP_FSNtfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partin
 }
 
 bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
-    char szcmdline[200];
-    QString cmdline;
-
     /*---init of the error message---*/
     _message = QString::null;
 
@@ -260,12 +317,9 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
     PedSector size = (PedSector)((newsize-1)*512);
 
     /*---read-only test---*/
-    sprintf(szcmdline, "-n -ff -s %lld %s", size, dev.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(NTFSRESIZE))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
+    char sSize[200];
+    sprintf(sSize, "%lld", size);
+    if (!fs_open(lstExternalTools->getPath(NTFSRESIZE), "-n", "-ff", "-s", sSize, dev.latin1(), NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
@@ -311,12 +365,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 
 
     /*---ok, the readonly test seems ok... now we resize it!---*/
-    sprintf(szcmdline, "-ff -s %lld %s", size, dev.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(NTFSRESIZE))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
+    if (!fs_open(lstExternalTools->getPath(NTFSRESIZE), "-ff", "-s", sSize, dev.latin1(), NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
@@ -349,24 +398,23 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 }
 
 bool QP_FSNtfs::mkpartfs(QString dev, QString label) {
-    char szcmdline[200];
-    QString cmdline;
-
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty())
-        sprintf(szcmdline, "-f -s 512 %s", dev.latin1());
-    else
-        sprintf(szcmdline, "-f -s 512 -L %s %s", label.latin1(), dev.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(MKNTFS))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
+    if (label.isEmpty()) {
+        if (!fs_open(lstExternalTools->getPath(MKNTFS), "-f", "-s", "512", dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
+    }
+    else {
+        char sLabel[200];
+        sprintf(sLabel, "%s", label.latin1());
+        if (!fs_open(lstExternalTools->getPath(MKNTFS), "-f", "-s", "512", "-L", sLabel, dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
     }
 
     bool success = false;
@@ -405,9 +453,7 @@ QP_FSJfs::QP_FSJfs() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    QString cmdline = QString("which %1")
-                    .arg(lstExternalTools->getPath(MKFS_JFS));
-    fs_open(cmdline);
+    fs_open("which", lstExternalTools->getPath(MKFS_JFS).latin1(), NULL);
 
     char *cline;
     while ((cline = fs_getline()))
@@ -472,22 +518,16 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
 
     if (!write) return true;
 
-    char szcmdline[200];
-    QString cmdline;
-
     /*---init of the error message---*/
     _message = QString::null;
 
+    printf("prima prima\n");
     if (!qpMount(partinfo->partname()))
         return false;
 
-    /*---to the resize!---*/
-    sprintf(szcmdline, "-o remount,resize= %s", TMP_MOUNTPOINT);
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(MOUNT))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
+    /*---do the resize!---*/
+    printf("prima\n");
+    if (!fs_open(lstExternalTools->getPath(MOUNT).latin1(), "-o", "remount,resize=", TMP_MOUNTPOINT, NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
@@ -515,24 +555,22 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
 }
 
 bool QP_FSJfs::mkpartfs(QString dev, QString label) {
-    char szcmdline[200];
-    QString cmdline;
-
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty())
-        sprintf(szcmdline, "-q %s", dev.latin1());
-    else
-        sprintf(szcmdline, "-q -L %s %s", label.latin1(), dev.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(MKFS_JFS))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
+    if (label.isEmpty()) {
+        if (!fs_open(lstExternalTools->getPath(MKFS_JFS).latin1(), "-q", dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
+    } else {
+        char sLabel[200];
+        sprintf(sLabel, "%s", label.latin1());
+        if (!fs_open(lstExternalTools->getPath(MKFS_JFS).latin1(), "-q", "-L", sLabel, dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
     }
 
     bool success = false;
@@ -564,9 +602,7 @@ QP_FSExt3::QP_FSExt3() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    QString cmdline = QString("which %1")
-                    .arg(lstExternalTools->getPath(MKFS_EXT3));
-    fs_open(cmdline);
+    fs_open("which", lstExternalTools->getPath(MKFS_EXT3).latin1(), NULL);
 
     char *cline;
     while ((cline = fs_getline()))
@@ -575,24 +611,22 @@ QP_FSExt3::QP_FSExt3() {
 }
 
 bool QP_FSExt3::mkpartfs(QString dev, QString label) {
-    char szcmdline[200];
-    QString cmdline;
-
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty())
-        sprintf(szcmdline, "%s", dev.latin1());
-    else
-        sprintf(szcmdline, "-L %s %s", label.latin1(), dev.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(MKFS_EXT3))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
+    if (label.isEmpty()) {
+        if (!fs_open(lstExternalTools->getPath(MKFS_EXT3), dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
+    } else {
+        char sLabel[200];
+        sprintf(sLabel, "%s", label.latin1());
+        if (!fs_open(lstExternalTools->getPath(MKFS_EXT3), "-L", sLabel, dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
     }
 
     bool writenode = false;
@@ -656,9 +690,7 @@ QP_FSXfs::QP_FSXfs() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    QString cmdline = QString("which %1")
-                    .arg(lstExternalTools->getPath(MKFS_XFS));
-    fs_open(cmdline);
+    fs_open("which", lstExternalTools->getPath(MKFS_XFS).latin1(), NULL);
 
     char *cline;
     while ((cline = fs_getline()))
@@ -667,24 +699,22 @@ QP_FSXfs::QP_FSXfs() {
 }
 
 bool QP_FSXfs::mkpartfs(QString dev, QString label) {
-    char szcmdline[200];
-    QString cmdline;
-
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty())
-        sprintf(szcmdline, "-q -f %s", dev.latin1());
-    else
-        sprintf(szcmdline, "-q -f -L %s %s", label.latin1(), dev.latin1());
-    cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(MKFS_XFS))
-            .arg(szcmdline);
-
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
+    if (label.isEmpty()) {
+        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-q", "-f", dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
+    } else {
+        char sLabel[200];
+        sprintf(sLabel, "%s", label.latin1());
+        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-q", "-f", "-L", sLabel, dev.latin1(), NULL)) {
+            _message = QString(NOTFOUND);
+            return false;
+        }
     }
 
     bool success = false;
