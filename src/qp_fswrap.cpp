@@ -24,6 +24,7 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <qapplication.h>
+#include <qmutex.h>
 
 #include "qp_fswrap.h"
 #include "qp_actlist.h"
@@ -33,6 +34,8 @@
 
 #define NOTFOUND tr("command not found")
 #define TMP_MOUNTPOINT "/tmp/mntqp"
+
+QMutex mutex;
 
 bool QP_FSWrap::fs_open(QString cmdline, const char *arg, ...) {
     char *t = NULL;
@@ -159,7 +162,9 @@ bool QP_FSWrap::qpMount(QString device) {
     char *cline;
 
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -188,7 +193,9 @@ bool QP_FSWrap::qpUMount(QString device) {
 
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -220,7 +227,9 @@ QP_FSNtfs::QP_FSNtfs() {
 
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) wrap_create = true;
     }
     fs_close();
@@ -229,7 +238,9 @@ QP_FSNtfs::QP_FSNtfs() {
     fs_open("which", lstExternalTools->getPath(NTFSRESIZE), NULL);
 
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) wrap_resize = RS_SHRINK | RS_ENLARGE;
     }
 
@@ -326,7 +337,9 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
     bool error = false;
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -374,7 +387,9 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 
     bool success = false;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -424,7 +439,9 @@ bool QP_FSNtfs::mkpartfs(QString dev, QString label) {
     bool success = false;
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -464,7 +481,9 @@ QP_FSJfs::QP_FSJfs() {
 
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) wrap_create = true;
     }
     fs_close();
@@ -541,7 +560,9 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
 
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -586,7 +607,9 @@ bool QP_FSJfs::mkpartfs(QString dev, QString label) {
     bool success = false;
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -619,7 +642,9 @@ QP_FSExt3::QP_FSExt3() {
 
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) wrap_create = true;
     }
     fs_close();
@@ -648,7 +673,9 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label) {
     bool success = false;
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -714,7 +741,9 @@ QP_FSXfs::QP_FSXfs() {
 
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) wrap_create = true;
     }
     fs_close();
@@ -723,7 +752,9 @@ QP_FSXfs::QP_FSXfs() {
     fs_open("which", lstExternalTools->getPath(XFS_GROWFS), NULL);
 
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) wrap_resize = RS_ENLARGE;
     }
 
@@ -752,7 +783,9 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label) {
     bool success = false;
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
@@ -840,7 +873,9 @@ bool QP_FSXfs::xfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     error = true;
     char *cline;
     while (isRunning()) {
+        mutex.lock();
         cline = fs_getline();
+        mutex.unlock();
         if (cline) {
             QString line = QString(cline);
 
