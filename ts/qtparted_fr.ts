@@ -175,11 +175,11 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Preparation for hiding a partition.</source>
-        <translation type="unfinished"></translation>
+        <translation>Préparation du masquage d&apos;une partition.</translation>
     </message>
     <message>
         <source>Hiding a partition.</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquage d&apos;une partition.</translation>
     </message>
 </context>
 <context>
@@ -238,7 +238,7 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     <name>QP_FSReiserFS</name>
     <message>
         <source>No label</source>
-        <translation type="unfinished"></translation>
+        <translation>Pas d&apos;étiquette</translation>
     </message>
 </context>
 <context>
@@ -334,7 +334,7 @@ Merci de lire la FAQ pour ce type d&apos;erreur !</translation>
     </message>
     <message>
         <source>Cannot change the hidden status on this partition</source>
-        <translation type="unfinished"></translation>
+        <translation>Impossible de changer l&apos;état « masqué » de cette partition</translation>
     </message>
 </context>
 <context>
@@ -420,7 +420,7 @@ Merci de lire la FAQ pour ce type d&apos;erreur !</translation>
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation type="unfinished">Cette partition est une partition %1
+        <translation>Cette partition est une partition %1
 Elle débute à : %2 et finit à : %3
 Elle peut être aggrandie sur la gauche à %4 et sur la droite à %5
 Son système de fichier est : %6</translation>
@@ -650,7 +650,7 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     </message>
     <message>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Masquer</translation>
     </message>
 </context>
 <context>
@@ -771,7 +771,7 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     </message>
     <message>
         <source>Hidden</source>
-        <translation type="unfinished"></translation>
+        <translation>Caché</translation>
     </message>
 </context>
 <context>
