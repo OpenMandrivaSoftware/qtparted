@@ -96,6 +96,9 @@ QP_RealListView::QP_RealListView(QWidget *parent, const char *name)
     addColumn(tr("Label")); // number 8
 #endif // LABELS_SUPPORT
 
+    // a little more space between columns
+    setItemMargin(3);
+
     /*---get if user want to change selectior or want to popup a menu---*/
     connect(this, SIGNAL(selectionChanged(QListViewItem *)),
                   SLOT(selectionChanged(QListViewItem *)));
