@@ -28,8 +28,10 @@
 #define QP_FSWRAP_H
 
 #include <qstring.h>
+#include <qstringlist.h>
 #include <stdarg.h>
 #include <qobject.h>
+#include <qprocess.h>
 #include "qp_libparted.h"
 
 class QP_FSNtfs;
@@ -61,15 +63,21 @@ public:
     bool wrap_copy;
     bool wrap_create;
 
+protected slots:
+    void readFromStdout();
+
 protected:
     bool qpMount(QString device);
     bool qpUMount(QString device);
     bool fs_open(QString cmdline, const char *arg, ...);
     char *fs_getline();
+    bool isRunning();
     int fs_close();
     QString _message;
+    QProcess *proc;
 
 private:
+    QStringList buffer;
     char line[255];
     FILE *fp_read;
     FILE *fp_write;

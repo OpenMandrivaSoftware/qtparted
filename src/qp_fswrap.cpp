@@ -22,6 +22,8 @@
 #include <qregexp.h>
 #include <fcntl.h>
 #include <unistd.h>
+#include <stdarg.h>
+#include <qapplication.h>
 
 #include "qp_fswrap.h"
 #include "qp_actlist.h"
@@ -33,102 +35,88 @@
 #define TMP_MOUNTPOINT "/tmp/mntqp"
 
 bool QP_FSWrap::fs_open(QString cmdline, const char *arg, ...) {
-    /*---this force stderr to stdout---*/
-    int iTot = 0;
     char *t = NULL;
     va_list ap;
+
+    /*---create a new process---*/
+    proc = new QProcess(this);
+    proc->addArgument(cmdline); //command line of the wrapper
+    buffer.clear();
+
     va_start(ap, arg);
-    iTot++; //cmdline
+    proc->addArgument((char *)arg); //add the first parameter
+    
     while ((t = (char *)va_arg(ap, const char *))) {
-       iTot++;
+        /*---add any other parameter---*/
+        proc->addArgument((char *)t);
     }
-    iTot++; //NULL
     va_end(ap);
+    
+    /*---i want to intercept both stdout/stderr---*/
+    proc->setCommunication(QProcess::Stdin | QProcess::Stdout | QProcess::Stderr);
+    connect(proc, SIGNAL(readyReadStdout()),
+            this, SLOT(readFromStdout()));
+    connect(proc, SIGNAL(readyReadStderr()),
+            this, SLOT(readFromStdout()));
 
-    char **argomenti = new char*[iTot];
-    int i = 0;
-    argomenti[i++] = (char *)cmdline.latin1();
-    va_start(ap, arg);
-    argomenti[i++] = (char *)arg;
-    while ((t = (char *)va_arg(ap, const char *))) {
-        argomenti[i++] = (char *)t;
+    /*---start the wrapper---*/
+    if (!proc->start()) {
+        return false;
     }
-    argomenti[i] = NULL;
-    va_end(ap);
-
-    pid_t pid;
-    int help; 
-
-    pipe(pipe1);
-    pipe(pipe2);
-
-    pid = fork();
-
-    if (pid == 0) {                      /* child                     */
-      close(pipe1[1]);                   /* close write end of pipe 1 */
-      close(pipe2[0]);                   /* close read end of pipe 2  */
-
-      dup2(pipe1[0],STDIN_FILENO);       /* pipe1 reading */
-      dup2(pipe2[1],STDOUT_FILENO);      /* pipe2 writing */
-      dup2(pipe2[1],STDERR_FILENO);      /* pipe2 writing */
-
-      help = execv(argomenti[0], argomenti);
-    /*  popen("ftp\n","w");             */
-      perror("ftp");
-      //printf("\n\n%d\n\n",help);      
-      //TODO: test on "help"
-    }
-
-    if (pid > 0) {                /* parent  */
-      close(pipe1[0]);
-      close(pipe2[1]);
-
-      fp_write = fdopen(pipe1[1], "w");
-      if (!fp_write) {
-          //delete argomenti;
-          return false;
-      }
-
-      fp_read = fdopen(pipe2[0], "r");
-      if (!fp_read) {
-          //delete argomenti;
-          return false;
-      }
-
-    /*    for ( ;; ) {
-       printf("\nGive me a Command: ");
-       scanf("%s", command);
-       printf("priam\n");
-       i = 0;
-       while (fgets(line, sizeof line, fp)) {
-           printf("linea: %s\n", line);
-           i++;
-           if (i == 3) {
-              fprintf(fp2, "%s\n", command);
-              fflush(fp2);
-           }
-          }
-      }*/
-    }
-
-    //delete argomenti;
 
     return true;
 }
 
-char * QP_FSWrap::fs_getline() {
-    bool rc = fgets(line, sizeof line, fp_read);
 
-    if (rc) return line;
-    else    return NULL;
+void QP_FSWrap::readFromStdout() {
+    /*---if you can read a full line...---*/
+    if (proc->canReadLineStdout()) {
+        do {
+            QString linea = proc->readLineStdout();
+            if (!linea.isNull()) {
+                buffer.append(linea);
+            }
+        } while (proc->canReadLineStdout());
+    } else {
+        /*---the process do a "fflush", maybe for the progress bar can be useful---*/
+        QByteArray linearray = proc->readStdout();
+        QString linea(linearray);
+        if (!linea.isNull()) {
+            buffer.append(linea);
+        }
+    }
+}
+
+
+char * QP_FSWrap::fs_getline() {
+    /*---refresh the GUI---*/
+    qApp->processEvents();
+
+    /*---if there is something to read in the buffer return it!---*/
+    if (buffer.count()) {
+        QString linea = buffer.first();
+        strcpy(line, linea.latin1());
+        buffer.remove(buffer.first());
+
+        return line;
+    }
+
+    return NULL;
+}
+
+bool QP_FSWrap::isRunning() {
+    /*---if the buffer was not read or the process is still running---*/
+    //qApp->processEvents();
+    if (proc->isRunning() || buffer.count()) {
+        return true;
+    }
+
+    return false;
 }
 
 int QP_FSWrap::fs_close() {
-    int rc1 = fclose(fp_read);
-    int rc2 = fclose(fp_write);
-
-    if (rc1 || rc2) return true;
-    else return false;
+    delete proc;
+    return true;
 }
 
 QP_FSWrap * QP_FSWrap::fswrap(QString name) {
@@ -156,27 +144,28 @@ bool QP_FSWrap::qpMount(QString device) {
     bool error = false;
 
     /*---just to be sure! :)---*/
-    printf("chiama umount\n");
     qpUMount(device);
-    printf("uscito da umount\n");
     
     /*---mount the partition---*/
-    printf("desso fa\n");
     if (!fs_open(lstExternalTools->getPath(MOUNT), device.latin1(), TMP_MOUNTPOINT, NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^mount: (.*)$");
-        if (rx.search(line) == 0) {
-            QString capError = rx.cap(1);
-            _message = capError;
-            error = true;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
+
+            QRegExp rx;
+            rx = QRegExp("^mount: (.*)$");
+            if (rx.search(line) == 0) {
+                QString capError = rx.cap(1);
+                _message = capError;
+                error = true;
+            }
         }
     }
     fs_close();
@@ -188,22 +177,24 @@ bool QP_FSWrap::qpUMount(QString device) {
     bool error = false;
 
     /*---umount the partition---*/
-    printf("prima primax\n");
     if (!fs_open(lstExternalTools->getPath(UMOUNT), device.latin1(), NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^mount: (.*)$");
-        if (rx.search(line) == 0) {
-            QString capError = rx.cap(1);
-            _message = capError;
-            error = true;
+            QRegExp rx;
+            rx = QRegExp("^mount: (.*)$");
+            if (rx.search(line) == 0) {
+                QString capError = rx.cap(1);
+                _message = capError;
+                error = true;
+            }
         }
     }
     fs_close();
@@ -224,15 +215,19 @@ QP_FSNtfs::QP_FSNtfs() {
     fs_open("which", lstExternalTools->getPath(MKNTFS), NULL);
 
     char *cline;
-    while ((cline = fs_getline()))
-        wrap_create = true;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) wrap_create = true;
+    }
     fs_close();
 
     /*---check if the wrapper is installed---*/
     fs_open("which", lstExternalTools->getPath(NTFSRESIZE), NULL);
 
-    while ((cline = fs_getline()))
-        wrap_resize = RS_SHRINK | RS_ENLARGE;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) wrap_resize = RS_SHRINK | RS_ENLARGE;
+    }
 
     fs_close();
 }
@@ -326,34 +321,37 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 
     bool error = false;
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
+            QRegExp rx;
 
-        if (!error) {
-            rx = QRegExp("^ERROR.*: (.*)");
+            if (!error) {
+                rx = QRegExp("^ERROR.*: (.*)");
+                if (rx.search(line) == 0) {
+                    QString captured = rx.cap(1);
+                    _message = QString(captured);
+                    error = true;
+                }
+            }
+
+            if (!error) {
+                rx = QRegExp("^The volume end is fragmented.*");
+                if (rx.search(line) == 0) {
+                    _message = QString("The partition is fragmented.");
+                    error = true;
+                }
+            }
+
+            rx = QRegExp("^Now You could resize at \\d* bytes or (\\d*) .*");
             if (rx.search(line) == 0) {
                 QString captured = rx.cap(1);
-                _message = QString(captured);
+                _message = QString("The partition is fragmented. Try to defragment it, or resize to %1MB")
+                            .arg(captured);
                 error = true;
             }
-        }
-
-        if (!error) {
-            rx = QRegExp("^The volume end is fragmented.*");
-            if (rx.search(line) == 0) {
-                _message = QString("The partition is fragmented.");
-                error = true;
-            }
-        }
-
-        rx = QRegExp("^Now You could resize at \\d* bytes or (\\d*) .*");
-        if (rx.search(line) == 0) {
-            QString captured = rx.cap(1);
-            _message = QString("The partition is fragmented. Try to defragment it, or resize to %1MB")
-                        .arg(captured);
-            error = true;
         }
     }
     fs_close();
@@ -371,21 +369,23 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
     }
 
     bool success = false;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^Successfully resized NTFS on device");
-        if (rx.search(line) == 0)
-            success = true;
-        rx = QRegExp("^Nothing to do: NTFS volume size is already OK.");
-        if (rx.search(line) == 0)
-            success = true;
-        rx = QRegExp("^ERROR.*: (.*)");
-        if (rx.search(line) == 0) {
-            QString captured = rx.cap(1);
-            _message = QString(captured);
-            printf("messsss: %s\n", _message.latin1());
+            QRegExp rx;
+            rx = QRegExp("^Successfully resized NTFS on device");
+            if (rx.search(line) == 0)
+                success = true;
+            rx = QRegExp("^Nothing to do: NTFS volume size is already OK.");
+            if (rx.search(line) == 0)
+                success = true;
+            rx = QRegExp("^ERROR.*: (.*)");
+            if (rx.search(line) == 0) {
+                QString captured = rx.cap(1);
+                _message = QString(captured);
+            }
         }
     }
     fs_close();
@@ -419,19 +419,22 @@ bool QP_FSNtfs::mkpartfs(QString dev, QString label) {
 
     bool success = false;
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^mkntfs completed successfully. Have a nice day.");
-        if (rx.search(line) == 0)
-            success = true;
+            QRegExp rx;
+            rx = QRegExp("^mkntfs completed successfully. Have a nice day.");
+            if (rx.search(line) == 0)
+                success = true;
 
-        rx = QRegExp("^ERROR.*: (.*)");
-        if (rx.search(line) == 0) {
-            QString captured = rx.cap(1);
-            _message = QString(captured);
-            success = false;
+            rx = QRegExp("^ERROR.*: (.*)");
+            if (rx.search(line) == 0) {
+                QString captured = rx.cap(1);
+                _message = QString(captured);
+                success = false;
+            }
         }
     }
     fs_close();
@@ -456,8 +459,10 @@ QP_FSJfs::QP_FSJfs() {
     fs_open("which", lstExternalTools->getPath(MKFS_JFS).latin1(), NULL);
 
     char *cline;
-    while ((cline = fs_getline()))
-        wrap_create = true;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) wrap_create = true;
+    }
     fs_close();
 }
 
@@ -521,27 +526,28 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     /*---init of the error message---*/
     _message = QString::null;
 
-    printf("prima prima\n");
     if (!qpMount(partinfo->partname()))
         return false;
 
     /*---do the resize!---*/
-    printf("prima\n");
     if (!fs_open(lstExternalTools->getPath(MOUNT).latin1(), "-o", "remount,resize=", TMP_MOUNTPOINT, NULL)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^mount: (.*)$");
-        if (rx.search(line) == 0) {
-            QString capError = rx.cap(1);
-            _message = capError;
-            error = true;
+            QRegExp rx;
+            rx = QRegExp("^mount: (.*)$");
+            if (rx.search(line) == 0) {
+                QString capError = rx.cap(1);
+                _message = capError;
+                error = true;
+            }
         }
     }
     fs_close();
@@ -575,13 +581,16 @@ bool QP_FSJfs::mkpartfs(QString dev, QString label) {
 
     bool success = false;
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^Format completed successfully.");
-        if (rx.search(line) == 0)
-            success = true;
+            QRegExp rx;
+            rx = QRegExp("^Format completed successfully.");
+            if (rx.search(line) == 0)
+                success = true;
+        }
     }
     fs_close();
 
@@ -605,8 +614,10 @@ QP_FSExt3::QP_FSExt3() {
     fs_open("which", lstExternalTools->getPath(MKFS_EXT3).latin1(), NULL);
 
     char *cline;
-    while ((cline = fs_getline()))
-        wrap_create = true;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) wrap_create = true;
+    }
     fs_close();
 }
 
@@ -632,46 +643,49 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label) {
     bool writenode = false;
     bool success = false;
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^Writing inode tables");
-        if (rx.search(line) == 0) {
-            writenode = true;
-        }
+            QRegExp rx;
+            rx = QRegExp("^Writing inode tables");
+            if (rx.search(line) == 0) {
+                writenode = true;
+            }
 
-        rx = QRegExp("^Creating journal");
-        if (rx.search(line) == 0) {
-            writenode = false;
-            emit sigTimer(90, QString(tr("Writing superblocks and filesystem.")), QString::null);
-        }
+            rx = QRegExp("^Creating journal");
+            if (rx.search(line) == 0) {
+                writenode = false;
+                emit sigTimer(90, QString(tr("Writing superblocks and filesystem.")), QString::null);
+            }
 
-        if (writenode) {
-            QString linesub = line;
+            if (writenode) {
+                QString linesub = line;
 
 #ifdef QT30COMPATIBILITY
-            linesub.replace(QRegExp("\b"), " ");
+                linesub.replace(QRegExp("\b"), " ");
 #else
-            linesub.replace(QChar('\b'), " ");
+                linesub.replace(QChar('\b'), " ");
 #endif
-            rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
-            if (rx.search(linesub) == 0) {
-                QString capActual = rx.cap(1);
-                QString capTotal = rx.cap(2);
-                
-                bool rc;
-                int iActual = capActual.toInt(&rc);
-                int iTotal = capTotal.toInt(&rc);
+                rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
+                if (rx.search(linesub) == 0) {
+                    QString capActual = rx.cap(1);
+                    QString capTotal = rx.cap(2);
+                    
+                    bool rc;
+                    int iActual = capActual.toInt(&rc);
+                    int iTotal = capTotal.toInt(&rc);
 
-                int iPerc = iActual*80/iTotal; //The percentual is calculated in 80% ;)
-                emit sigTimer(iPerc, QString(tr("Writing inode tables.")), QString::null);
+                    int iPerc = iActual*80/iTotal; //The percentual is calculated in 80% ;)
+                    emit sigTimer(iPerc, QString(tr("Writing inode tables.")), QString::null);
+                }
             }
-        }
 
-        rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
-        if (rx.search(line) == 0)
-            success = true;
+            rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
+            if (rx.search(line) == 0)
+                success = true;
+        }
     }
     fs_close();
 
@@ -693,8 +707,10 @@ QP_FSXfs::QP_FSXfs() {
     fs_open("which", lstExternalTools->getPath(MKFS_XFS).latin1(), NULL);
 
     char *cline;
-    while ((cline = fs_getline()))
-        wrap_create = true;
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) wrap_create = true;
+    }
     fs_close();
 }
 
@@ -719,13 +735,16 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label) {
 
     bool success = false;
     char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
+    while (isRunning()) {
+        cline = fs_getline();
+        if (cline) {
+            QString line = QString(cline);
 
-        QRegExp rx;
-        rx = QRegExp("^Format completed successfully.");
-        if (rx.search(line) == 0)
-            success = true;
+            QRegExp rx;
+            rx = QRegExp("^Format completed successfully.");
+            if (rx.search(line) == 0)
+                success = true;
+        }
     }
     fs_close();
 
