@@ -50,6 +50,7 @@ friend class QP_LibParted;
 friend class QP_ActionList;
     Q_OBJECT
 public:
+    QP_PartInfo();
     QP_FileSystemSpec *fsspec;
     QTParted::partType type;
     int num;
@@ -85,6 +86,9 @@ public:
     bool fswrap();
     QString message();
     bool isVirtual();                       /*---return if it is a virtual partinfo           ---*/
+    bool partMount();                       /*---mount the partition                          ---*/
+    bool partUMount();                      /*---umount the partition                         ---*/
+    QString mountPoint();                   /*---return the mountpoint                        ---*/
 
 private:
     QP_Device *_device;                     /*---pointer to the device                        ---*/
@@ -95,6 +99,7 @@ private:
     QP_LibParted *_libparted;
     PedGeometry _geometry;                  /*---geometry of the partition                    ---*/
     bool _virtual;                          /*---if this flag is on this partinfo=virtual!    ---*/
+    QString _mountPoint;                    /*---mountpoint of the partition                  ---*/
 };
 
 class qtp_DriveInfo {
@@ -110,6 +115,7 @@ class QP_LibParted : public QObject
 friend class QP_PartInfo;
 friend class QP_ActionList;
 friend class QP_FSNtfs;
+friend class QP_FSJfs;
     Q_OBJECT
 public:
     QP_LibParted();

@@ -93,8 +93,12 @@ Q_OBJECT
 
 public:
     QP_FSJfs();
+    bool resize(QP_LibParted *, bool write, QP_PartInfo *, PedSector, PedSector);
     bool mkpartfs(QString dev, QString label);
     QString fsname();
+    
+private:
+    bool jfsresize(bool, QP_PartInfo *, PedSector newsize); //this is the true jfsresize wrapper
 };
 
 class QP_FSExt3 : public QP_FSWrap {

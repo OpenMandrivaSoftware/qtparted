@@ -328,7 +328,7 @@ QString QP_FSNtfs::fsname() {
 
 /*---JFS WRAPPER-----------------------------------------------------------------*/
 QP_FSJfs::QP_FSJfs() {
-    wrap_resize = false;
+    wrap_resize = true;
     wrap_move = false;
     wrap_copy = false;
     wrap_create = false;
@@ -342,6 +342,159 @@ QP_FSJfs::QP_FSJfs() {
     while ((cline = fs_getline()))
         wrap_create = true;
     fs_close();
+}
+
+bool QP_FSJfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinfo, PedSector new_start, PedSector new_end) {
+    /*---pointer to libparted---*/
+    QP_LibParted *libparted = _libparted;
+    
+	showDebug("%s", "Resizing a filesystem using a wrapper\n");
+
+    /*---the user want to shrink or enlarge the partition?---*/
+    /*---the user want to shrink!---*/
+    if (new_end < partinfo->end) {
+        /*---update the filesystem---*/
+	    showDebug("%s", "shrinking filesystem not supported with jfs...\n");
+        return false;
+    /*---the user want to enlarge!---*/
+    } else {
+        /*---cannot enlarge if we cannot change disk geometry!---*/
+        if (partinfo->device()->isBusy()) {
+            showDebug("%s", "the device is busy, so you cannot enlarge it\n");
+            _message = tr("Cannot enlarge a partition if the disk device is busy");
+            return false;
+        }
+        
+        /*---first se the geometry of the partition---*/
+        showDebug("%s", "update geometry...\n");
+        if (!libparted->set_geometry(partinfo, new_start, new_end)) {
+            showDebug("%s", "update geometry ko\n");
+            _message = libparted->message();
+            return false;
+        } else {
+            /*---if you are NOT committing then add in the undo/commit list---*/
+            if (!write) {
+                showDebug("%s", "operation added to undo/commit list\n");
+                PedPartitionType parttype = libparted->type2parttype(partinfo->type);
+                PedGeometry geom = libparted->get_geometry(partinfo);
+                libparted->actlist->ins_resize(partinfo->num, new_start, new_end, geom, parttype);
+            }
+        }
+
+        if (write) {
+            /*---and now update the filesystem!---*/
+	        showDebug("%s", "enlarge filesystem...\n");
+            if (!jfsresize(write, partinfo, new_end - new_start)) {
+	            showDebug("%s", "enlarge filesystem ko\n");
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return true;
+        }
+    }
+}
+
+bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
+    bool error = false;
+    const char *TMP_MOUNTPOINT = "/tmp/mntqp";
+
+    if (!write) return true;
+
+    char szcmdline[200];
+    QString cmdline;
+
+    /*---init of the error message---*/
+    _message = QString::null;
+
+
+
+    /*---mount the partition---*/
+    sprintf(szcmdline, "%s %s", partinfo->partname().latin1(), TMP_MOUNTPOINT);
+    cmdline = QString("%1 %2")
+            .arg("/bin/mount")
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+
+    char *cline;
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
+
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            printf("catturato: %s\n", capError.latin1());
+            _message = capError;
+            error = true;
+        }
+    }
+    fs_close();
+    
+    if (error) return false;
+
+
+
+    /*---to the resize!---*/
+    sprintf(szcmdline, "-o remount,resize= %s", TMP_MOUNTPOINT);
+    cmdline = QString("%1 %2")
+            .arg("/bin/mount")
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
+
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            printf("catturato: %s\n", capError.latin1());
+            _message = capError;
+            error = true;
+        }
+    }
+    fs_close();
+
+
+
+    /*---umount the partition---*/
+    sprintf(szcmdline, "%s", partinfo->partname().latin1());
+    cmdline = QString("%1 %2")
+            .arg("/bin/umount")
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }
+
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
+
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            printf("catturato: %s\n", capError.latin1());
+            _message = capError;
+            error = true;
+        }
+    }
+    fs_close();
+    
+    if (error) return false;
+
+    return true;
 }
 
 bool QP_FSJfs::mkpartfs(QString dev, QString label) {

@@ -19,6 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#include <sys/mount.h>
 #include <qmessagebox.h>
 #include <stdlib.h>
 #include <qapplication.h>
@@ -30,6 +31,7 @@
 #include "qp_options.h"
 #include "qp_debug.h"
 
+#define TMP_MOUNTPOINT "/tmp/mntqp"
 #define MIN_FREESPACE		(1000 * 2)	/* 1000k */
 #define PED_ASSERT(cond, action)        while (0) {}
 
@@ -60,6 +62,10 @@ QString MB2String(float mbyte) {
 }
 
 /*-begin of QP_PartInfo--------------------------------------------------------------------------*/
+QP_PartInfo::QP_PartInfo() {
+    _mountPoint = QString::null;
+}
+
 QP_Device *QP_PartInfo::device() {
     return _device;
 }
@@ -234,6 +240,35 @@ QString QP_PartInfo::message() {
 bool QP_PartInfo::isVirtual() {
     showDebug("%s", "partinfo::isVirtual\n");
     return _virtual;
+}
+
+bool QP_PartInfo::partMount() {
+    // security: if already mounted
+    if (!_mountPoint.isNull()) umount(_mountPoint.latin1());
+
+    char type[255];
+
+    if (((fsspec->name().compare("fat32") == 0)
+      || (fsspec->name().compare("fat16") == 0))) {
+        strcpy(type, "vfat");
+    } else {
+        strcpy(type, fsspec->name().latin1());
+    }
+
+    _mountPoint = TMP_MOUNTPOINT;
+    int nRes = mount(partname().latin1(), _mountPoint.latin1(), type, MS_NOATIME | MS_RDONLY, NULL);
+    if (nRes == 0)
+        return true;
+    else
+        return false;
+}
+
+bool QP_PartInfo::partUMount() {
+    return (bool)umount(_mountPoint.latin1());
+}
+
+QString QP_PartInfo::mountPoint() {
+    return _mountPoint;
 }
 /*-end of QP_PartInfo----------------------------------------------------------------------------*/
 
