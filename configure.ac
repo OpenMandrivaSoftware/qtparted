@@ -113,6 +113,12 @@ AC_CHECK_LIB(uuid, uuid_generate, [], AC_MSG_ERROR([*** uuid library (libuuid) n
 AC_CHECK_LIB(dl, dlopen,          [], AC_MSG_ERROR([*** dl library (libdl) not found]))
 AC_CHECK_LIB(parted, ped_malloc,  [], AC_MSG_ERROR([*** libparted >= 1.6.0 not installed - please install first ***]))
 
+dnl options for volume-name-labels
+AC_ARG_ENABLE(labels,[  --enable-labels       Enable volume name labels support (needs parted-1.6.7)],
+    labels_support=$enableval,
+    labels_support=no
+)
+
 dnl options for ntfs
 AC_ARG_ENABLE(ntfs,[  --disable-ntfs          Disable the ntfs support (you can use this option if ntfsprogs is missing)],
     ntfs_support=$enableval,

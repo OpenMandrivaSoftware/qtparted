@@ -92,6 +92,9 @@ QP_RealListView::QP_RealListView(QWidget *parent, const char *name)
     setColumnAlignment(6, AlignRight);
     addColumn(tr("End"));
     setColumnAlignment(7, AlignRight);
+#ifdef LABELS_SUPPORT
+    addColumn(tr("Label")); // number 8
+#endif // LABELS_SUPPORT
 
     /*---get if user want to change selectior or want to popup a menu---*/
     connect(this, SIGNAL(selectionChanged(QListViewItem *)),

@@ -20,6 +20,9 @@
 #define FILESYS_JFS_SUPPORT                  @FILESYS_JFS_SUPPORT@
 #define FILESYS_XFS_SUPPORT                  @FILESYS_XFS_SUPPORT@
 
+// True if QtParted supports volume names labels (needs parted >= 1.6.7)
+#define LABELS_SUPPORT                       @labels_support@
+
 // Paths for the current program
 #define DATADIR                              "@prefix@/share/qtparted"
 
