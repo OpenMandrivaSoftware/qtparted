@@ -1335,7 +1335,7 @@ bool QP_LibParted::_test_move(QP_PartInfo *partinfo, PedSector start, PedSector 
     PedGeometry old_geom;
     PedGeometry new_geom;
     PedFileSystem *fs;
-    PedFileSystem *fs_copy;
+    //PedFileSystem *fs_copy;
     PedConstraint *constraint;
     PedDisk *disk;
        

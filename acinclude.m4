@@ -315,16 +315,19 @@ AC_DEFUN(AC_PATH_QT_MOC_UIC,
      if test -z "$UIC_PATH" ; then
        KDE_UIC_ERROR_MESSAGE
        exit 1
-     elif test $kde_qtver = 3; then
+     else
+       UIC=$UIC_PATH
+
+       if test $kde_qtver = 3; then
        KDE_CHECK_UIC_FLAG(L,[/nonexistant],ac_uic_supports_libpath=yes,ac_uic_supports_libpath=no)
        KDE_CHECK_UIC_FLAG(nounload,,ac_uic_supports_nounload=yes,ac_uic_supports_nounload=no)
 
-       UIC=$UIC_PATH
        if test x$ac_uic_supports_libpath = xyes; then
            UIC="$UIC -L \$(kde_widgetdir)"
        fi
        if test x$ac_uic_supports_nounload = xyes; then
            UIC="$UIC -nounload"
+         fi
        fi
      fi
    else
@@ -1129,7 +1132,7 @@ if test -z "$2"; then
   fi
   if test "$kde_qtver" = "3"; then
     if test $kde_qtsubver -gt 0; then
-      kde_qt_minversion=">= Qt 3.1 (20021021)"
+      kde_qt_minversion=">= Qt 3.1.0 and < Qt 3.4.0"
     else
       kde_qt_minversion=">= Qt 3.0"
     fi
@@ -1143,10 +1146,14 @@ fi
 
 if test -z "$3"; then
    if test $kde_qtver = 3; then
-     if test $kde_qtsubver -gt 0; then
+     if test $kde_qtsubver -gt 1; then
        kde_qt_verstring="QT_VERSION >= 0x030100"
-     else
-       kde_qt_verstring="QT_VERSION >= 300"
+     else 
+       if test $kde_qtsubver = 1; then
+         kde_qt_verstring="QT_VERSION >= 0x030100 && QT_VERSION < 0x030400"
+       else
+         kde_qt_verstring="QT_VERSION >= 300"
+       fi
      fi
    fi
    if test $kde_qtver = 2; then
@@ -1164,7 +1171,7 @@ else
 fi
 
 if test $kde_qtver = 3; then
-  kde_qt_dirs="$QTDIR /usr/lib/qt3 /usr/lib/qt"
+  kde_qt_dirs="$QTDIR /usr/lib/qt3 /usr/lib/qt /usr/share/qt3"
 fi
 if test $kde_qtver = 2; then
    kde_qt_dirs="$QTDIR /usr/lib/qt2 /usr/lib/qt"
@@ -2049,7 +2056,7 @@ if test "x$kde_cv_func_$1" = xyes; then
   kde_cv_proto_$1=no
 else
   case "$1" in
-	setenv|unsetenv|usleep|getdomainname|random|srandom|seteuid|mkstemps|mkstemp|revoke|vsnprintf|strlcpy|strlcat)
+	setenv|unsetenv|usleep|random|srandom|seteuid|mkstemps|mkstemp|revoke|vsnprintf|strlcpy|strlcat)
 		kde_cv_proto_$1="yes - in libkdefakes"
 		;;
 	*)
@@ -2247,7 +2254,7 @@ AC_DEFUN(AC_CHECK_RES_INIT,
     ],
     [ AC_MSG_RESULT(no) ]
   )
-  LIBS=$kde_libs_safe
+  LIBS="$kde_libs_safe"
   AC_SUBST(LIBRESOLV)
 
   AC_MSG_CHECKING([if res_init is available])
@@ -2741,6 +2748,11 @@ AC_DEFUN(AC_CHECK_COMPILERS,
     [kde_use_profiling="no"]
   )
 
+  AC_ARG_ENABLE(gcov,[  --enable-gcov           enables gcov test coverage support [default=no]],
+    [kde_use_gcov=$enableval],
+    [kde_use_gcov=no]
+  )
+
   dnl this prevents stupid AC_PROG_CC to add "-g" to the default CFLAGS
   CFLAGS=" $CFLAGS"
 
@@ -2750,7 +2762,7 @@ AC_DEFUN(AC_CHECK_COMPILERS,
 
   if test "$GCC" = "yes"; then
     if test "$kde_use_debug_code" != "no"; then
-      if test $kde_use_debug_code = "full"; then
+      if test $kde_use_debug_code = "full" || test $kde_use_gcov = "yes"; then
         CFLAGS="-g3 $CFLAGS"
       else
         CFLAGS="-g -O2 $CFLAGS"
@@ -2781,7 +2793,7 @@ AC_DEFUN(AC_CHECK_COMPILERS,
   if test "$GXX" = "yes" || test "$CXX" = "KCC"; then
     if test "$kde_use_debug_code" != "no"; then
       if test "$CXX" = "KCC"; then
-        CXXFLAGS="+K0 -Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings $CXXFLAGS"
+        CXXFLAGS="+K0 -Wall -pedantic -W -Wpointer-arith -Wwrite-strings $CXXFLAGS"
       else
         if test "$kde_use_debug_code" = "full"; then
           CXXFLAGS="-g3 $CXXFLAGS"
@@ -2815,6 +2827,14 @@ AC_DEFUN(AC_CHECK_COMPILERS,
     ])
   fi
 
+  if test "$kde_use_gcov" = "yes"; then
+    KDE_CHECK_COMPILER_FLAG(fprofile-arcs,
+    [
+      CFLAGS="-fprofile-arcs -ftest-coverage $CFLAGS"
+      CXXFLAGS="-fprofile-arcs -ftest-coverage $CXXFLAGS"
+    ])
+  fi
+
   if test "$kde_use_warnings" = "yes"; then
       if test "$GCC" = "yes"; then
         case $host in
@@ -2823,7 +2843,7 @@ AC_DEFUN(AC_CHECK_COMPILERS,
             CXXFLAGS="-ansi -D_XOPEN_SOURCE=500 -D_BSD_SOURCE -Wcast-align -Wconversion $CXXFLAGS"
           ;;
         esac
-        CXXFLAGS="-Wall -pedantic -W -Wpointer-arith -Wmissing-prototypes -Wwrite-strings $CXXFLAGS"
+        CXXFLAGS="-Wall -pedantic -W -Wpointer-arith -Wwrite-strings $CXXFLAGS"
         KDE_CHECK_COMPILER_FLAG(Wundef,[CXXFLAGS="-Wundef $CXXFLAGS"])
         KDE_CHECK_COMPILER_FLAG(Wno-long-long,[CXXFLAGS="-Wno-long-long $CXXFLAGS"])
         KDE_CHECK_COMPILER_FLAG(Wnon-virtual-dtor,[CXXFLAGS="-Wnon-virtual-dtor $CXXFLAGS"])
@@ -2961,14 +2981,12 @@ AC_DEFUN(KDE_CHECK_LIB64,
     kdelibsuff=none
     AC_ARG_ENABLE(libsuffix,
         AC_HELP_STRING([--enable-libsuffix],
-            [/lib directory suffix (64,32,none)]),
+            [/lib directory suffix (64,32,none[=default])]),
             kdelibsuff=$enableval)
+    # TODO: add an auto case that compiles a little C app to check
+    # where the glibc is
     if test "$kdelibsuff" = "none"; then
-        if test -d /lib64 ; then
-            kdelibsuff=64
-        else
-            kdelibsuff=
-        fi
+       kdelibsuff=
     fi
     if test -z "$kdelibsuff"; then
         AC_MSG_RESULT([not using lib directory suffix])
@@ -3019,7 +3037,8 @@ if test -z "$KDE_RPATH" && test "$USE_RPATH" = "yes"; then
   fi
   dnl $x_libraries is set to /usr/lib in case
   if test -n "$X_LDFLAGS"; then
-    KDE_RPATH="$KDE_RPATH -R \$(x_libraries)"
+    X_RPATH="-R \$(x_libraries)" 
+    KDE_RPATH="$KDE_RPATH $X_RPATH"
   fi
   if test -n "$KDE_EXTRA_RPATH"; then
     KDE_RPATH="$KDE_RPATH \$(KDE_EXTRA_RPATH)"
@@ -3027,6 +3046,7 @@ if test -z "$KDE_RPATH" && test "$USE_RPATH" = "yes"; then
 fi
 AC_SUBST(KDE_EXTRA_RPATH)
 AC_SUBST(KDE_RPATH)
+AC_SUBST(X_RPATH)
 AC_MSG_RESULT($USE_RPATH)
 ])
 
@@ -3231,7 +3251,7 @@ __argz_count __argz_stringify __argz_next])
    AC_CACHE_VAL(kde_cv_func_stpcpy,
    [
    kde_safe_cxxflags=$CXXFLAGS
-   CXXFLAGS="-Wmissing-prototypes -Werror"
+   CXXFLAGS="-Werror"
    AC_LANG_SAVE
    AC_LANG_CPLUSPLUS
    AC_TRY_COMPILE([
@@ -4173,10 +4193,11 @@ fi
 
 AC_DEFUN(KDE_CHECK_PYTHON,
 [
-  KDE_CHECK_PYTHON_INTERN("2.2", 
-    [KDE_CHECK_PYTHON_INTERN("2.1", 
-      [KDE_CHECK_PYTHON_INTERN("2.0", [ KDE_CHECK_PYTHON_INTERN($1, $2) ])
-  ])])
+  KDE_CHECK_PYTHON_INTERN("2.3", 
+    [KDE_CHECK_PYTHON_INTERN("2.2", 
+      [KDE_CHECK_PYTHON_INTERN("2.1", 
+        [KDE_CHECK_PYTHON_INTERN("2.0", [ KDE_CHECK_PYTHON_INTERN($1, $2) ])
+  ])])])
 ])
 
 AC_DEFUN(KDE_CHECK_STL_SGI,
@@ -4538,7 +4559,7 @@ AC_DEFUN(KDE_CHECK_HEADER,
    kde_safe_cppflags=$CPPFLAGS
    CPPFLAGS="$CPPFLAGS $all_includes"
    AC_LANG_CPLUSPLUS
-   AC_CHECK_HEADER($1, $2, $3)
+   AC_CHECK_HEADER($1, $2, $3, $4)
    CPPFLAGS=$kde_safe_cppflags
    AC_LANG_RESTORE
 ])
@@ -4758,6 +4779,8 @@ else
       KDE_JAVA_PREFIX(/opt/j*sdk*)
       KDE_JAVA_PREFIX(/usr/lib/java*)
       KDE_JAVA_PREFIX(/usr/java*)
+      KDE_JAVA_PREFIX(/usr/java/j*dk*)
+      KDE_JAVA_PREFIX(/usr/java/j*re*)
       KDE_JAVA_PREFIX(/usr/lib/SunJava2*)
       KDE_JAVA_PREFIX(/usr/lib/SunJava*)
       KDE_JAVA_PREFIX(/usr/lib/IBMJava2*)
@@ -5057,7 +5080,7 @@ if test "${with_qt_dir+set}" = set; then
   kde_qtdir="$with_qt_dir"
 fi
 
-AC_FIND_FILE(qsql.html, [ $kde_qtdir/doc/html $QTDIR/doc/html /usr/share/doc/packages/qt3/html /usr/lib/qt/doc /usr/lib/qt3/doc /usr/lib/qt3/doc/html /usr/doc/qt3/html /usr/doc/qt3 /usr/share/doc/qt3-doc], QTDOCDIR)
+AC_FIND_FILE(qsql.html, [ $kde_qtdir/doc/html $QTDIR/doc/html /usr/share/doc/packages/qt3/html /usr/lib/qt/doc /usr/lib/qt3/doc /usr/lib/qt3/doc/html /usr/doc/qt3/html /usr/doc/qt3 /usr/share/doc/qt3-doc /usr/share/qt3/doc/html ], QTDOCDIR)
 AC_MSG_RESULT($QTDOCDIR)
 
 AC_SUBST(QTDOCDIR)
@@ -5117,19 +5140,23 @@ if test ! "$ac_cv_lib_bzip2" = no; then
 
 else
 
-   cxx_shared_flags=
+   cxx_shared_flag=
+   ld_shared_flag=
    KDE_CHECK_COMPILER_FLAG(shared, [
-	cxx_shared_flag="-shared"
+	ld_shared_flag="-shared"
+   ])
+   KDE_CHECK_COMPILER_FLAG(fPIC, [
+        cxx_shared_flag="-fPIC"
    ])
 
    AC_MSG_CHECKING([for BZ2_bzDecompress in (shared) libbz2])
    AC_CACHE_VAL(ac_cv_lib_bzip2_prefix,
    [
-   AC_LANG_C
+   AC_LANG_CPLUSPLUS
    kde_save_LIBS="$LIBS"
-   LIBS="$all_libraries $USER_LDFLAGS $cxx_shared_flag -lbz2 $LIBSOCKET"
-   kde_save_CFLAGS="$CFLAGS"
-   CFLAGS="$CFLAGS $all_includes $USER_INCLUDES"
+   LIBS="$all_libraries $USER_LDFLAGS $ld_shared_flag -lbz2 $LIBSOCKET"
+   kde_save_CXXFLAGS="$CXXFLAGS"
+   CXXFLAGS="$CFLAGS $cxx_shared_flag $all_includes $USER_INCLUDES"
 
    AC_TRY_LINK(dnl
    [
@@ -5140,7 +5167,7 @@ else
                eval "ac_cv_lib_bzip2_prefix='-lbz2'",
                eval "ac_cv_lib_bzip2_prefix=no")
    LIBS="$kde_save_LIBS"
-   CFLAGS="$kde_save_CFLAGS"
+   CXXFLAGS="$kde_save_CXXFLAGS"
    ])dnl
 
    AC_MSG_RESULT($ac_cv_lib_bzip2_prefix)
@@ -7344,6 +7371,9 @@ irix5* | irix6* | nonstopux*)
 linux*)
   case $host_cpu in
   alpha* | hppa* | i*86 | ia64* | m68* | mips | mipsel | powerpc* | sparc* | s390* | sh* | x86_64* )
+    lt_cv_deplibs_check_method=pass_all ;;
+  # the debian people say, arm and glibc 2.3.1 works for them with pass_all
+  arm* )
     lt_cv_deplibs_check_method=pass_all ;;
   *)
     # glibc up to 2.1.1 does not perform some relocations on ARM

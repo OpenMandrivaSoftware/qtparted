@@ -208,9 +208,11 @@ int snprintf(char *str, size_t n, char const *fmt, ...);
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
 
-/* Define as `__inline' if that's what the C compiler calls it, or to nothing
-   if it is not supported. */
+/* Define to `__inline__' or `__inline' if that's what the C compiler
+   calls it, or to nothing if 'inline' is not supported under any name.  */
+#ifndef __cplusplus
 #undef inline
+#endif
 
 /* Compatibility define */
 #undef ksize_t
