@@ -31,7 +31,6 @@
 #include <qstringlist.h>
 #include <stdarg.h>
 #include <qobject.h>
-#include <qprocess.h>
 #include "qp_libparted.h"
 
 class QP_FSNtfs;
@@ -58,35 +57,22 @@ public:
     /*---return the right wrapper (if a wrapper exist ;-))---*/
     static QP_FSWrap *fswrap(QString name);
 
-    /*---write stdin to the process---*/
-    void writeToStdin(QString line);
-
     int wrap_resize;
     bool wrap_move;
     bool wrap_copy;
     bool wrap_create;
 
-protected slots:
-    /*---receive stdout from the process---*/
-    void readFromStdout();
-
 protected:
     bool qpMount(QString device);
     bool qpUMount(QString device);
-    bool fs_open(QString cmdline, const char *arg, ...);
+    bool fs_open(QString cmdline);
     char *fs_getline();
-    bool isRunning();
     int fs_close();
     QString _message;
-    QProcess *proc;
 
 private:
-    QStringList buffer;
     char line[255];
-    FILE *fp_read;
-    FILE *fp_write;
-    int pipe1[2];
-    int pipe2[2];
+    FILE *fp;
 
 signals:
     /*---emitted when there is need to update a progress bar---*/

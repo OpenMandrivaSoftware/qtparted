@@ -24,7 +24,6 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <qapplication.h>
-#include <qmutex.h>
 
 #include "qp_fswrap.h"
 #include "qp_actlist.h"
@@ -35,91 +34,31 @@
 #define NOTFOUND tr("command not found")
 #define TMP_MOUNTPOINT "/tmp/mntqp"
 
-QMutex mutex;
+bool QP_FSWrap::fs_open(QString cmdline) {
 
-bool QP_FSWrap::fs_open(QString cmdline, const char *arg, ...) {
-    char *t = NULL;
-    va_list ap;
+    /*---this force stderr to stdout---*/
+    QString dupcmdline = QString("%1 %2")
+                    .arg(cmdline)
+                    .arg(QString("2>&1"));
 
-    /*---create a new process---*/
-    proc = new QProcess(this);
-    proc->addArgument(cmdline); //command line of the wrapper
-    buffer.clear();
+    /*---open a pipe from the command line---*/
+    fp = popen(dupcmdline, "r");
 
-    va_start(ap, arg);
-    proc->addArgument((char *)arg); //add the first parameter
-    
-    while ((t = (char *)va_arg(ap, const char *))) {
-        /*---add any other parameter---*/
-        proc->addArgument((char *)t);
-    }
-    va_end(ap);
-    
-    /*---i want to intercept both stdout/stderr---*/
-    proc->setCommunication(QProcess::Stdin | QProcess::Stdout | QProcess::Stderr);
-    connect(proc, SIGNAL(readyReadStdout()),
-            this, SLOT(readFromStdout()));
-    connect(proc, SIGNAL(readyReadStderr()),
-            this, SLOT(readFromStdout()));
-
-    /*---start the wrapper---*/
-    if (!proc->start()) {
+    if (fp)
+        return true;
+    else
         return false;
-    }
-
-    return true;
 }
-
-
-void QP_FSWrap::readFromStdout() {
-    /*---if you can read a full line...---*/
-    if (proc->canReadLineStdout()) {
-        do {
-            QString linea = proc->readLineStdout();
-            if (!linea.isNull()) {
-                buffer.append(linea);
-            }
-        } while (proc->canReadLineStdout());
-    } else {
-        /*---the process do a "fflush", maybe for the progress bar can be useful---*/
-        QByteArray linearray = proc->readStdout();
-        QString linea(linearray);
-        if (!linea.isNull()) {
-            buffer.append(linea);
-        }
-    }
-}
-
 
 char * QP_FSWrap::fs_getline() {
-    /*---refresh the GUI---*/
-    qApp->processEvents();
+    bool rc = fgets(line, sizeof line, fp);
 
-    /*---if there is something to read in the buffer return it!---*/
-    if (buffer.count()) {
-        QString linea = buffer.first();
-        strcpy(line, linea.latin1());
-        buffer.remove(buffer.first());
-
-        return line;
-    }
-
-    return NULL;
-}
-
-bool QP_FSWrap::isRunning() {
-    /*---if the buffer was not read or the process is still running---*/
-    //qApp->processEvents();
-    if (proc->isRunning() || buffer.count()) {
-        return true;
-    }
-
-    return false;
+    if (rc) return line;
+    else    return NULL;
 }
 
 int QP_FSWrap::fs_close() {
-    delete proc;
-    return true;
+    return fclose(fp);
 }
 
 QP_FSWrap * QP_FSWrap::fswrap(QString name) {
@@ -143,38 +82,34 @@ QP_FSWrap * QP_FSWrap::fswrap(QString name) {
         return NULL;
 }
 
-void QP_FSWrap::writeToStdin(QString line) {
-    proc->writeToStdin(line);
-}
-
 bool QP_FSWrap::qpMount(QString device) {
+    char szcmdline[200];
     bool error = false;
 
     /*---just to be sure! :)---*/
     qpUMount(device);
     
     /*---mount the partition---*/
-    if (!fs_open(lstExternalTools->getPath(MOUNT), device.latin1(), TMP_MOUNTPOINT, NULL)) {
+    sprintf(szcmdline, "%s %s", device.latin1(), TMP_MOUNTPOINT);
+    QString cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(MOUNT))
+            .arg(szcmdline);
+    
+    if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     char *cline;
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
 
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
-
-            QRegExp rx;
-            rx = QRegExp("^mount: (.*)$");
-            if (rx.search(line) == 0) {
-                QString capError = rx.cap(1);
-                _message = capError;
-                error = true;
-            }
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            _message = capError;
+            error = true;
         }
     }
     fs_close();
@@ -183,29 +118,30 @@ bool QP_FSWrap::qpMount(QString device) {
 }
 
 bool QP_FSWrap::qpUMount(QString device) {
+    char szcmdline[200];
     bool error = false;
 
     /*---umount the partition---*/
-    if (!fs_open(lstExternalTools->getPath(UMOUNT), device.latin1(), NULL)) {
+    sprintf(szcmdline, "%s", device.latin1());
+    QString cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(UMOUNT))
+            .arg(szcmdline);
+    
+    if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+        QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^mount: (.*)$");
-            if (rx.search(line) == 0) {
-                QString capError = rx.cap(1);
-                _message = capError;
-                error = true;
-            }
+        QRegExp rx;
+        rx = QRegExp("^mount: (.*)$");
+        if (rx.search(line) == 0) {
+            QString capError = rx.cap(1);
+            _message = capError;
+            error = true;
         }
     }
     fs_close();
@@ -223,27 +159,22 @@ QP_FSNtfs::QP_FSNtfs() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    fs_open("which", lstExternalTools->getPath(MKNTFS), NULL);
-
+    QString cmdline = QString("which %1")
+                    .arg(lstExternalTools->getPath(MKNTFS));
+    fs_open(cmdline);
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) wrap_create = true;
-    }
+    while ((cline = fs_getline()))
+        wrap_create = true;
     fs_close();
 
     /*---check if the wrapper is installed---*/
-    fs_open("which", lstExternalTools->getPath(NTFSRESIZE), NULL);
+    cmdline = QString("which %1")
+            .arg(lstExternalTools->getPath(NTFSRESIZE));
+    fs_open(cmdline);
 
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) wrap_resize = RS_SHRINK | RS_ENLARGE;
-    }
 
+    while ((cline = fs_getline()))
+        wrap_resize = RS_SHRINK | RS_ENLARGE;
     fs_close();
 }
 
@@ -320,6 +251,8 @@ bool QP_FSNtfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partin
 }
 
 bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
+    char szcmdline[200];
+
     /*---init of the error message---*/
     _message = QString::null;
 
@@ -327,49 +260,70 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
     PedSector size = (PedSector)((newsize-1)*512);
 
     /*---read-only test---*/
-    char sSize[200];
-    sprintf(sSize, "%lld", size);
-    if (!fs_open(lstExternalTools->getPath(NTFSRESIZE), "-n", "-ff", "-s", sSize, dev.latin1(), NULL)) {
+    sprintf(szcmdline, "-n -ff -s %lld %s", size, dev.latin1());
+    QString cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(NTFSRESIZE))
+            .arg(szcmdline);
+    
+    if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     bool error = false;
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
+       QRegExp rx;
 
-            if (!error) {
-                rx = QRegExp("^ERROR.*: (.*)");
-                if (rx.search(line) == 0) {
-                    QString captured = rx.cap(1);
-                    _message = QString(captured);
-                    error = true;
-                }
-            }
+       if (!error) {
+           rx = QRegExp("^ERROR.*: (.*)");
+           if (rx.search(line) == 0) {
+               QString captured = rx.cap(1);
+               _message = QString(captured);
+               error = true;
+           }
+       }
 
-            if (!error) {
-                rx = QRegExp("^The volume end is fragmented.*");
-                if (rx.search(line) == 0) {
-                    _message = QString("The partition is fragmented.");
-                    error = true;
-                }
-            }
+       if (!error) {
+           rx = QRegExp("^The volume end is fragmented.*");
+           if (rx.search(line) == 0) {
+               _message = QString("The partition is fragmented.");
+               error = true;
+           }
+       }
 
-            rx = QRegExp("^Now You could resize at \\d* bytes or (\\d*) .*");
-            if (rx.search(line) == 0) {
-                QString captured = rx.cap(1);
-                _message = QString("The partition is fragmented. Try to defragment it, or resize to %1MB")
-                            .arg(captured);
-                error = true;
-            }
-        }
+       /*---progress bar!---*/
+       QString linesub = line;
+#ifdef QT30COMPATIBILITY
+       linesub.replace(QRegExp("\r"), " ");
+#else
+       linesub.replace(QChar('\r'), " ");
+#endif
+       //example: 34,72 percent completed
+       rx = QRegExp("^.* (\\d*),(\\d*) percent completed.*$");
+       if (rx.search(linesub) == 0) {
+           QString capIntPercent = rx.cap(1);
+           printf("letto: %s\n", capIntPercent.latin1());
+           //QString capFloatPercent = rx.cap(2);
+           
+           bool rc;
+           int iPerc = capIntPercent.toInt(&rc) - 1;
+           if (iPerc < 0) iPerc = 0; //the percente completed run many times, but i don't want it reach 100%
+           
+           emit sigTimer(iPerc, QString(tr("Resizing in progress.")), QString::null);
+       }
+
+       //BETA: change could with might with ntfsresize 1.9
+       //rx = QRegExp("^Now You could resize at \\d* bytes or (\\d*) .*");
+       rx = QRegExp("^Now You might resize at \\d* bytes or (\\d*) .*");
+       if (rx.search(line) == 0) {
+           QString captured = rx.cap(1);
+           _message = QString("The partition is fragmented. Try to defragment it, or resize to %1MB")
+                       .arg(captured);
+           error = true;
+       }
     }
     fs_close();
 
@@ -380,32 +334,60 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 
 
     /*---ok, the readonly test seems ok... now we resize it!---*/
-    if (!fs_open(lstExternalTools->getPath(NTFSRESIZE), "-ff", "-s", sSize, dev.latin1(), NULL)) {
+    sprintf(szcmdline, "-ff -s %lld %s", size, dev.latin1());
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(NTFSRESIZE))
+            .arg(szcmdline);
+    printf("ora eseguo: %s\n", cmdline.latin1());
+    if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     bool success = false;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
+       QRegExp rx;
+       
+       /*---progress bar!---*/
+       QString linesub = line;
+#ifdef QT30COMPATIBILITY
+       linesub.replace(QRegExp("\r"), " ");
+#else
+       linesub.replace(QChar('\r'), " ");
+#endif
+       //example: 34,72 percent completed
+       rx = QRegExp("^.* (\\d*),(\\d*) percent completed.*$");
+       if (rx.search(linesub) == 0) {
+           QString capIntPercent = rx.cap(1);
+           printf("letto: %s\n", capIntPercent.latin1());
+           //QString capFloatPercent = rx.cap(2);
+           
+           bool rc;
+           int iPerc = capIntPercent.toInt(&rc) - 1;
+           if (iPerc < 0) iPerc = 0; //the percente completed run many times, but i don't want it reach 100%
+           
+           emit sigTimer(iPerc, QString(tr("Resizing in progress.")), QString::null);
+       }
 
-            QRegExp rx;
-            rx = QRegExp("^Successfully resized NTFS on device");
-            if (rx.search(line) == 0)
-                success = true;
-            rx = QRegExp("^Nothing to do: NTFS volume size is already OK.");
-            if (rx.search(line) == 0)
-                success = true;
-            rx = QRegExp("^ERROR.*: (.*)");
-            if (rx.search(line) == 0) {
-                QString captured = rx.cap(1);
-                _message = QString(captured);
-            }
-        }
+       //rx = QRegExp("^Successfully resized NTFS on device");
+       rx = QRegExp("^.*[Ss]uccessfully.*");
+       if (rx.search(line) == 0)
+           success = true;
+       rx = QRegExp("^Nothing to do: NTFS volume size is already OK.");
+       if (rx.search(line) == 0)
+           success = true;
+
+       rx = QRegExp("^Syncing device.*");
+       if (rx.search(line) == 0) {
+           emit sigTimer(99, QString(tr("Syncing device.")), QString::null);
+       }
+           
+       rx = QRegExp("^ERROR.*: (.*)");
+       if (rx.search(line) == 0) {
+           QString captured = rx.cap(1);
+           _message = QString(captured);
+       }
     }
     fs_close();
 
@@ -417,46 +399,43 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize) {
 }
 
 bool QP_FSNtfs::mkpartfs(QString dev, QString label) {
+    char szcmdline[200];
+    QString cmdline;
+
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty()) {
-        if (!fs_open(lstExternalTools->getPath(MKNTFS), "-f", "-s", "512", dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
+    if (label.isEmpty())
+        sprintf(szcmdline, "-f -s 512 %s", dev.latin1());
+    else
+        sprintf(szcmdline, "-f -s 512 -L %s %s", label.latin1(), dev.latin1());
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(MKNTFS))
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
     }
-    else {
-        char sLabel[200];
-        sprintf(sLabel, "%s", label.latin1());
-        if (!fs_open(lstExternalTools->getPath(MKNTFS), "-f", "-s", "512", "-L", sLabel, dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
-    }
+    
 
     bool success = false;
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^mkntfs completed successfully. Have a nice day.");
-            if (rx.search(line) == 0)
-                success = true;
+       QRegExp rx;
+       rx = QRegExp("^mkntfs completed successfully. Have a nice day.");
+       if (rx.search(line) == 0)
+           success = true;
 
-            rx = QRegExp("^ERROR.*: (.*)");
-            if (rx.search(line) == 0) {
-                QString captured = rx.cap(1);
-                _message = QString(captured);
-                success = false;
-            }
-        }
+       rx = QRegExp("^ERROR.*: (.*)");
+       if (rx.search(line) == 0) {
+           QString captured = rx.cap(1);
+           _message = QString(captured);
+           success = false;
+       }
     }
     fs_close();
 
@@ -477,16 +456,15 @@ QP_FSJfs::QP_FSJfs() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    fs_open("which", lstExternalTools->getPath(MKFS_JFS).latin1(), NULL);
+    QString cmdline = QString("which %1")
+                    .arg(lstExternalTools->getPath(MKFS_JFS));
+    fs_open(cmdline);
 
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) wrap_create = true;
-    }
+    while ((cline = fs_getline()))
+        wrap_create = true;
     fs_close();
+    
 }
 
 bool QP_FSJfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinfo, PedSector new_start, PedSector new_end) {
@@ -542,6 +520,9 @@ bool QP_FSJfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinf
 }
 
 bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
+    char szcmdline[200];
+    QString cmdline;
+
     bool error = false;
 
     if (!write) return true;
@@ -552,28 +533,29 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     if (!qpMount(partinfo->partname()))
         return false;
 
+
     /*---do the resize!---*/
-    if (!fs_open(lstExternalTools->getPath(MOUNT).latin1(), "-o", "remount,resize=", TMP_MOUNTPOINT, NULL)) {
+    sprintf(szcmdline, "-o remount,resize= %s", TMP_MOUNTPOINT);
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(MOUNT))
+            .arg(szcmdline);
+    
+    if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^mount: (.*)$");
-            if (rx.search(line) == 0) {
-                QString capError = rx.cap(1);
-                _message = capError;
-                error = true;
-            }
-        }
+       QRegExp rx;
+       rx = QRegExp("^mount: (.*)$");
+       if (rx.search(line) == 0) {
+           QString capError = rx.cap(1);
+           _message = capError;
+           error = true;
+       }
     }
     fs_close();
 
@@ -583,41 +565,40 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
         return false;
 
     return true;
+    /*fino a qui*/
 }
 
 bool QP_FSJfs::mkpartfs(QString dev, QString label) {
+    char szcmdline[200];
+    QString cmdline;
+
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty()) {
-        if (!fs_open(lstExternalTools->getPath(MKFS_JFS).latin1(), "-q", dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
-    } else {
-        char sLabel[200];
-        sprintf(sLabel, "%s", label.latin1());
-        if (!fs_open(lstExternalTools->getPath(MKFS_JFS).latin1(), "-q", "-L", sLabel, dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
+    if (label.isEmpty())
+        sprintf(szcmdline, "-q %s", dev.latin1());
+    else
+        sprintf(szcmdline, "-q -L %s %s", label.latin1(), dev.latin1());
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(MKFS_JFS))
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
     }
+    
 
     bool success = false;
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^Format completed successfully.");
-            if (rx.search(line) == 0)
-                success = true;
-        }
+       QRegExp rx;
+       rx = QRegExp("^Format completed successfully.");
+       if (rx.search(line) == 0)
+           success = true;
     }
     fs_close();
 
@@ -638,85 +619,82 @@ QP_FSExt3::QP_FSExt3() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    fs_open("which", lstExternalTools->getPath(MKFS_EXT3).latin1(), NULL);
+    QString cmdline = QString("which %1")
+                    .arg(lstExternalTools->getPath(MKFS_EXT3));
+    fs_open(cmdline);
 
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) wrap_create = true;
-    }
+    while ((cline = fs_getline()))
+        wrap_create = true;
     fs_close();
+    
 }
 
 bool QP_FSExt3::mkpartfs(QString dev, QString label) {
+    char szcmdline[200];
+    QString cmdline;
+
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty()) {
-        if (!fs_open(lstExternalTools->getPath(MKFS_EXT3), dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
-    } else {
-        char sLabel[200];
-        sprintf(sLabel, "%s", label.latin1());
-        if (!fs_open(lstExternalTools->getPath(MKFS_EXT3), "-L", sLabel, dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
+    if (label.isEmpty())
+        sprintf(szcmdline, "%s", dev.latin1());
+    else
+        sprintf(szcmdline, "-L %s %s", label.latin1(), dev.latin1());
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(MKFS_EXT3))
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
     }
+    
 
     bool writenode = false;
     bool success = false;
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^Writing inode tables");
-            if (rx.search(line) == 0) {
-                writenode = true;
-            }
+       QRegExp rx;
+       rx = QRegExp("^Writing inode tables");
+       if (rx.search(line) == 0) {
+           writenode = true;
+       }
 
-            rx = QRegExp("^Creating journal");
-            if (rx.search(line) == 0) {
-                writenode = false;
-                emit sigTimer(90, QString(tr("Writing superblocks and filesystem.")), QString::null);
-            }
+       rx = QRegExp("^Creating journal");
+       if (rx.search(line) == 0) {
+           writenode = false;
+           emit sigTimer(90, QString(tr("Writing superblocks and filesystem.")), QString::null);
+       }
 
-            if (writenode) {
-                QString linesub = line;
+       if (writenode) {
+           QString linesub = line;
 
 #ifdef QT30COMPATIBILITY
-                linesub.replace(QRegExp("\b"), " ");
+            linesub.replace(QRegExp("\b"), " ");
 #else
-                linesub.replace(QChar('\b'), " ");
+            linesub.replace(QChar('\b'), " ");
 #endif
-                rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
-                if (rx.search(linesub) == 0) {
-                    QString capActual = rx.cap(1);
-                    QString capTotal = rx.cap(2);
-                    
-                    bool rc;
-                    int iActual = capActual.toInt(&rc);
-                    int iTotal = capTotal.toInt(&rc);
+           rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
+           if (rx.search(linesub) == 0) {
+               QString capActual = rx.cap(1);
+               QString capTotal = rx.cap(2);
+               
+               bool rc;
+               int iActual = capActual.toInt(&rc);
+               int iTotal = capTotal.toInt(&rc);
 
-                    int iPerc = iActual*80/iTotal; //The percentual is calculated in 80% ;)
-                    emit sigTimer(iPerc, QString(tr("Writing inode tables.")), QString::null);
-                }
-            }
+               int iPerc = iActual*80/iTotal; //The percentual is calculated in 80% ;)
+               emit sigTimer(iPerc, QString(tr("Writing inode tables.")), QString::null);
+           }
+       }
 
-            rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
-            if (rx.search(line) == 0)
-                success = true;
-        }
+       rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
+       if (rx.search(line) == 0)
+           success = true;
     }
     fs_close();
 
@@ -737,63 +715,56 @@ QP_FSXfs::QP_FSXfs() {
     wrap_create = false;
 
     /*---check if the wrapper is installed---*/
-    fs_open("which", lstExternalTools->getPath(MKFS_XFS).latin1(), NULL);
+    QString cmdline = QString("which %1")
+                    .arg(lstExternalTools->getPath(MKFS_XFS));
+    fs_open(cmdline);
 
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) wrap_create = true;
-    }
+    while ((cline = fs_getline()))
+        wrap_create = true;
     fs_close();
+    
 
     /*---check if the wrapper is installed---*/
-    fs_open("which", lstExternalTools->getPath(XFS_GROWFS), NULL);
+    cmdline = QString("which %1")
+                    .arg(lstExternalTools->getPath(XFS_GROWFS));
+    fs_open(cmdline);
 
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) wrap_resize = RS_ENLARGE;
-    }
-
+    while ((cline = fs_getline()))
+        wrap_resize = RS_ENLARGE;
     fs_close();
 }
 
 bool QP_FSXfs::mkpartfs(QString dev, QString label) {
+    char szcmdline[200];
+    QString cmdline;
+
     /*---init of the error message---*/
     _message = QString::null;
 
     /*---prepare the command line---*/
-    if (label.isEmpty()) {
-        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-f", dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
-    } else {
-        char sLabel[200];
-        sprintf(sLabel, "%s", label.latin1());
-        if (!fs_open(lstExternalTools->getPath(MKFS_XFS).latin1(), "-f", "-L", sLabel, dev.latin1(), NULL)) {
-            _message = QString(NOTFOUND);
-            return false;
-        }
-    }
+    if (label.isEmpty())
+        sprintf(szcmdline, "-f %s", dev.latin1());
+    else
+        sprintf(szcmdline, "-f -L %s %s", label.latin1(), dev.latin1());
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(MKFS_XFS))
+            .arg(szcmdline);
+
+    if (!fs_open(cmdline)) {
+        _message = QString(NOTFOUND);
+        return false;
+    }    
 
     bool success = false;
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^realtime =.*");
-            if (rx.search(line) == 0)
-                success = true;
-        }
+       QRegExp rx;
+       rx = QRegExp("^realtime =.*");
+       if (rx.search(line) == 0)
+           success = true;
     }
     fs_close();
 
@@ -854,6 +825,9 @@ bool QP_FSXfs::resize(QP_LibParted *_libparted, bool write, QP_PartInfo *partinf
 }
 
 bool QP_FSXfs::xfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
+    char szcmdline[200];
+    QString cmdline;
+
     bool error = false;
 
     if (!write) return true;
@@ -865,26 +839,26 @@ bool QP_FSXfs::xfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
         return false;
 
     /*---do the resize!---*/
-    if (!fs_open(lstExternalTools->getPath(XFS_GROWFS).latin1(), TMP_MOUNTPOINT, NULL)) {
+    sprintf(szcmdline, "%s", TMP_MOUNTPOINT);
+    cmdline = QString("%1 %2")
+            .arg(lstExternalTools->getPath(XFS_GROWFS))
+            .arg(szcmdline);
+    
+    if (!fs_open(cmdline)) {
         _message = QString(NOTFOUND);
         return false;
     }
 
     error = true;
     char *cline;
-    while (isRunning()) {
-        mutex.lock();
-        cline = fs_getline();
-        mutex.unlock();
-        if (cline) {
-            QString line = QString(cline);
+    while ((cline = fs_getline())) {
+       QString line = QString(cline);
 
-            QRegExp rx;
-            rx = QRegExp("^realtime =.*");
-            if (rx.search(line) == 0) {
-                error = false;
-            }
-        }
+       QRegExp rx;
+       rx = QRegExp("^realtime =.*");
+       if (rx.search(line) == 0) {
+           error = false;
+       }
     }
     fs_close();
 
