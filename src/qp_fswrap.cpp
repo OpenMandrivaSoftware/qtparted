@@ -89,7 +89,7 @@ bool QP_FSWrap::qpMount(QString device) {
     /*---mount the partition---*/
     sprintf(szcmdline, "%s %s", device.latin1(), TMP_MOUNTPOINT);
     cmdline = QString("%1 %2")
-            .arg("/bin/mount")
+            .arg(lstExternalTools->getPath(MOUNT))
             .arg(szcmdline);
 
     if (!fs_open(cmdline)) {
@@ -122,7 +122,7 @@ bool QP_FSWrap::qpUMount(QString device) {
     /*---umount the partition---*/
     sprintf(szcmdline, "%s", device.latin1());
     cmdline = QString("%1 %2")
-            .arg("/bin/umount")
+            .arg(lstExternalTools->getPath(UMOUNT))
             .arg(szcmdline);
 
     if (!fs_open(cmdline)) {
@@ -484,7 +484,7 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo *partinfo, PedSector) {
     /*---to the resize!---*/
     sprintf(szcmdline, "-o remount,resize= %s", TMP_MOUNTPOINT);
     cmdline = QString("%1 %2")
-            .arg("/bin/mount")
+            .arg(lstExternalTools->getPath(MOUNT))
             .arg(szcmdline);
 
     if (!fs_open(cmdline)) {

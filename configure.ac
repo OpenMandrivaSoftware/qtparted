@@ -162,6 +162,8 @@ AC_PATH_PROG(FSPATH_NTFSRESIZE,     ntfsresize, missing, $PATH:/usr/sbin:/usr/bi
 AC_PATH_PROG(FSPATH_MKFSEXT3,       mkfs.ext3, missing, $PATH:/usr/sbin:/usr/bin:/sbin:/usr/local/sbin)
 AC_PATH_PROG(FSPATH_MKFSJFS,        mkfs.jfs, missing, $PATH:/usr/sbin:/usr/bin:/sbin:/usr/local/sbin)
 AC_PATH_PROG(FSPATH_MKFSXFS,        mkfs.xfs, missing, $PATH:/usr/sbin:/usr/bin:/sbin:/usr/local/sbin)
+AC_PATH_PROG(FSPATH_MOUNT,          mount, missing, $PATH:/usr/sbin:/usr/bin:/sbin:/usr/local/sbin)
+AC_PATH_PROG(FSPATH_UMOUNT,         umount, missing, $PATH:/usr/sbin:/usr/bin:/sbin:/usr/local/sbin)
 
 if test "$ntfs_support" = "yes" && test "$FSPATH_MKNTFS" = "missing" ; then
   AC_MSG_ERROR([*** mkntfs not found. Please, install ntfsprogs (http://linux-ntfs.sourceforge.net) or disable the NTFS support with  --disable-ntfs])
@@ -212,6 +214,8 @@ AC_SUBST(FSPATH_NTFSRESIZE)
 AC_SUBST(FSPATH_MKFSEXT3)
 AC_SUBST(FSPATH_MKFSJFS)
 AC_SUBST(FSPATH_MKFSXFS)
+AC_SUBST(FSPATH_MOUNT)
+AC_SUBST(FSPATH_UMOUNT)
 
 AC_SUBST(FILESYS_REISERFS_SUPPORT)
 AC_SUBST(FILESYS_EXT3FS_SUPPORT)

@@ -37,5 +37,9 @@
 #define MKFS_JFS_PATH                        "@FSPATH_MKFSJFS@"
 #define MKFS_XFS                             "mkfs.xfs"
 #define MKFS_XFS_PATH                        "@FSPATH_MKFSXFS@"
+#define MOUNT                                "mount"
+#define MOUNT_PATH                           "@FSPATH_MOUNT@"
+#define UMOUNT                               "umount"
+#define UMOUNT_PATH                          "@FSPATH_UMOUNT@"
 
 #endif // QP_OPTIONS_H

@@ -34,6 +34,8 @@ QP_Settings::QP_Settings() {
     QString mkfs_ext3_path = settings.readEntry("/qtparted/" MKFS_EXT3, MKFS_EXT3_PATH);
     QString mkfs_jfs_path = settings.readEntry("/qtparted/" MKFS_JFS, MKFS_JFS_PATH);
     QString mkfs_xfs_path = settings.readEntry("/qtparted/" MKFS_XFS, MKFS_XFS_PATH);
+    QString mount_path = settings.readEntry("/qtparted/" MOUNT, MOUNT_PATH);
+    QString umount_path = settings.readEntry("/qtparted/" UMOUNT, UMOUNT_PATH);
 
     lstExternalTools->add(MKNTFS, 
                           mkntfs_path,
@@ -50,6 +52,12 @@ QP_Settings::QP_Settings() {
     lstExternalTools->add(MKFS_XFS, 
                           mkfs_xfs_path,
                           QObject::tr("A program that create XFS partitions."));
+    lstExternalTools->add(MOUNT, 
+                          mount_path,
+                          QObject::tr("Utility for mount a filesystem."));
+    lstExternalTools->add(UMOUNT, 
+                          umount_path,
+                          QObject::tr("Utility for umount a filesystem."));
 }
 
 QP_Settings::~QP_Settings() {
@@ -68,12 +76,16 @@ void QP_Settings::setLayout(int layout) {
     QString mkfs_ext3_path = lstExternalTools->getPath(MKFS_EXT3);
     QString mkfs_jfs_path = lstExternalTools->getPath(MKFS_JFS);
     QString mkfs_xfs_path = lstExternalTools->getPath(MKFS_XFS);
+    QString mount_path = lstExternalTools->getPath(MOUNT);
+    QString umount_path = lstExternalTools->getPath(UMOUNT);
 
     settings.writeEntry("/qtparted/" MKNTFS, mkntfs_path);
     settings.writeEntry("/qtparted/" NTFSRESIZE, ntfsresize_path);
     settings.writeEntry("/qtparted/" MKFS_EXT3, mkfs_ext3_path);
     settings.writeEntry("/qtparted/" MKFS_JFS, mkfs_jfs_path);
     settings.writeEntry("/qtparted/" MKFS_XFS, mkfs_xfs_path);
+    settings.writeEntry("/qtparted/" MOUNT, mount_path);
+    settings.writeEntry("/qtparted/" UMOUNT, umount_path);
 }
 
 time_t QP_Settings::getDevUpdate(QString device) {
