@@ -7,8 +7,8 @@ TODO for QtParted (http://qtparted.sourceforge.net)
 MINOR-TODO (trivial changes):
 -----------------------------
 - Support for Resier4 (detection only)
-- Support for flags: hidden, lba, ...
-  (boot already supported)
+- Support for flags: lba, ...
+  (boot and hidden already supported)
 - Conversion from ext2 to ext3
 - Set maximal length of text in format/create dialogs:
   maxname for xfs label = 12

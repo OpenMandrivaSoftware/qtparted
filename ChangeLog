@@ -1,10 +1,14 @@
-* 0.4.4
+ChangeLog for QtParted:
+-----------------------
+
+* 0.4.4 (2004-04-25)
   - Added hidden flags for FAT/NTFS filesystem
   - Added support for read label (François Dupoux)
   - Added Catalan translation (Dani Hernandez)
-* 0.4.3
+
+* 0.4.3 (2004-03-13)
   - Improved stability with fs wrappers
   - New ntfsresize wrapper (tested with 1.8 and 1.9)
+
 * 0.4.2 (2004-03-04)
   - Fixed compilation errors with Qt-3.3
-
