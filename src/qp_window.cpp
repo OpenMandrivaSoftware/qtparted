@@ -887,7 +887,14 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
     mnuOperations->setItemChecked(mnuSetActiveID, partinfo->isActive());
 
     if (diskview->selPartInfo()->fsspec == diskview->filesystem->free()) {
-        actCreate->setEnabled(true);
+        /*---you cannot create more then 4 primary partions, but more then 4 logical!    ---*/
+        /*---please note that the test is > 4 'cause there is the free virtual partitions---*/
+        if ((diskview->libparted->partlist.count() > 4)
+        && (diskview->selPartInfo()->type != QTParted::logical)) {
+            actCreate->setEnabled(false);
+        } else {
+            actCreate->setEnabled(true);
+        }
         actFormat->setEnabled(false);
         actResize->setEnabled(false);
         actMove->setEnabled(false);
