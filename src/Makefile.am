@@ -89,14 +89,5 @@ qtparted_LDADD   = -ldl -lparted $(LIB_QPE) $(LIB_QT)
 DISTCLEANFILES = $(piguicqt_METASOURCES)
 MAINTAINERCLEANFILES = Makefile.in
 
-%.uic.h: %.ui
-	$(QT_UIC) -o $@ $<
-
-%.uic.cpp: %.ui
-	$(QT_UIC) -o $@ -impl $<c.h $<
-
-%.moc.cpp: %.h
-	$(QT_MOC) -o $@ $<
-
 AM_CXXFLAGS=
 CXXLINK = $(LIBTOOL) --mode=link $(CXX) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@ 
