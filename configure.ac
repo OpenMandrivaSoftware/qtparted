@@ -3,7 +3,7 @@ dnl http://qtparted.sourceforge.net
 
 AC_PREREQ(2.53)
 
-AC_INIT([qtparted],[0.4.2],[zanac@libero.it])
+AC_INIT([qtparted],[0.4.2_pre2],[zanac@libero.it])
 AC_CONFIG_SRCDIR([configure.ac])
 AM_CONFIG_HEADER(config.h)
 AC_PREFIX_DEFAULT([/usr])
@@ -11,7 +11,7 @@ AC_CANONICAL_SYSTEM
 AC_DEFINE([HOMEPAGE],["http://qtparted.sourceforge.net/"],["official web site"])
 
 PACKAGE=qtparted
-VERSION=0.4.2
+VERSION=0.4.2_pre2
 HOMEPAGE="http://qtparted.sourceforge.net/"
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
  
@@ -250,15 +250,15 @@ CPPFLAGS="$CPPFLAGS -fexceptions $QTE_NORTTI -Wall -Wno-deprecated" dnl "--no-rt
 DEFS="$DEFS -D_REENTRANT -D_FILE_OFFSET_BITS=64"
 
 dnl Static executables?
-AC_ARG_ENABLE(static,[  --enable-static         build static binaries],
-    exe_static=$enableval,
-    exe_static=no
-)
+dnl AC_ARG_ENABLE(static,[  --enable-static         build static binaries],
+dnl     exe_static=$enableval,
+dnl     exe_static=no
+dnl )
 
-if test "$exe_static" = "yes" ; then
-  QTPARTED_LDFLAGS="$QTPARTED_LDFLAGS -static"
-  AC_SUBST(QTPARTED_LDFLAGS)
-fi
+dnl if test "$exe_static" = "yes" ; then
+dnl  QTPARTED_LDFLAGS="$QTPARTED_LDFLAGS"
+dnl  AC_SUBST(QTPARTED_LDFLAGS)
+dnl fi
 
 AC_SUBST(QTPARTED_LIBS)
 
