@@ -61,7 +61,7 @@ public:
     static QP_FSWrap *fswrap(QString);
 
     /*---return the label---*/
-    static QString get_label(QString, QP_PartInfo *);
+    static QString get_label(QString, char *);
 
     int wrap_resize;
     bool wrap_move;
@@ -96,7 +96,7 @@ public:
     bool mkpartfs(QString dev, QString label);
     PedSector min_size(QString);
     QString fsname();
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
 
 private:
     bool ntfsresize(bool, QString dev, PedSector newsize); //this is the true ntfsresize wrapper
@@ -110,7 +110,7 @@ public:
     bool resize(QP_LibParted *, bool write, QP_PartInfo *, PedSector, PedSector);
     bool mkpartfs(QString dev, QString label);
     QString fsname();
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
     
 private:
     bool jfsresize(bool, QP_PartInfo *, PedSector newsize); //this is the true jfsresize wrapper
@@ -123,7 +123,7 @@ public:
     QP_FSExt3();
     bool mkpartfs(QString dev, QString label);
     QString fsname();
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
 };
 
 class QP_FSXfs : public QP_FSWrap {
@@ -134,7 +134,7 @@ public:
     bool mkpartfs(QString dev, QString label);
     bool resize(QP_LibParted *, bool write, QP_PartInfo *, PedSector, PedSector);
     QString fsname();
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
     
 private:
     bool xfsresize(bool, QP_PartInfo *, PedSector newsize); //this is the true xfsresize wrapper
@@ -144,28 +144,28 @@ class QP_FSFat16 : public QP_FSWrap {
 Q_OBJECT
 
 public:
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
 };
 
 class QP_FSFat32 : public QP_FSWrap {
 Q_OBJECT
 
 public:
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
 };
 
 class QP_FSExt2 : public QP_FSWrap {
 Q_OBJECT
 
 public:
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
 };
 
 class QP_FSReiserFS : public QP_FSWrap {
 Q_OBJECT
 
 public:
-    static QString _get_label(QP_PartInfo *);
+    static QString _get_label(char *);
 };
 
 #endif

@@ -472,10 +472,19 @@ bool QP_ActionList::get_partfilesystem_info(PedPartition *part, QP_PartInfo *par
 }
 
 bool QP_ActionList::get_partfilesystem_label(PedPartition *part, QP_PartInfo *partinfo) {
+    char buffer[512];
+    
     if (partinfo->_virtual)
         return true;
 
-    partinfo->_label = QP_FSWrap::get_label(partinfo->fsspec->name(), partinfo);
+    /*---open a new device, read a sector and close it---*/
+    ped_device_open(part->geom.dev);
+    ped_geometry_read(&part->geom, buffer, 0, 1);
+    ped_device_close (part->geom.dev);
+        
+    partinfo->_label = QP_FSWrap::get_label(partinfo->fsspec->name(), buffer);
+
+    return true;
 }
 
 void QP_ActionList::ins_resize(int num,
