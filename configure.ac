@@ -1,7 +1,7 @@
 dnl QtParted: Nice partition tool
 dnl http://qtparted.sourceforge.net
 
-AC_PREREQ(2.57)
+AC_PREREQ(2.53)
 
 AC_INIT([qtparted],[0.4.0-rc1],[zanac@libero.it])
 AC_CONFIG_SRCDIR([configure.ac])
@@ -215,7 +215,7 @@ AC_SUBST(FILESYS_XFS_SUPPORT)
 
 KDE_USE_QT(3)
 AC_ENABLE_SHARED(yes)
-AC_PATH_QT
+AC_PATH_QT(3.0)
 
 PATH_QTDIR="$QTDIR"
 AC_SUBST(PATH_QTDIR)
