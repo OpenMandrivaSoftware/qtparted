@@ -49,10 +49,6 @@
 <context>
     <name>QObject</name>
     <message>
-        <source>A script that return space used by a partition.</source>
-        <translation type="obsolete">Un script que devuelve el espacio usado por una partición.</translation>
-    </message>
-    <message>
         <source>A program that create NTFS partitions.</source>
         <translation>Un programa que crea particiones NTFS.</translation>
     </message>
@@ -63,10 +59,6 @@
     <message>
         <source>A program that create EXT3 partitions.</source>
         <translation>Un programa que crea particiones EXT3.</translation>
-    </message>
-    <message>
-        <source>A program that create JFS partition.</source>
-        <translation type="obsolete">Un programa que crea una partición JFS.</translation>
     </message>
     <message>
         <source>A program that create JFS partitions.</source>
@@ -100,7 +92,7 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Cannot umount partition device: %1.Please do it by hand first to commit the changes!</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede desmontar el dispositivo de la partición: %1. ¡Por favor, hágalo manualmente antes de efectuar los cambios!</translation>
     </message>
 </context>
 <context>
@@ -223,10 +215,6 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
         <translation>Examinando todas las particiones del disco.</translation>
     </message>
     <message>
-        <source>Getting info about partition %1.</source>
-        <translation type="obsolete">Obteniendo información sobre la partición %1.</translation>
-    </message>
-    <message>
         <source>Partition %s is being used.</source>
         <translation>La partición %s está en uso.</translation>
     </message>
@@ -244,26 +232,29 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ésta es una partición virtual.  No puede modificarla: use deshacer para volver.</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;resize&quot; scan, please report it!</source>
-        <translation type="unfinished"></translation>
+        <translation>Se ha encontrado un fallo en QTParted durante el examen para el redimensionamiento. ¡Por favor, informe de él!</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;mkfs&quot; scan, please report it!</source>
-        <translation type="unfinished"></translation>
+        <translation>Se ha encontrador un fallo en QTParted durante la creación del sistema de ficheros. ¡Por favor, informe de él!</translation>
     </message>
     <message>
         <source>Error committing device.
 This can happen when a device is mounted in the disk.
 Try to unmount all partitions on this disk.
 Please read the FAQ for this kind of error!</source>
-        <translation type="unfinished"></translation>
+        <translation>Error al efectuar los cambios sobre el dispositivo.
+Esto puede suceder cuando un dispositivo está montado en el disco.
+Pruebe a desmontar todas las particiones de este disco.
+¡Por favor, lea las Preguntas Más Frecuentes para este tipo de error!</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
-        <translation type="unfinished"></translation>
+        <translation>Se ha encontrado un fallo en QTParted durante el movimiento de una partición. ¡Por favor, informe de él!</translation>
     </message>
 </context>
 <context>
@@ -348,12 +339,6 @@ Please read the FAQ for this kind of error!</source>
         <translation>&amp;Operaciones</translation>
     </message>
     <message>
-        <source>WARNING
-Are you really sure to remove the selected partition?</source>
-        <translation type="obsolete">AVISO
-¿Seguro que quiere borrar la partición seleccionada?</translation>
-    </message>
-    <message>
         <source>this is a %1 partition
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
@@ -365,7 +350,7 @@ el sistema de ficheros es: %6</translation>
     </message>
     <message>
         <source>Enter &lt;b&gt;What&apos;s This&lt;/b&gt; modeIt enables the user to ask for help about widgets on the screen.</source>
-        <translation type="unfinished">Pulsar &lt;b&gt; Qué es esto?&lt;/b&gt; le permite pedir ayuda a los objetos de la pantalla.</translation>
+        <translation>Introducir &lt;b&gt;¿Qué es esto?&lt;/b&gt; permite al usuario pedir ayuda sobre los objetos de la pantalla.</translation>
     </message>
     <message>
         <source>Create</source>
@@ -378,12 +363,6 @@ el sistema de ficheros es: %6</translation>
     <message>
         <source>What&apos;s This</source>
         <translation>Qué es esto</translation>
-    </message>
-    <message>
-        <source>WARNING
-Are you really sure to process?</source>
-        <translation type="obsolete">AVISO
-¿Seguro que quieres hacerlo?</translation>
     </message>
     <message>
         <source>About QT</source>
@@ -469,23 +448,23 @@ Esto significa que no puede redimensionar o mover esta partición.</translation>
     </message>
     <message>
         <source>&amp;Commit</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Aplicar</translation>
     </message>
     <message>
         <source>Commit</source>
-        <translation type="unfinished"></translation>
+        <translation>Aplicar</translation>
     </message>
     <message>
         <source>Commit all operations</source>
-        <translation type="unfinished"></translation>
+        <translation>Efectuar todas las operaciones</translation>
     </message>
     <message>
         <source>Set Active...</source>
-        <translation type="unfinished"></translation>
+        <translation>Establecer partición activa...</translation>
     </message>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation type="unfinished"></translation>
+        <translation>Esta es una partición virtual. Usted no puede modificarla: use deshacer para volver.</translation>
     </message>
     <message>
         <source>primary</source>
@@ -501,14 +480,17 @@ Esto significa que no puede redimensionar o mover esta partición.</translation>
     </message>
     <message>
         <source>(No Active on Drive)</source>
-        <translation type="unfinished"></translation>
+        <translation>(Ninguna activa en el disco)</translation>
     </message>
     <message>
         <source>Currently active partition: %1
 Change active partition to: %2
 
 Are you sure you want to change the active partition?</source>
-        <translation type="unfinished"></translation>
+        <translation>Partición activa actualmente: %1
+Cambiar la partición activa a: %2
+
+¿Está seguro de que quiere cambiar la partición activa?</translation>
     </message>
     <message>
         <source>&amp;Format</source>
@@ -525,14 +507,6 @@ Are you sure you want to change the active partition?</source>
     <message>
         <source>&amp;Device property</source>
         <translation>Propiedades del &amp;dispositivo</translation>
-    </message>
-    <message>
-        <source>See the property of this device</source>
-        <translation type="obsolete">Ver las propiedades de este dispositivo</translation>
-    </message>
-    <message>
-        <source>Some information about the device</source>
-        <translation type="obsolete">Alguna información del dispositivo</translation>
     </message>
     <message>
         <source>&amp;Make a new Partition Table</source>
@@ -566,33 +540,35 @@ All data will be lost!</source>
     </message>
     <message>
         <source>Device status: readonly.</source>
-        <translation type="unfinished"></translation>
+        <translation>Estado del dispositivo: de sólo lectura.</translation>
     </message>
     <message>
         <source>Device status: busy.</source>
-        <translation type="unfinished"></translation>
+        <translation>Estado del dispositivo: ocupado.</translation>
     </message>
     <message>
         <source>Device status: available.</source>
-        <translation type="unfinished"></translation>
+        <translation>Estado del dispositivo: disponbile.</translation>
     </message>
     <message>
         <source>You&apos;re commiting all changes. Warning, you can lost data!
 Make sure also that you&apos;re not commiting a busy device...
 In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
-        <translation type="unfinished"></translation>
+        <translation>Va a efectuar todos los cambios. Advertencia: ¡puede perder datos!
+Asegúrese también de qué no va a hacer los cambios sobre un dispositivo ocupado...
+En otras palabras, ¡POR FAVOR DESMONTE TODAS LAS PARTICIONES antes de efectuar los cambios!</translation>
     </message>
     <message>
         <source>&amp;Device</source>
-        <translation type="unfinished"></translation>
+        <translation>&amp;Dispositivo</translation>
     </message>
     <message>
         <source>See the property of this disk device</source>
-        <translation type="unfinished"></translation>
+        <translation>Ver las propiedades de este dispositivo de disco</translation>
     </message>
     <message>
         <source>Some information about the disk device</source>
-        <translation type="unfinished"></translation>
+        <translation>Algo de información sobre el dispositivo de disco</translation>
     </message>
 </context>
 <context>
@@ -627,26 +603,26 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     </message>
     <message>
         <source>Status: </source>
-        <translation type="unfinished"></translation>
+        <translation>Estado:</translation>
     </message>
     <message>
         <source>readonly.</source>
-        <translation type="unfinished"></translation>
+        <translation>de sólo lectura.</translation>
     </message>
     <message>
         <source>busy.</source>
-        <translation type="unfinished"></translation>
+        <translation>ocupado.</translation>
     </message>
     <message>
         <source>available.</source>
-        <translation type="unfinished"></translation>
+        <translation>disponible.</translation>
     </message>
 </context>
 <context>
     <name>QP_PartInfo</name>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation type="unfinished"></translation>
+        <translation>Ésta es una partición virtual. Usted no puede modificarla: use deshacer en su lugar.</translation>
     </message>
     <message>
         <source>Bug during mkfs! Cannot format virtual partitions!</source>
@@ -654,7 +630,7 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
-        <translation type="unfinished"></translation>
+        <translation>No se puede agrandar una partición si el dispositivo de disco está ocupado</translation>
     </message>
 </context>
 <context>
@@ -670,10 +646,6 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     <message>
         <source>Type</source>
         <translation>Tipo</translation>
-    </message>
-    <message>
-        <source>Size (Mb)</source>
-        <translation type="obsolete">Tamaño (Mb)</translation>
     </message>
     <message>
         <source>Start</source>
@@ -705,11 +677,11 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     </message>
     <message>
         <source>Empty</source>
-        <translation type="unfinished"></translation>
+        <translation>Vacío</translation>
     </message>
     <message>
         <source>Partition table</source>
-        <translation type="unfinished"></translation>
+        <translation>Tabla de particiones</translation>
     </message>
 </context>
 <context>
@@ -724,15 +696,15 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     </message>
     <message>
         <source>Chart and ListBox</source>
-        <translation type="unfinished">Gráfica y listado</translation>
+        <translation>Gráfica y detalles</translation>
     </message>
     <message>
         <source>Only Chart</source>
-        <translation type="unfinished">Sólo gráfica</translation>
+        <translation>Sólo gráfica</translation>
     </message>
     <message>
         <source>Only ListBox</source>
-        <translation type="unfinished">Solo listado</translation>
+        <translation>Sólo detalles</translation>
     </message>
     <message>
         <source>&amp;External Tools</source>
@@ -760,10 +732,6 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     <message>
         <source>&amp;Size:</source>
         <translation>&amp;Tamaño:</translation>
-    </message>
-    <message>
-        <source>MB</source>
-        <translation type="obsolete">MB</translation>
     </message>
     <message>
         <source>Create &amp;as:</source>
@@ -851,10 +819,6 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
         <translation>Progreso</translation>
     </message>
     <message>
-        <source>Current Operation (1 of 1)</source>
-        <translation type="obsolete">Operacin en curso (1 di 1)</translation>
-    </message>
-    <message>
         <source>Progress:</source>
         <translation>Progreso:</translation>
     </message>
@@ -886,10 +850,6 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
         <translation>Espacio libre &amp;antes:</translation>
     </message>
     <message>
-        <source>MB</source>
-        <translation type="obsolete">MB</translation>
-    </message>
-    <message>
         <source>New Size:</source>
         <translation>Nuevo tamaño:</translation>
     </message>
@@ -913,30 +873,26 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
 <context>
     <name>QP_dlgAbout</name>
     <message>
-        <source>&amp;OK</source>
-        <translation type="obsolete">&amp;Aceptar</translation>
-    </message>
-    <message>
         <source>O&amp;K</source>
-        <translation type="unfinished"></translation>
+        <translation>O&amp;K</translation>
     </message>
 </context>
 <context>
     <name>QP_dlgCreate</name>
     <message>
         <source>This filesystem cannot be greater of %1</source>
-        <translation type="unfinished"></translation>
+        <translation>Este sistema de ficheros no puede ser mayor de %1</translation>
     </message>
 </context>
 <context>
     <name>QP_dlgDevProperty</name>
     <message>
         <source>Devfs is enabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Devfs está habilitado.</translation>
     </message>
     <message>
         <source>Devfs is disabled.</source>
-        <translation type="unfinished"></translation>
+        <translation>Devfs está deshabilitado.</translation>
     </message>
     <message>
         <source>Partition table: %1</source>
