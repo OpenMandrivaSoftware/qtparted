@@ -1,3 +1,16 @@
+qtparted (0.4.3) unstable; urgency=low
+
+  * Improved stability with fs wrappers
+  * New ntfsresize wrapper (tested with 1.8 and 1.9)
+
+ -- Vanni Brutto <zanac@libero.it>  Sat, 03 Mar 2004 11:17:56 +0100
+
+qtparted (0.4.2) unstable; urgency=low
+
+  * Fixed QT 3.3 stuff (by François Dupoux)
+
+ -- Vanni Brutto <zanac@libero.it>  Sat, 04 Mar 2004 10:10:10 +0100
+
 qtparted (0.4.1) unstable; urgency=low
 
   * Added jfs/xfs resize
