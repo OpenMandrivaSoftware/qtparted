@@ -2,6 +2,7 @@ qtparted (0.4.0-rc1) unstable; urgency=low
 
   * Fixed all localizations
   * Fixed a rare segfault with empty partition table
+  * Fixed configure script
   * Added debug log in /var/log (switch --log, default=1)
 
  -- Vanni Brutto <zanac@libero.it>  Sat, 23 Aug 2003 17:24:50 +0100
