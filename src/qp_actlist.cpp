@@ -20,6 +20,7 @@
 */
 
 #include <qapplication.h>
+#include <qmessagebox.h>
 #include "qp_filesystem.h"
 #include "qp_actlist.h"
 #include "qp_options.h"
@@ -116,13 +117,30 @@ QP_ActionList::QP_ActionList(QP_LibParted *libparted) {
 
     /*---save of the original device state---*/
     disk = ped_disk_new(_libparted->dev);
-    if (!disk) showDebug("%s", "actionlist::actionlist, ped_disk_new ko\n"); //FIXME goto error
+    if (!disk) {
+        showDebug("%s", "actionlist::actionlist, ped_disk_new ko\n");
+        
+        QString label = QString(tr("Critical error during ped_disk_new!"));
+        QMessageBox::information(NULL, PROG_NAME, label);
+
+        return ;
+    }
 
     listdisk.append(disk);
 
     /*---make a backup of the disk (we will use this)---*/
     _disk = ped_disk_duplicate(disk);
-    if (!_disk) showDebug("%s", "actionlist::actionlist, ped_disk_duplicate ko\n"); //FIXME goto error
+    if (!_disk) {
+        showDebug("%s", "actionlist::actionlist, ped_disk_duplicate ko\n");
+        ped_disk_destroy(disk);
+        listdisk.removeLast();
+        disk = NULL;
+        
+        QString label = QString(tr("Critical error during ped_disk_duplicate!"));
+        QMessageBox::information(NULL, PROG_NAME, label);
+
+        return ;
+    }
 
     /*---make the partlist of the disk---*/
     scan_partitions();
