@@ -11,5 +11,10 @@ all:
 	perl admin/am_edit
 	@rm -rf autom4te.cache
 	@chmod +x ./configure
+	@chmod +x missing
+	@chmod +x install-sh
+	@chmod +x ltmain.sh
+	@chmod +x mkinstalldirs
+	@chmod +x depcomp
 	@echo ""
 	@echo "Now, you can run ./configure && make"
