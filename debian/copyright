@@ -1,14 +1,22 @@
-This package was debianized by Vanni Brutto <zanac4ever(-at)virgilio.it> on
+This package was debianized by Vanni Brutto <zanac(-at)libero.it> on
 Sun, 26 Jan 2003 20:29:44 +0100.
 
-It was downloaded from http://members.xoom.it/zanac/qtparted
+It was downloaded from http://qtparted.sourceforge.net
 
-Upstream Author(s): Vanni Brutto
+Upstream Author: Vanni Brutto <zanac@libero.it>
 
-This software is copyright (c) 1998-99 by Emil Brink, Obsession
-Development.
+This software is copyright (c) 2004 by Vanni Brutto <zanac@libero.it>.
 
 You are free to distribute this software under the terms of
 the GNU General Public License.
 On Debian systems, the complete text of the GNU General Public
 License can be found in /usr/share/common-licenses/GPL file.
+
+
+  As a special exception, Justin Karneges gives permission to link
+  this program with the Qt Library (commercial or non-commercial edition),
+  and distribute the resulting executable, without including the source
+  code for the Qt library in the source distribution.
+
+  As a special exception, Justin Karneges gives permission to link
+  this program with the OpenSSL Library.

@@ -1,3 +1,11 @@
+qtparted (0.4.4) unstable; urgency=low
+
+  * Added hidden flags for FAT/NTFS filesystem
+  * Added support for read label (François Dupoux)
+  * Added Catalan translation (Dani Hernandez)
+
+ -- Vanni Brutto <zanac4ever@virgilio.it>  Sat, 24 Apr 2004 17:44:40 +0100
+
 qtparted (0.4.3) unstable; urgency=low
 
   * Improved stability with fs wrappers

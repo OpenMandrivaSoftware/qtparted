@@ -172,6 +172,14 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation>Errore critico durante una chiamata a ped_disk_duplicate!</translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation>Preparazione per nascondere una partizione.</translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation>Nascondendo una partizione.</translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -223,6 +231,13 @@ Parted homepage: http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Syncing device.</source>
         <translation>Sincronizzazione del dispositivo.</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
+        <translation>Nessuna etichetta</translation>
     </message>
 </context>
 <context>
@@ -315,6 +330,10 @@ Per favore, leggi le FAQ per questo tipo di errore!</translation>
     <message>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>Un bug è stato trovato in QTParted durante lo spostamento di una partizione, per favore, segnalalo!</translation>
+    </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation>Non posso cambiare nascondere la partizione</translation>
     </message>
 </context>
 <context>
@@ -627,6 +646,14 @@ In altre parole PER FAVORE SMONTA TUTTE LE PARTIZIONI prima di applicare cambiam
         <source>Some information about the disk device</source>
         <translation>Mostra alcune informazioni sul disco dispositivo</translation>
     </message>
+    <message>
+        <source>Set Hidden...</source>
+        <translation type="obsolete">Nascondi...</translation>
+    </message>
+    <message>
+        <source>Hide</source>
+        <translation>Nascondi</translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -743,6 +770,10 @@ In altre parole PER FAVORE SMONTA TUTTE LE PARTIZIONI prima di applicare cambiam
     <message>
         <source>Label</source>
         <translation>Etichetta</translation>
+    </message>
+    <message>
+        <source>Hidden</source>
+        <translation>Nascosto</translation>
     </message>
 </context>
 <context>

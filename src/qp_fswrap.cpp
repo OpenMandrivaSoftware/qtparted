@@ -1056,97 +1056,9 @@ QString QP_FSExt2::_get_label(PedPartition *part)
 QString QP_FSReiserFS::_get_label(PedPartition *) 
 {
     //return QString::null;
-    return QString("No label");
+    return QString(tr("No label"));
 }
 
-// ===============================================================================
-// ===============================================================================
-// ===============================================================================
-
-#include "qptypes.h"
-
-#define swab16(x) ((u16)( (((u16)(x) & (u16)0x00ffU) << 8) | (((u16)(x) & (u16)0xff00U) >> 8) ))
-
-#define swab32(x) ((u32)( (((u32)(x) & (u32)0x000000ffUL) << 24) | \
-                          (((u32)(x) & (u32)0x0000ff00UL) <<  8) | \
-                          (((u32)(x) & (u32)0x00ff0000UL) >>  8) | \
-                          (((u32)(x) & (u32)0xff000000UL) >> 24) ))
-#define swab64(x) ((u64)(  (u64)(((u64)(x) & (u64)0x00000000000000ffULL) << 56) | \
-                           (u64)(((u64)(x) & (u64)0x000000000000ff00ULL) << 40) | \
-                           (u64)(((u64)(x) & (u64)0x0000000000ff0000ULL) << 24) | \
-                           (u64)(((u64)(x) & (u64)0x00000000ff000000ULL) <<  8) | \
-                           (u64)(((u64)(x) & (u64)0x000000ff00000000ULL) >>  8) | \
-                           (u64)(((u64)(x) & (u64)0x0000ff0000000000ULL) >> 24) | \
-                           (u64)(((u64)(x) & (u64)0x00ff000000000000ULL) >> 40) | \
-                           (u64)(((u64)(x) & (u64)0xff00000000000000ULL) >> 56) )) 
-
-// ------------- CPU TO XXX ---------------
-#ifdef ENDIAN_BIG // BIG ENDIAN
-#  define CpuToLe16(a) (swab16(a))
-#  define CpuToBe16(a) (a)
-#  define CpuToLe32(a) (swab32(a)) 
-#  define CpuToBe32(a) (a)
-#  define CpuToLe64(a) (swab64(a))
-#  define CpuToBe64(a) (a)
-#else // LITTLE_ENDIAN
-#  define CpuToLe16(a) (a)
-#  define CpuToBe16(a) (swab16(a))
-#  define CpuToLe32(a) (a)
-#  define CpuToBe32(a) (swab32(a))
-#  define CpuToLe64(a) (a)
-#  define CpuToBe64(a) (swab64(a))
-#endif // ENDIAN
-
-#define CpuToLe(a) \
-    ((sizeof(a) == 8) ? CpuToLe64(a) : \
-    ((sizeof(a) == 4) ? CpuToLe32(a) : \
-    ((sizeof(a) == 2) ? CpuToLe16(a) : \
-    (a))))
-
-#define CpuToBe(a) \
-    ((sizeof(a) == 8) ? CpuToBe64(a) : \
-    ((sizeof(a) == 4) ? CpuToBe32(a) : \
-    ((sizeof(a) == 2) ? CpuToBe16(a) : \
-    (a))))
-
-// ------------- XXX TO CPU --------------
-#define Le16ToCpu(a) CpuToLe16(a)
-#define Le32ToCpu(a) CpuToLe32(a)
-#define Le64ToCpu(a) CpuToLe64(a)
-
-#define Be16ToCpu(a) CpuToBe16(a)
-#define Be32ToCpu(a) CpuToBe32(a)
-#define Be64ToCpu(a) CpuToBe64(a)
-
-#define LeToCpu(a) \
-    ((sizeof(a) == 8) ? Le64ToCpu(a) : \
-    ((sizeof(a) == 4) ? Le32ToCpu(a) : \
-    ((sizeof(a) == 2) ? Le16ToCpu(a) : \
-    (a))))
-
-#define BeToCpu(a) \
-    ((sizeof(a) == 8) ? Be64ToCpu(a) : \
-    ((sizeof(a) == 4) ? Be32ToCpu(a) : \
-    ((sizeof(a) == 2) ? Be16ToCpu(a) : \
-    (a))))
-
-#define NTFS_GETU8(p)      (*(u8*)(p))
-#define NTFS_GETU16(p)     ((u16)Le16ToCpu(*(u16*)(p)))
-#define NTFS_GETU24(p)     ((u32)NTFS_GETU16(p) | ((u32)NTFS_GETU8(((char*)(p))+2)<<16))
-#define NTFS_GETU32(p)     ((u32)Le32ToCpu(*(u32*)(p)))
-#define NTFS_GETU40(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU8(((char*)(p))+4))<<32))
-#define NTFS_GETU48(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU16(((char*)(p))+4))<<32))
-#define NTFS_GETU56(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU24(((char*)(p))+4))<<32))
-#define NTFS_GETU64(p)     ((u64)Le64ToCpu(*(u64*)(p)))
-
-#define NTFS_GETS8(p)        ((*(s8*)(p)))
-#define NTFS_GETS16(p)       ((s16)Le16ToCpu(*(s16*)(p)))
-#define NTFS_GETS24(p)       (NTFS_GETU24(p) < 0x800000 ? (s32)NTFS_GETU24(p) : (s32)(NTFS_GETU24(p) - 0x1000000))
-#define NTFS_GETS32(p)       ((s32)Le32ToCpu(*(s32*)(p)))
-#define NTFS_GETS40(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS8(((char*)(p))+4)) << 32))
-#define NTFS_GETS48(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS16(((char*)(p))+4)) << 32))
-#define NTFS_GETS56(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS24(((char*)(p))+4)) << 32))
-#define NTFS_GETS64(p)	     ((s64)NTFS_GETU64(p))
 
 QString QP_FSNtfs::_get_label(PedPartition *part) 
 {

@@ -172,6 +172,14 @@ Parted homepage: http://www.gnu.org/software/parted/</source>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation>Критическая ошибка во время ped_disk_duplicate!</translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -222,6 +230,13 @@ Parted homepage: http://www.gnu.org/software/parted/</source>
     </message>
     <message>
         <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -316,6 +331,10 @@ Please read the FAQ for this kind of error!</source>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>В QTParted была найдена ошибка во время сканирования &quot;move&quot;, пожалуйста сообщите об этом!</translation>
     </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_MainWindow</name>
@@ -400,7 +419,7 @@ Please read the FAQ for this kind of error!</source>
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation>Это %1 раздел.
+        <translation type="unfinished">Это %1 раздел.
 он начинается с %2 и заканчивается %3
 он может быть увеличен влево на %4 и вправо на %5
 файловая система: %6</translation>
@@ -627,6 +646,10 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
         <source>Some information about the disk device</source>
         <translation>Краткая информация о диске</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -742,6 +765,10 @@ In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
     </message>
     <message>
         <source>Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hidden</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

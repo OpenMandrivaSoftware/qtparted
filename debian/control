@@ -1,14 +1,14 @@
 Source: qtparted
 Section: x11
 Priority: optional
-Maintainer: Vanni Brutto <zanac4ever@virgilio.it>
-Build-Depends: debhelper (>> 3.0.0), libqt3-mt-dev (>= 3.1.1), libparted1.6-dev (>= 1.6.6), gawk (>= 3.0), grep (>= 2.4), jfsutils (>= 1.1.1), ntfstools (>= 1.7.1), xfsprogs (>= 2.4.12), libreiserfs0.3-0 (>= 0.3.0.4), progsreiserfs (>= 0.3.0.4), libuuid1 (>= 1.34), uuid-dev (>= 1.2)
-Standards-Version: 3.5.2
+Maintainer: Fabian Franz <debian@fabian-franz.de>
+Build-Depends: debhelper (>> 3.0.0), libqt3-mt-dev (>= 3.1.1), libparted1.6-dev (>= 1.6.6), gawk (>= 3.0), grep (>= 2.4), jfsutils (>= 1.1.1), ntfstools (>= 1.7.1), xfsprogs (>= 2.4.12), libreiserfs0.3-0 (>= 0.3.0.4), progsreiserfs (>= 0.3.0.4), libuuid1 (>= 1.34), uuid-dev (>= 1.2), libreiserfs0.3-dev (>=0.3.0.4)
+Standards-Version: 3.6.0
 
 Package: qtparted
 Architecture: any
-Depends: ${shlibs:Depends} 
+Depends: ${shlibs:Depends}, gksu 
 Recommends: parted (>= 1.6.6), e2fsprogs (>= 1.2), jfsutils (>= 1.1.1), ntfstools (>= 1.7.1), xfsprogs (>= 2.4.12), libreiserfs0.3-dev (>= 0.3.0.4), libreiserfs0.3-0 (>= 0.3.0.4), progsreiserfs (>= 0.3.0.4)
 Description: A parted frontend using QT
- QTParted is a Partition Magic clone writed using C++.
+ QTParted is a Partition Magic clone writen using C++.
  It is based on libparted and QT toolkit.

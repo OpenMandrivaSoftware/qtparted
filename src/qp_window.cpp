@@ -361,7 +361,7 @@ void QP_MainWindow::addMenuBar() {
     mnuOperations->connectItem(mnuSetActiveID, this, SLOT(slotSetActive()));
     mnuOperations->setItemEnabled(mnuSetActiveID, false);
 
-    mnuSetHiddenID = mnuOperations->insertItem(tr("Set Hidden..."));
+    mnuSetHiddenID = mnuOperations->insertItem(tr("Hide"));
     mnuOperations->connectItem(mnuSetHiddenID, this, SLOT(slotSetHidden()));
     mnuOperations->setItemEnabled(mnuSetHiddenID, false);
 
@@ -772,15 +772,13 @@ void QP_MainWindow::slotProperty() {
                     "end at: %3\n"
                     "it can grow left: %4 and "
                     "right: %5\n"
-                    "the filesystem is: %6"
-                    "label: %7\n"))
+                    "the filesystem is: %6"))
                             .arg(type)
                             .arg(diskview->selPartInfo()->mb_start())
                             .arg(diskview->selPartInfo()->mb_end())
                             .arg(diskview->selPartInfo()->mb_t_start())
                             .arg(diskview->selPartInfo()->mb_t_end())
-                            .arg(diskview->selPartInfo()->fsspec->name())
-                            .arg(diskview->selPartInfo()->label());
+                            .arg(diskview->selPartInfo()->fsspec->name());
 
     QMessageBox::information(this, PROG_NAME, label);
 }

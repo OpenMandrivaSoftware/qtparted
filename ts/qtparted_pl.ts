@@ -172,6 +172,14 @@ Strona główna Parted: http://www.gnu.org/software/parted/</translation>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -222,6 +230,13 @@ Strona główna Parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -315,6 +330,10 @@ Proszę przeczytać FAQ dla tego typu problemów!</translation>
     <message>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>Błąd został znaleziony w QTParted podczas skanowania &quot;przesuń&quot;, proszę poinformuj nas!</translation>
+    </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -499,7 +518,7 @@ Oznacza to, że nie możesz zmienić rozmiaru ani przesunąć tej partycji.
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation>To jest %1 partycja
+        <translation type="unfinished">To jest %1 partycja
 Początek: %2 i koniec: %3
 Może wzrosnąć w lewo: %4 i w prawo: %5
 Jej system plików to: %6
@@ -629,6 +648,10 @@ Innymi słowy ODMONTUJ WSZYSTKIE PARTYCJE zanim ostatecznie potwierdzisz zmiany!
         <source>Some information about the disk device</source>
         <translation>Wybrane informacje o dysku</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -744,6 +767,10 @@ Innymi słowy ODMONTUJ WSZYSTKIE PARTYCJE zanim ostatecznie potwierdzisz zmiany!
     </message>
     <message>
         <source>Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hidden</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -1,6 +1,6 @@
-EXTRA_DIST = qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_ua.qm
+EXTRA_DIST = qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_ua.qm qtparted_ca.qm
 
-trans_DATA = qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_ua.qm
+trans_DATA = qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_ua.qm qtparted_ca.qm
 transdir   = $(prefix)/share/qtparted/locale
 
 qtparted_cs.qm:
@@ -34,6 +34,10 @@ qtparted_ru.qm:
 qtparted_ua.qm:
 	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_ua.ts
 	lrelease qtparted_ua.ts
+
+qtparted_ca.qm:
+	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_ca.ts
+	lrelease qtparted_ca.ts
 
 CLEANFILES = $(trans_DATA)
 DISTCLEANFILES = $(trans_DATA)

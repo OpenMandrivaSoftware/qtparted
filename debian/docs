@@ -1,7 +1,4 @@
 doc/README
-doc/README.Debian
 doc/BUGS
-COPYING
-INSTALL
 AUTHORS
-TODO
+doc/TODO.txt

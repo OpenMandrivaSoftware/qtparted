@@ -173,6 +173,14 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation>Erreur critique durant l&apos;appel ped_disk_duplicate !</translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -224,6 +232,13 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     <message>
         <source>Syncing device.</source>
         <translation>Synchronisation du périphérique.</translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -317,6 +332,10 @@ Merci de lire la FAQ pour ce type d&apos;erreur !</translation>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>Un bug a été trouvé dans QtParted pendant le rafraichissement du déplacement. Merci de signaler ce bug !</translation>
     </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_MainWindow</name>
@@ -401,7 +420,7 @@ Merci de lire la FAQ pour ce type d&apos;erreur !</translation>
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation>Cette partition est une partition %1
+        <translation type="unfinished">Cette partition est une partition %1
 Elle débute à : %2 et finit à : %3
 Elle peut être aggrandie sur la gauche à %4 et sur la droite à %5
 Son système de fichier est : %6</translation>
@@ -629,6 +648,10 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
         <source>Some information about the disk device</source>
         <translation>Affiche des informations à propos du disque dur</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -745,6 +768,10 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     <message>
         <source>Label</source>
         <translation>Étiquette</translation>
+    </message>
+    <message>
+        <source>Hidden</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>

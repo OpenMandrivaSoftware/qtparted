@@ -173,6 +173,14 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -223,6 +231,13 @@ Página web de parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -317,6 +332,10 @@ Pruebe a desmontar todas las particiones de este disco.
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>Se ha encontrado un fallo en QTParted durante el movimiento de una partición. ¡Por favor, informe de él!</translation>
     </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_MainWindow</name>
@@ -404,7 +423,7 @@ Pruebe a desmontar todas las particiones de este disco.
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation>ésta es una partición %1
+        <translation type="unfinished">ésta es una partición %1
 empieza en: %2 y termina en: %3
 puede crecer hacia la izquierda: %4 y hacia la derecha: %5
 el sistema de ficheros es: %6</translation>
@@ -631,6 +650,10 @@ En otras palabras, ¡POR FAVOR DESMONTE TODAS LAS PARTICIONES antes de efectuar 
         <source>Some information about the disk device</source>
         <translation>Algo de información sobre el dispositivo de disco</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -746,6 +769,10 @@ En otras palabras, ¡POR FAVOR DESMONTE TODAS LAS PARTICIONES antes de efectuar 
     </message>
     <message>
         <source>Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hidden</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

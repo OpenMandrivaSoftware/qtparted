@@ -120,4 +120,5 @@ TRANSLATIONS = ../ts/qtparted_it.ts \
                ../ts/qtparted_pl.ts \
                ../ts/qtparted_cs.ts \
                ../ts/qtparted_ru.ts \
-               ../ts/qtparted_ua.ts
+               ../ts/qtparted_ua.ts \
+               ../ts/qtparted_ca.ts

@@ -172,6 +172,14 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -222,6 +230,13 @@ Domovská stránka: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -316,6 +331,10 @@ Více o tomto druhu chyby naleznete ve FAQ!</translation>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>V programu QTParted se vyskytla chyba během funkce &quot;move&quot;, prosím nahlašte ji!</translation>
     </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_MainWindow</name>
@@ -400,7 +419,7 @@ Více o tomto druhu chyby naleznete ve FAQ!</translation>
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation>Toto je oddíl %1
+        <translation type="unfinished">Toto je oddíl %1
 Oddíl začíná na: %2 a končí na: %3
 Může být zvětšen zleva o %4 a zprava o %5
 Souborový systém je: %6</translation>
@@ -627,6 +646,10 @@ Před potvrzením změn raději ODPOJTE VŠECHNY DISKOVÉ ODDÍLY!</translation>
         <source>Some information about the disk device</source>
         <translation>Informace o disku</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -742,6 +765,10 @@ Před potvrzením změn raději ODPOJTE VŠECHNY DISKOVÉ ODDÍLY!</translation>
     </message>
     <message>
         <source>Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hidden</source>
         <translation type="unfinished"></translation>
     </message>
 </context>

@@ -172,6 +172,14 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
         <source>Critical error during ped_disk_duplicate!</source>
         <translation type="unfinished"></translation>
     </message>
+    <message>
+        <source>Preparation for hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hiding a partition.</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_DriveList</name>
@@ -222,6 +230,13 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Syncing device.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>QP_FSReiserFS</name>
+    <message>
+        <source>No label</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
@@ -316,6 +331,10 @@ Bitte lesen sie die FAQ für diese Art von Fehlern!</translation>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
         <translation>Während des &quot;move&quot; scans wurde ein Fehler in QTParted gefunden, bitte diesen melden!</translation>
     </message>
+    <message>
+        <source>Cannot change the hidden status on this partition</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_MainWindow</name>
@@ -400,7 +419,7 @@ Bitte lesen sie die FAQ für diese Art von Fehlern!</translation>
 it start at: %2 and end at: %3
 it can grow left: %4 and right: %5
 the filesystem is: %6</source>
-        <translation>Dies ist eine %1 Partition.
+        <translation type="unfinished">Dies ist eine %1 Partition.
 Sie beginnt bei %2 und endet bei %3
 Sie kann nach links bis %4 wachsen, nach rechts bis %5
 Das Dateisystem ist %6</translation>
@@ -627,6 +646,10 @@ In anderen Worten, BITTE ALLE LAUFWERKSVERBINDUNGEN ZU DIESEM LAUFWERK LÖSEN, b
         <source>Some information about the disk device</source>
         <translation>EInige Informationen über dieses Laufwerk</translation>
     </message>
+    <message>
+        <source>Hide</source>
+        <translation type="unfinished"></translation>
+    </message>
 </context>
 <context>
     <name>QP_NavView</name>
@@ -742,6 +765,10 @@ In anderen Worten, BITTE ALLE LAUFWERKSVERBINDUNGEN ZU DIESEM LAUFWERK LÖSEN, b
     </message>
     <message>
         <source>Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <source>Hidden</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
