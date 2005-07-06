@@ -134,22 +134,22 @@ AC_ARG_ENABLE(ext3fs,[  --disable-ext3fs        Disable the ext3fs support (you 
 dnl options for jfs
 AC_ARG_ENABLE(jfs,[  --disable-jfs           Disable the jfs support (you can use this option if jfsutils is missing)],
     jfs_support=$enableval,
-    jfs_support=yes
+    jfs_support=maybe
 )
 
 dnl options for xfs
 AC_ARG_ENABLE(xfs,[  --disable-xfs           Disable the xfs support (you can use this option if xfsprogs is missing)],
     xfs_support=$enableval,
-    xfs_support=yes
+    xfs_support=maybe
 )
 
 dnl options for libreiserfs
 AC_ARG_ENABLE(reiserfs,[  --disable-reiserfs      Disable the reiserfs support (you can use this option if progsreiserfs is missing)],
     reiserfs_support=$enableval,
-    reiserfs_support=yes
+    reiserfs_support=maybe
 )
-if test "$reiserfs_support" = "yes" ; then
-  AC_CHECK_LIB(reiserfs, reiserfs_fs_create, [], AC_MSG_ERROR([*** reiserfsprogs library (libreiserfs) not found]))
+if test "$reiserfs_support" != "no" ; then
+  AC_CHECK_LIB(reiserfs, reiserfs_fs_create, [], if test "$reiserfs_support" = "maybe"; then AC_MSG_WARN([reiserfs support will not be built.]); else AC_MSG_ERROR([*** reiserfsprogs library (libreiserfs) not found]); fi)
   FILESYS_REISERFS_SUPPORT=1
   QTPARTED_LIBS="$QTPARTED_LIBS -lreiserfs"
 else
@@ -192,6 +192,13 @@ if test "$jfs_support" = "yes" && test "$FSPATH_MKFSJFS" = "missing"; then
   AC_MSG_ERROR([*** mkfs.jfs not found. Please, install jfsprogs (http://oss.software.ibm.com/jfs/) or disable the jfs support with --disable-jfs])
   FILESYS_JFS_SUPPORT=0
 else
+  if test "$jfs_support" = "maybe"; then
+    if test "$FSPATH_MKFSJFS" = "missing"; then
+      jfs_support="no"
+    else
+      jfs_support="yes"
+    fi
+  fi
   if test "$jfs_support" = "yes" ; then
     FILESYS_JFS_SUPPORT=1
   else
@@ -203,6 +210,13 @@ if test "$xfs_support" = "yes" && test "$FSPATH_MKFSXFS" = "missing"; then
   AC_MSG_ERROR([*** mkfs.xfs not found. Please, install xfsprogs (http://oss.sgi.com/projects/xfs/) or disable the xfs support with --disable-xfs])
   FILESYS_XFS_SUPPORT=0
 else
+  if test "$xfs_support" = "maybe"; then
+    if test "$FSPATH_MKFSXFS" = "missing"; then
+      xfs_support="no"
+    else
+      xfs_support="yes"
+    fi
+  fi
   if test "$xfs_support" = "yes" ; then
     FILESYS_XFS_SUPPORT=1
   else
@@ -448,12 +462,6 @@ AC_CONFIG_FILES([
 ])
 AC_CONFIG_FILES([
 	doc/Makefile
-])
-AC_CONFIG_FILES([
-	redhat/qtparted-x11.spec
-])
-AC_CONFIG_FILES([
-	redhat/qtparted-embedded.spec
 ])
 
 AC_OUTPUT
