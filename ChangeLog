@@ -2,8 +2,9 @@ ChangeLog for QtParted:
 -----------------------
 
 * 0.4.5 (2005-XX-XX)
-  - Fix up & signs being displayed in the menus w/ Qt 3.3.4
+  - Fix up "&" signs being displayed in the menus w/ Qt 3.3.4
   - Some code cleanups
+  - Some bugfixes
 
 * 0.4.4 (2004-04-25)
   - Added hidden flags for FAT/NTFS filesystem
