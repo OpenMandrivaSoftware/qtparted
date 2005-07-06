@@ -43,5 +43,5 @@ CLEANFILES = $(trans_DATA)
 DISTCLEANFILES = $(trans_DATA)
 MAINTAINERCLEANFILES = $(trans_DATA)
 
-.ts:
-	lrelease $<
+%.ts: %.qm
+	lrelease *.qm

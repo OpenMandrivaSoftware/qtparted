@@ -1,24 +1,2 @@
 all:
-	@echo "Makefile.dist creates files from CVS, to prepare ./configure and other files"
-	@echo "--> running libtoolize ..."
-	@libtoolize --copy --force
-	@echo "--> running autoheader ..."
-	@autoheader
-	@echo "--> running aclocal ..."
-	@aclocal
-	@echo "--> running autoconf ..."
-	@autoconf
-	@echo "--> running automake ..."
-	@automake -a
-	@echo "--> cleaning few files ..."
-	rm -rf config.cache
-	perl admin/am_edit
-	@rm -rf autom4te.cache
-	@chmod +x ./configure
-	@chmod +x missing
-	@chmod +x install-sh
-	@chmod +x ltmain.sh
-	@chmod +x mkinstalldirs
-	@chmod +x depcomp
-	@echo ""
-	@echo "Now, you can run ./configure && make"
+	make -f admin/Makefile.common cvs
