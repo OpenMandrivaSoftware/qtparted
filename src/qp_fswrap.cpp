@@ -1038,7 +1038,7 @@ QString QP_FSExt2::_get_label(PedPartition *part)
 QString QP_FSReiserFS::_get_label(PedPartition *) 
 {
     //return QString::null;
-    return QString(tr("No label"));
+    return tr("No label");
 }
 
 
