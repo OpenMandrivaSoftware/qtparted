@@ -23,7 +23,7 @@
 #include "qp_filesystem.h"
 #include "qp_options.h"
 
-##include <config.h>
+#include <config.h>
 
 #define MIN_HDWIDTH 190
 
