@@ -31,6 +31,7 @@
 #include <qtranslator.h>
 #include <qmessagebox.h>
 #include <qtextcodec.h>
+#include <qsplashscreen.h>
 #include <qtimer.h>
 #include "qp_libparted.h"
 #include "qp_splash.h"
@@ -146,12 +147,10 @@ int main(int argc, char *argv[]) {
     mainwindow = new QP_MainWindow(&settings, 0, "QP_MainWindow");
     app.setMainWidget(mainwindow);
 
-    QP_Splash *splash = new QP_Splash(mainwindow);
+    QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"), Qt::WType_Modal | Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WDestructiveClose);
     splash->connect(mainwindow, SIGNAL(sigSplashInfo(const QString &)),
-                    SLOT(addInfo(const QString &)));
-
-    // kill the splash after 3 seconds
-    QTimer::singleShot(3000, splash, SLOT(close()));
+                    SLOT(message(const QString &)));
+    splash->finish(mainwindow);
     splash->show();
 
     mainwindow->init();
