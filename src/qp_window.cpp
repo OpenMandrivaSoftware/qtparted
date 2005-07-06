@@ -417,7 +417,7 @@ void QP_MainWindow::addStatusBar() {
 	lbl2->setFont(boldfont);
 	lbl2->setText("Message");
 	lbl2->setMinimumHeight(lbl2->sizeHint().height());
-	lbl2->setText("by Zanac (c) 2002-2003 / Ark Linux (C) 2005");
+	lbl2->setText("(C) 2002-2003 by Zanac / (C) 2005 Ark Linux");
 	QToolTip::add(lbl2, "Message area");
 	
 	frame = new QFrame(hbox, "frame");
