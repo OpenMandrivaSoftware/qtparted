@@ -1,5 +1,8 @@
 Vanni Brutto:
-QTParted program and Italian localization 
+QTParted program and Italian localization up to 0.4.4
+
+Bernhard Rosenkraenzer <bero at arklinux dot org>:
+Present maintainer
 
 François Dupoux
 Automake/autoconf porting, source code patch, beta testing

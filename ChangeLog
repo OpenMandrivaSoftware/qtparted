@@ -1,6 +1,9 @@
 ChangeLog for QtParted:
 -----------------------
 
+* 0.4.5 (2005-XX-XX)
+  - Some code cleanups
+
 * 0.4.4 (2004-04-25)
   - Added hidden flags for FAT/NTFS filesystem
   - Added support for read label (François Dupoux)
