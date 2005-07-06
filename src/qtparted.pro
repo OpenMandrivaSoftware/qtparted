@@ -34,7 +34,6 @@ TARGET    = qtparted
 # Header files
 HEADERS   =  qtparted.h          \
              qp_options.h        \
-             qp_splash.h         \
              qp_common.h         \
              qp_settings.h       \
              qp_exttools.h       \
@@ -71,7 +70,6 @@ HEADERS   =  qtparted.h          \
 
 # Source files
 SOURCES   =  main.cpp            \
-             qp_splash.cpp       \
              qp_common.cpp       \
              qp_settings.cpp     \
              qp_exttools.cpp     \

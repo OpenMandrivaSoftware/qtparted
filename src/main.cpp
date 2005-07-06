@@ -34,7 +34,6 @@
 #include <qsplashscreen.h>
 #include <qtimer.h>
 #include "qp_libparted.h"
-#include "qp_splash.h"
 #include "qp_window.h"
 #include "qp_settings.h"
 #include "qp_common.h"
