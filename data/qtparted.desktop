@@ -1,5 +1,5 @@
 [Desktop Entry]
-Exec=gksu /usr/sbin/qtparted
+Exec=/usr/sbin/qtparted
 Name=QTParted
 Icon=qtparted.xpm
 Terminal=false
