@@ -1,11 +1,7 @@
-SUBDIRS = 
-
 sbin_PROGRAMS = qtparted
 
 INCLUDES = -I. -I$(qt_includes) -I$(all_includes) 
 KDE_OPTIONS = qtonly
-INTERFACES = 
-TRANSLATIONS = 
 
 qtparted_METASOURCES = AUTO
 
@@ -84,6 +80,3 @@ qtparted_LDADD   = -ldl -lparted $(LIB_QPE) $(LIB_QT)
 
 DISTCLEANFILES = $(piguicqt_METASOURCES)
 MAINTAINERCLEANFILES = Makefile.in
-
-AM_CXXFLAGS=
-CXXLINK = $(LIBTOOL) --mode=link $(CXX) $(AM_CXXFLAGS) $(CXXFLAGS) $(KDE_CXXFLAGS) $(AM_LDFLAGS) $(LDFLAGS) -o $@ 
