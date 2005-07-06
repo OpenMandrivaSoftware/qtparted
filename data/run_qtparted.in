@@ -62,5 +62,5 @@ fi
 echo 0 > /proc/sys/kernel/printk
 
 # run qtparted
-qtparted 2> /dev/null
+qtparted -qws 2> /dev/null
 clear
