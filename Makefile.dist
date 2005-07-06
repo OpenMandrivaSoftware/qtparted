@@ -1,2 +1,6 @@
 all:
+	@libtoolize --force
+	@autoheader
+	@aclocal
+	@automake -ac
 	make -f admin/Makefile.common cvs

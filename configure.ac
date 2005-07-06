@@ -5,8 +5,7 @@ AC_PREREQ(2.53)
 
 AC_INIT([qtparted],[0.4.5-cvs],[zanac4ever@virgilio.it])
 AC_CONFIG_SRCDIR([configure.ac])
-AM_CONFIG_HEADER(config.h)
-AC_PREFIX_DEFAULT([/usr])
+AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_SYSTEM
 AC_DEFINE([HOMEPAGE],["http://qtparted.sourceforge.net/"],["official web site"])
 
