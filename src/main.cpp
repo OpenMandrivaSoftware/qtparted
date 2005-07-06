@@ -40,18 +40,23 @@
 #include "qp_options.h"
 #include "qp_debug.h"
 
+#include <iostream>
+
+using namespace std;
+
 QP_MainWindow *mainwindow;
 
 void print_usage(const char *program_name) {
-    printf("Usage: %s [OPTION]...\n", program_name);
-    printf("A nice QT GUI for libparted\n\n");
-    printf("Options used by qtparted:\n");
-    printf("  -l, --log=value       use 1 to enable log, 0 for disable it.\n"
-           "                        [default = 1])\n");
-    printf("  -h, --help            Show this usage message\n");
-    printf("\n\n%s by Zanac copyright 2003\n", program_name);
-
-    exit(EXIT_SUCCESS);
+	cout << "Usage: " << program_name << " [OPTION]..." << endl
+	     << "A nice QT GUI for libparted" << endl << endl
+	     << "Options used by qtparted:" << endl
+	     << "  -l, --log=value       use 1 to enable log, 0 for disable it." << endl
+	     << "                        [default = 1])" << endl
+	     << "  -h, --help            Show this usage message" << endl
+	     << endl << endl
+	     << program_name << " by Zanac copyright 2003, (C) 2005 Ark Linux" << endl
+	     << "Send bug reports to bero@arklinux.org" << endl;
+	exit(EXIT_SUCCESS);
 }
 
 
