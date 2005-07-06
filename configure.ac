@@ -45,13 +45,19 @@ case "$host_os" in
     *mingw32*)
         OS=mingw32;;
     *)
-        AC_MSG_ERROR(unknown or unsupported OS \"$host_os\".  Only linux and gnu are supported.);;
+        AC_MSG_ERROR([unknown or unsupported OS $host_os.  Only linux and gnu are supported.]);;
 esac
 
 AC_SUBST(OS)
 
 QTPARTED_PREFIX="${prefix}"
 AC_SUBST(QTPARTED_PREFIX)
+
+dnl enable-qws-client option.
+AC_ARG_ENABLE([qws-client], AC_HELP_STRING([--enable-qws-client],[In Embedded mode, run as QWS client rather than server]), [ac_cv_qws_client=$enableval], [ac_cv_qws_client=no])
+if test "$ac_cv_qws_client" = "yes"; then
+	AC_DEFINE([QWS_CLIENT], [1], [Define if you wish to run as QWS client])
+fi
 
 dnl with-log-dir option.
 AC_ARG_WITH(log-dir,

@@ -42,6 +42,8 @@
 
 #include <iostream>
 
+#include <config.h>
+
 using namespace std;
 
 QP_MainWindow *mainwindow;
@@ -63,7 +65,10 @@ void print_usage(const char *program_name) {
 int main(int argc, char *argv[]) {
 // This allows to run QtParted with QtEmbedded without having
 // to pass parameters "-qws".
-#ifdef Q_WS_QWS // Frame Buffer
+// This is, however, potentially harmful, for example if we're being launched
+// from another QWS application (OPIE, Ark Linux installer, .....) - so we
+// add a configure option to turn it off...
+#if defined(Q_WS_QWS) && !defined(QWS_CLIENT) // Frame Buffer
     QApplication app(argc, argv, QApplication::GuiServer);
 #else // X11
     QApplication app(argc, argv);

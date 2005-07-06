@@ -27,6 +27,8 @@
 #ifndef QP_FSWRAP_H
 #define QP_FSWRAP_H
 
+#include <config.h>
+
 #include <qstring.h>
 #include <qstringlist.h>
 #include <stdarg.h>

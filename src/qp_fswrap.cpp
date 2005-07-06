@@ -30,6 +30,8 @@
 #include <sys/mount.h>
 #include <qapplication.h>
 
+#include <config.h>
+
 #include "qp_fswrap.h"
 #include "qp_actlist.h"
 #include "qp_common.h"
