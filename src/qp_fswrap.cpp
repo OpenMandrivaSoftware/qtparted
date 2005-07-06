@@ -4,6 +4,9 @@
 
     Vanni Brutto <zanac (-at-) libero dot it>
 
+    Copyright (C) 2005 Bernhard Rosenkraenzer
+    bero (-at-) arklinux dot org
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -23,6 +26,8 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdarg.h>
+#include <errno.h>
+#include <sys/mount.h>
 #include <qapplication.h>
 
 #include "qp_fswrap.h"
@@ -165,35 +170,12 @@ bool QP_FSWrap::qpMount(QString device) {
 }
 
 bool QP_FSWrap::qpUMount(QString device) {
-    char szcmdline[200];
-    bool error = false;
-
-    /*---umount the partition---*/
-    sprintf(szcmdline, "%s", device.latin1());
-    QString cmdline = QString("%1 %2")
-            .arg(lstExternalTools->getPath(UMOUNT))
-            .arg(szcmdline);
-    
-    if (!fs_open(cmdline)) {
-        _message = QString(NOTFOUND);
-        return false;
+    int ret = umount(device.latin1());
+    if(ret) {
+	    _message = QString(strerror(errno));
+	    return false;
     }
-
-    char *cline;
-    while ((cline = fs_getline())) {
-        QString line = QString(cline);
-
-        QRegExp rx;
-        rx = QRegExp("^mount: (.*)$");
-        if (rx.search(line) == 0) {
-            QString capError = rx.cap(1);
-            _message = capError;
-            error = true;
-        }
-    }
-    fs_close();
-
-    return !error;
+    return true;
 }
 
 
