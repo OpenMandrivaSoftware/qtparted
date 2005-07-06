@@ -1,6 +1,11 @@
 all:
-	@libtoolize --force
+	@libtoolize --copy --force
 	@autoheader
 	@aclocal
 	@automake -ac
 	make -f admin/Makefile.common cvs
+
+dist:
+	perl admin/cvs-clean.pl
+	make -f Makefile.dist
+	rm -rf autom4te.cache
