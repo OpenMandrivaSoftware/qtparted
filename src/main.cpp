@@ -42,22 +42,6 @@
 
 QP_MainWindow *mainwindow;
 
-void checkDevfs() {
-    int rc;
-
-    rc = isDevfsEnabled();
-    showDebug("isDevfsEnabled() == %d\n", rc);
-
-    if (rc == -1) {
-        QString label = QString(QObject::tr("Cannot read /proc/partitions, QTParted cannot be used!.\n"
-                                            "Please use a kernel with /proc/partitions support."));
-        QMessageBox::information(NULL, PROG_NAME, label);
-        exit(1);
-    } else {
-        flagDevfsEnabled = bool(rc);
-    }
-}
-
 void print_usage(const char *program_name) {
     printf("Usage: %s [OPTION]...\n", program_name);
     printf("A nice QT GUI for libparted\n\n");
@@ -150,7 +134,7 @@ int main(int argc, char *argv[]) {
         return EXIT_FAILURE;
 
     /*---check if the kernel support devfs---*/
-    checkDevfs();
+    isDevfsEnabled();
 
     QP_Settings settings;
 

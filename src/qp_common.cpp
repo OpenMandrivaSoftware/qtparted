@@ -34,30 +34,7 @@ QP_ListExternalTools *lstExternalTools = new QP_ListExternalTools();
 
 /*---this function test if the kernel support devfs.
  *   the code was bring from partimage software made by François Dupoux---*/
-int isDevfsEnabled() {
-    FILE *fPart;
-    char cBuffer[32768];
-    char *cPtr;
-    int nSize;
-
-    fPart = fopen("/proc/partitions", "rb");
-    if (!fPart) {
-        return -1;
-    }
-
-    nSize = 0;
-    memset(cBuffer, 0, 32767);
-    while (!feof(fPart)) {
-        cBuffer[nSize] = fgetc(fPart);
-        nSize++;
-    }
-
-    cPtr = cBuffer;
-
-    fclose(fPart);
-
-    if (strstr(cBuffer, "part"))
-        return 1; // devfs is enabled
-    else
-        return 0; // devfs is disabled
+bool isDevfsEnabled() {
+	flagDevfsEnabled=!access("/dev/.devfsd", F_OK);
+	return flagDevfsEnabled;
 }

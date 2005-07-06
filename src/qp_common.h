@@ -28,10 +28,8 @@
 #include <qstring.h>
 #include "qp_exttools.h"
 
-extern
-bool flagDevfsEnabled;
+extern bool flagDevfsEnabled;
 
-extern
-QP_ListExternalTools *lstExternalTools;
+extern QP_ListExternalTools *lstExternalTools;
 
-int isDevfsEnabled();
+bool isDevfsEnabled();

@@ -149,9 +149,11 @@ AC_ARG_ENABLE(reiserfs,[  --disable-reiserfs      Disable the reiserfs support (
     reiserfs_support=maybe
 )
 if test "$reiserfs_support" != "no" ; then
-  AC_CHECK_LIB(reiserfs, reiserfs_fs_create, [], if test "$reiserfs_support" = "maybe"; then AC_MSG_WARN([reiserfs support will not be built.]); else AC_MSG_ERROR([*** reiserfsprogs library (libreiserfs) not found]); fi)
-  FILESYS_REISERFS_SUPPORT=1
-  QTPARTED_LIBS="$QTPARTED_LIBS -lreiserfs"
+  AC_CHECK_LIB(reiserfs, reiserfs_fs_create, [], if test "$reiserfs_support" = "maybe"; then AC_MSG_WARN([reiserfs support will not be built.]); reiserfs_support="no"; else AC_MSG_ERROR([*** reiserfsprogs library (libreiserfs) not found]); fi)
+  if test "$reiserfs_support" != "no"; then
+    FILESYS_REISERFS_SUPPORT=1
+    QTPARTED_LIBS="$QTPARTED_LIBS -lreiserfs"
+  fi
 else
   FILESYS_REISERFS_SUPPORT=0
 fi
