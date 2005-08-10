@@ -3,6 +3,7 @@ ChangeLog for QtParted:
 
 * 0.4.5 (2005-XX-XX)
   - Fix up "&" signs being displayed in the menus w/ Qt 3.3.4
+  - Add workaround for parted bug showing CD-ROMs as partitioning targets
   - Some code cleanups
   - Some bugfixes
 

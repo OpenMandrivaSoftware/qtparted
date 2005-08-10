@@ -49,8 +49,6 @@ public:
     void setData(void *);         //set data stuff ;)
     bool partitionTable();        //return if has a partition table
     void setPartitionTable(bool); //set if it has a partition table
-    bool devfsEnabled();          //return if the devfs is enabled
-    void setDevfsEnabled(bool);   //set if the devfs is enabled
     bool canUpdateGeometry();     //return if the geometry of the device can be changed
     void commit();                //the device was commited!
 
@@ -61,7 +59,6 @@ private:
     bool _isBusy;
     void *_data;
     bool _partitionTable;
-    bool _devfsEnabled;
     QP_Settings *settings;
 };
 
@@ -70,13 +67,10 @@ class QP_DevList {
 public:
     QP_DevList(QP_Settings *);
     ~QP_DevList();
-    bool devfsEnabled();
     void getDevices();          //probe all devices
     QPtrList<QP_Device> devlist;
 
 private:
-    int _getDevfsEnabled();
-    bool _devfsEnabled;
     QP_Settings *_settings;
 };
 

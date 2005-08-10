@@ -800,7 +800,6 @@ void QP_MainWindow::slotNavProperty() {
 
 	dlgdevprop->setShortName(seldev->shortname());
 	dlgdevprop->setLongName(seldev->longname());
-	dlgdevprop->setDevfsEnabled(seldev->devfsEnabled());
 
 	if (!seldev->canUpdateGeometry()) 
 		dlgdevprop->setState(tr("Device status: readonly."));

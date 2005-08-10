@@ -34,6 +34,7 @@
 #include "statistics.h"
 #include "qp_filesystem.h"
 #include "qp_options.h"
+#include "qp_common.h"
 
 #define TMP_MOUNTPOINT "/tmp/mntqp"
 #define KBYTE_SECTORS 2
@@ -99,7 +100,7 @@ int isMounted(QP_PartInfo *partinfo, char *szMountPoint) {
         }
         
         /*---if there is devfs try to see if the longname match---*/
-        if (partinfo->device()->devfsEnabled()) {
+        if (isDevfsEnabled()) {
             if ((partinfo->longname().compare(mnt->mnt_fsname) == 0)) {
                 bMounted = true;
                 strcpy(szMountPoint, mnt->mnt_dir);

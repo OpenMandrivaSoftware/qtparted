@@ -111,12 +111,10 @@ fi
 dnl AM_KDE_WITH_NLS
 
 dnl Checking for libparted. (FIXME for libparted detection)
-dnl PARTED_CHECK_LIBPARTED(1.6.0, , [AC_MSG_NOTICE([*** libparted >= 1.6.0 not installed - please install first ***])])
-dnl PARTED_CHECK_LIBPARTED(1.6.0, , [AC_MSG_ERROR([*** libparted >= 1.6.0 not installed - please install first ***])])
-dnl AC_SUBST(PARTED_LIBS)
 AC_CHECK_LIB(uuid, uuid_generate, [], AC_MSG_ERROR([*** uuid library (libuuid) not found]))
 AC_CHECK_LIB(dl, dlopen,          [], AC_MSG_ERROR([*** dl library (libdl) not found]))
-AC_CHECK_LIB(parted, ped_malloc,  [], AC_MSG_ERROR([*** libparted >= 1.6.0 not installed - please install first ***]))
+AC_CHECK_LIB(parted, ped_malloc,  [], AC_MSG_ERROR([*** libparted >= 1.6.0 development files not installed.
+Please install first (e.g. run "apt-get install parted-devel" on Ark Linux) ***]))
 
 dnl options for volume-name-labels
 AC_ARG_ENABLE(labels,[  --enable-labels       Enable volume name labels support (needs parted-1.6.7)],
