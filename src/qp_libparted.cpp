@@ -520,41 +520,6 @@ void QP_LibParted::scan_orig_partitions() {
 	emitSigTimer(100, message(), QString::null);
 }
 
-QStrList QP_LibParted::device_probe() {
-	showDebug("%s", "libparted::device_probe\n");
-	QStrList tmp;
-
-	PedDevice *dev = NULL;
-	ped_device_probe_all();
-	showDebug("%s", "probed all device\n");
-	while((dev = ped_device_get_next(dev))) {
-		// Workaround for parted mistetecting CD-ROMs as harddisks
-		// FIXME remove if/when libparted gets fixed
-	
-		QString p(dev->path);
-		if(!p.startsWith("/dev/sd") && (p.contains("/dev/scd") || p.contains("/dev/sr") || access("/proc/ide/" + p.section('/', 2, 2) + "/cache", R_OK)))
-			continue;
-		
-		showDebug("%s", "test the device type\n");
-		if ( dev->type == PED_DEVICE_IDE )
-		  tmp.append(dev->path);
-		  //addDevice( dev, ideRoot );
-		else if ( dev->type == PED_DEVICE_SCSI )
-		  tmp.append(dev->path);
-		  //addDevice( dev, scsiRoot );
-		else if ( dev->type == PED_DEVICE_DAC960 )
-		  tmp.append(dev->path);
-		  //addDevice( dev, dacRoot );
-		else
-		  //printf("non so\n");
-		  tmp.append(dev->path);
-		  //addDevice( dev, unknownRoot );
-	};
-
-	return tmp;
-}
-
-
 qtp_DriveInfo QP_LibParted::device_info(QString strdev) {
 	showDebug("%s", "libparted::device_info\n");
 	qtp_DriveInfo driveinfo;

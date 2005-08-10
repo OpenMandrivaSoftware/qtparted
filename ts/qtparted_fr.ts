@@ -72,7 +72,7 @@
     <message>
         <source>Cannot read /proc/partitions, QTParted cannot be used!.
 Please use a kernel with /proc/partitions support.</source>
-        <translation>Impossible de lire le fichier /proc/partitions. QtParted ne peut pas être utilisé. Ajoutez ce support dans votre noyau.</translation>
+        <translation type="obsolete">Impossible de lire le fichier /proc/partitions. QtParted ne peut pas être utilisé. Ajoutez ce support dans votre noyau.</translation>
     </message>
     <message>
         <source>Cannot get parted version.</source>

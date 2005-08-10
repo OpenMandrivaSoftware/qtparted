@@ -130,7 +130,6 @@ public:
     void setDevice(QP_Device *);
     void scan_partitions(); //update partlist/logilist with the actlist PedDisk
     void scan_orig_partitions(); //update partlist/logilist... with the "original" actlist PedDisk
-    static QStrList device_probe();
     static qtp_DriveInfo device_info(QString);
     static bool checkForParted();                            /*---return if it is installed the right version of libparted---*/
     void get_filesystem(QP_FileSystem *);
