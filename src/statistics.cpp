@@ -54,8 +54,6 @@ int my_mount(QP_PartInfo *partinfo, const char *szMountPoint) {
 	// security: if already mounted
 	umount(szMountPoint);
 
-	int nRes;
-
 	char type[255];
 
 	if (((partinfo->fsspec->name().compare("fat32") == 0)
@@ -64,14 +62,8 @@ int my_mount(QP_PartInfo *partinfo, const char *szMountPoint) {
 	} else {
 		strcpy(type, partinfo->fsspec->name().latin1());
 	}
-	nRes=mount(partinfo->partname().latin1(),
-	           szMountPoint, type, MS_NOATIME | MS_RDONLY, NULL);
-	/*fprintf (stderr, "debug: try mount %s as %s --> %d\n", partinfo->partname().latin1(), 
-			type, nRes);*/
-	if (nRes == 0) // if success
-		return 0; // success
-
-	return -1; // failure
+	return mount(partinfo->partname().latin1(),
+	             szMountPoint, type, MS_NOATIME | MS_RDONLY, NULL);
 }
 
 //---------------------------------------
@@ -96,9 +88,8 @@ QString mountPoint(QP_PartInfo *partinfo) {
 //------------------------------------------------
 unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 	struct statfs sfs;
-	char szMountPoint[MAXPATHLEN+1];
 	unsigned long long a, b, c;
-	int bToBeUnmounted;
+	bool bToBeUnmounted;
 	int nRes;
 	unsigned long lResult = 0; // to be returned
 	QString mnt;
@@ -113,37 +104,29 @@ unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 		mkdir (TMP_MOUNTPOINT, 755);
 		memset(szMountPoint, 0, sizeof(szMountPoint)-1);
 		snprintf(szMountPoint, sizeof(szMountPoint)-1, "%s", TMP_MOUNTPOINT);
-		nRes = my_mount(partinfo, TMP_MOUNTPOINT);
-		/*if (nRes != 0)
-			fprintf (stderr, "debug: cannot mount device %s\n", partinfo->partname().latin1());*/
+		int nRes = my_mount(partinfo, TMP_MOUNTPOINT);
+		if(nRes != 0) // Can't mount --> can't get statistics
+			return 0L;
 		bToBeUnmounted = (nRes == 0);
 		mnt = TMP_MOUNTPOINT;
 	}
 
-	// if the partition is mounted (naturally or not)
-	if (!mnt.isEmpty()) {
-		if (statfs(szMountPoint, &sfs) != -1) {
-			a = (sfs.f_blocks - sfs.f_bavail); // used blocks count
-			b = a * sfs.f_bsize; // used bytes count
-			c = b / 1024LL; // user KiloBytes count
-			lResult = c;
-		} /*else {
-			fprintf (stderr, "debug: statfs error on device %s\n", partinfo->partname().latin1());
-		}*/
-
-		if (bToBeUnmounted) {
-			nRes = umount(mnt);
-			if (nRes != 0) {
-				QString label = QString(QObject::tr("Cannot umount partition device: %1."
-				                        "Please do it by hand first to commit the changes!"))
-				                        .arg(partinfo->partname());
-				QMessageBox::information(NULL, PROG_NAME, label);
-			}
-		}
-
-		return lResult; // success
-	} else {
-		// error -> partition not mounted
-		return 0L; // failure
+	if (statfs(mnt, &sfs) != -1) {
+		a = (sfs.f_blocks - sfs.f_bavail); // used blocks count
+		b = a * sfs.f_bsize; // used bytes count
+		c = b / 1024LL; // user KiloBytes count
+		lResult = c;
 	}
+
+	if (bToBeUnmounted) {
+		int nRes = umount(mnt);
+		if (nRes != 0) {
+			QString label = QObject::tr("Cannot umount partition device: %1."
+			                "Please do it by hand first to commit the changes!")
+			                .arg(partinfo->partname());
+			QMessageBox::information(NULL, PROG_NAME, label);
+		}
+	}
+
+	return lResult; // success
 }
