@@ -3,7 +3,9 @@
                              -------------------
     begin                : Wed Sep  4 19:21:54 UTC 2002
     copyright            : (C) 2002 by Francois Dupoux
+                           (C) 2005 by Bernhard Rosenkraenzer
     email                : fdupoux@partimage.org
+                           bero@arklinux.org
  ***************************************************************************/
 
 /***************************************************************************
@@ -17,7 +19,7 @@
 
 #include "qp_libparted.h"
 
-int isMounted(QP_PartInfo *, char *szMountPoint);
+QString mountPoint(QP_PartInfo *);
 unsigned long getFsUsedKiloBytes(QP_PartInfo *);
 int my_mount(QP_PartInfo *, char *szMountPoint);
 PedSector space_stats(QP_PartInfo *);
