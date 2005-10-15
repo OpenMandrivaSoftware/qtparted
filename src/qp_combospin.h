@@ -33,24 +33,23 @@
 #define QP_COMBOSPIN_H
 
 class QP_ComboSpin : public QWidget {
-Q_OBJECT
+	Q_OBJECT
 public:
-    QP_ComboSpin(QWidget *parent = 0L, const char *name = 0L);
-    ~QP_ComboSpin();
-    void setRange(PedSector, PedSector);
-    void setMaxValue(PedSector);
-    void setMinValue(PedSector);
-    void setValue(PedSector);
-    PedSector value();
-    PedSector maxValue();
+	QP_ComboSpin(QWidget *parent = 0L, const char *name = 0L);
+	~QP_ComboSpin();
+	void setRange(PedSector, PedSector);
+	void setMaxValue(PedSector);
+	void setMinValue(PedSector);
+	void setValue(PedSector);
+	PedSector value();
+	PedSector maxValue();
 
 signals:
-    void valueChanged(PedSector);
+	void valueChanged(PedSector);
 
 protected:
-    QHBoxLayout *layout;    
-    QComboBox *combobox;
-    QP_SpinBox *spinbox;
+	QHBoxLayout *layout;
+	QComboBox *combobox;
+	QP_SpinBox *spinbox;
 };
-
 #endif

@@ -42,51 +42,50 @@
 typedef long long PedSector;
 
 class QP_SpinBox : public QSpinBox {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    QP_SpinBox(QWidget *parent = 0L, const char *name = 0L);
-    ~QP_SpinBox();
+	QP_SpinBox(QWidget *parent = 0L, const char *name = 0L);
+	~QP_SpinBox();
 
-    void setFormatString(const char *fmt);
+	void setFormatString(const char *fmt);
 
-    void setValue(PedSector);
-    void setMaxValue(PedSector);
-    void setMinValue(PedSector);
+	void setValue(PedSector);
+	void setMaxValue(PedSector);
+	void setMinValue(PedSector);
 
-    void setStep(float step);
-    float getStep() const;
+	void setStep(float step);
+	float getStep() const;
 
-    void setRange(PedSector minVal, PedSector maxVal);
-    void getRange(float &minVal, float &maxVal);
-    PedSector pedValue();
-    PedSector pedMaxValue();
+	void setRange(PedSector minVal, PedSector maxVal);
+	void getRange(float &minVal, float &maxVal);
+	PedSector pedValue();
+	PedSector pedMaxValue();
 
 signals:
-    void valueChanged(PedSector);
+	void valueChanged(PedSector);
 
 public slots:
-    virtual void stepUp();
-    virtual void stepDown();
-    void setMaxValue(float);
-    void setMinValue(float);
-    void setFormat(int);
+	virtual void stepUp();
+	virtual void stepDown();
+	void setMaxValue(float);
+	void setMinValue(float);
+	void setFormat(int);
 
 protected:
-    int mapTextToValue(bool *ok);
-    QString mapValueToText(int v);
-    void valueChange();
+	int mapTextToValue(bool *ok);
+	QString mapValueToText(int v);
+	void valueChange();
 
 private:
-    void setRange(float minVal, float maxVal);
-    void setValue(float value);
-    float step, _floatminval, _floatmaxval, _floatvalue;
-    QString format;
-    QDoubleValidator *val;
-    PedSector _pedminval;
-    PedSector _pedmaxval;
-    PedSector _pedvalue;
-    int _format;
-    bool _update;
+	void setRange(float minVal, float maxVal);
+	void setValue(float value);
+	float step, _floatminval, _floatmaxval, _floatvalue;
+	QString format;
+	QDoubleValidator *val;
+	PedSector _pedminval;
+	PedSector _pedmaxval;
+	PedSector _pedvalue;
+	int _format;
+	bool _update;
 };
-
 #endif

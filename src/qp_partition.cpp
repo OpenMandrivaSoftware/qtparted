@@ -22,8 +22,7 @@
 #include "qp_partition.h"
 #include "qp_options.h"
 
-QP_Partition::QP_Partition(QP_PartInfo *pinfo, QWidget *parent, const char *name, WFlags f) 
-    :QP_PartWidget(pinfo, parent, name, f) {
+QP_Partition::QP_Partition(QP_PartInfo *pinfo, QWidget *parent, const char *name, WFlags f):QP_PartWidget(pinfo, parent, name, f) {
 }
 
 QP_Partition::~QP_Partition() {

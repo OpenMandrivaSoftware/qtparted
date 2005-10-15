@@ -25,24 +25,22 @@
 #include "qp_options.h"
 
 QP_SpinBox::QP_SpinBox(QWidget *parent, const char *name)
-    :QSpinBox (parent, name) {
-    /*---initialization of the default value---*/
-    _floatminval = 0;
-    _floatmaxval = 0;
-    _pedminval = 0;
-    _pedmaxval = 0;
-    _pedvalue = 0;
-    step = 1;
-    _floatvalue = 0;
-    _format = 0;
-    _update = true;
-
-    /*---format of the displayed string (ie: 999.99)---*/
-    format = "%3.2f";
-    setValue((float)0);
-    setSteps(10, 10);
-    val = new QDoubleValidator(_floatminval, _floatmaxval, 2, this);
-    setValidator (val);
+	:QSpinBox (parent, name)
+	,_floatminval(0)
+	,_floatmaxval(0)
+	,_pedminval(0)
+	,_pedmaxval(0)
+	,step(1)
+	,_floatvalue(0)
+	,_format(0)
+	,_update(true)
+{
+	/*---format of the displayed string (ie: 999.99)---*/
+	format = "%3.2f";
+	setValue((float)0);
+	setSteps(10, 10);
+	val = new QDoubleValidator(_floatminval, _floatmaxval, 2, this);
+	setValidator (val);
 }
 
 
@@ -51,189 +49,204 @@ QP_SpinBox::~QP_SpinBox() {
 
 
 void QP_SpinBox::setFormatString (const char *fmt) {
-    format = fmt;
+	format = fmt;
 }
 
 
 /*---change between mbyte and gbyte---*/
 void QP_SpinBox::setFormat(int format) {
-    _format = format;
-    float f_minvalue = 0;
-    float f_maxvalue = 0;
-    float f_value = 0;
+	_format = format;
+	float f_minvalue = 0;
+	float f_maxvalue = 0;
+	float f_value = 0;
 
-    if (_format == 0) { f_minvalue = float(_pedminval * 1.0 / MBYTE_SECTORS);
-                        f_maxvalue = float(_pedmaxval * 1.0 / MBYTE_SECTORS);
-                        f_value = float(_pedvalue * 1.0 / MBYTE_SECTORS);     } else
-    if (_format == 1) { f_minvalue = float(_pedminval * 1.0 / GBYTE_SECTORS);
-                        f_maxvalue = float(_pedmaxval * 1.0 / GBYTE_SECTORS);
-                        f_value = float(_pedvalue * 1.0 / GBYTE_SECTORS);     }
+	if (_format == 0) {
+		f_minvalue = float(_pedminval * 1.0 / MBYTE_SECTORS);
+		f_maxvalue = float(_pedmaxval * 1.0 / MBYTE_SECTORS);
+		f_value = float(_pedvalue * 1.0 / MBYTE_SECTORS);
+	} else if (_format == 1) {
+		f_minvalue = float(_pedminval * 1.0 / GBYTE_SECTORS);
+		f_maxvalue = float(_pedmaxval * 1.0 / GBYTE_SECTORS);
+		f_value = float(_pedvalue * 1.0 / GBYTE_SECTORS);
+	}
 
-    /*---don't update internal ped values!---*/
-    _update = false;
-    setRange(f_minvalue, f_maxvalue);
-    setValue(f_value);
-    _update = true;
+	/*---don't update internal ped values!---*/
+	_update = false;
+	setRange(f_minvalue, f_maxvalue);
+	setValue(f_value);
+	_update = true;
 }
 
-
 void QP_SpinBox::setValue(float value) {
-    char buf[20];
-    if (_floatminval <= value && value <= _floatmaxval) {
-        sprintf (buf, (const char *) format, value);
-        _floatvalue = value;
-        QSpinBox::setValue(int(value * 100.0));
-    }
+	char buf[20];
+	if (_floatminval <= value && value <= _floatmaxval) {
+		sprintf (buf, (const char *) format, value);
+		_floatvalue = value;
+		QSpinBox::setValue(int(value * 100.0));
+	}
 }
 
 
 void QP_SpinBox::setValue(PedSector value) {
-    if (_pedminval <= value && value <= _pedmaxval) {
-        float f_value = 0;
+	if (_pedminval <= value && value <= _pedmaxval) {
+		float f_value = 0;
 
-        if (_format == 0) f_value = float(value * 1.0 / MBYTE_SECTORS); else
-        if (_format == 1) f_value = float(value * 1.0 / GBYTE_SECTORS);
+		if (_format == 0)
+			f_value = float(value * 1.0 / MBYTE_SECTORS); else
+		if (_format == 1)
+			f_value = float(value * 1.0 / GBYTE_SECTORS);
 
-        _pedvalue = value;
+		_pedvalue = value;
 
-        /*---don't update internal ped values!---*/
-        _update = false;
-        setValue(f_value);
-        _update = true;
-    }
+		/*---don't update internal ped values!---*/
+		_update = false;
+		setValue(f_value);
+		_update = true;
+	}
 }
 
 
 void QP_SpinBox::setMaxValue(PedSector maxVal) {
-    float f_maxvalue = 0;
+	float f_maxvalue = 0;
 
-    _pedmaxval = maxVal;
+	_pedmaxval = maxVal;
 
-    if (_format == 0) {f_maxvalue = float(maxVal * 1.0 / MBYTE_SECTORS);} else
-    if (_format == 1) {f_maxvalue = float(maxVal * 1.0 / GBYTE_SECTORS);}
+	if (_format == 0)
+		f_maxvalue = float(maxVal * 1.0 / MBYTE_SECTORS);
+	else if (_format == 1)
+		f_maxvalue = float(maxVal * 1.0 / GBYTE_SECTORS);
 
-    setMaxValue(f_maxvalue);
+	setMaxValue(f_maxvalue);
 }
 
 
 void QP_SpinBox::setMinValue(PedSector minVal) {
-    float f_minvalue = 0;
+	float f_minvalue = 0;
 
-    _pedminval = minVal;
+	_pedminval = minVal;
 
-    if (_format == 0) {f_minvalue = float(minVal * 1.0 / MBYTE_SECTORS);} else
-    if (_format == 1) {f_minvalue = float(minVal * 1.0 / GBYTE_SECTORS);}
+	if (_format == 0)
+		f_minvalue = float(minVal * 1.0 / MBYTE_SECTORS);
+	else if (_format == 1)
+		f_minvalue = float(minVal * 1.0 / GBYTE_SECTORS);
 
-    setMinValue(f_minvalue);
+	setMinValue(f_minvalue);
 }
 
 
 void QP_SpinBox::setStep (float s) {
-    step = s;
-    setSteps ((int)(step * 10.0), (int)(step * 10.0));
+	step = s;
+	setSteps ((int)(step * 10.0), (int)(step * 10.0));
 }
-
 
 float QP_SpinBox::getStep() const {
-    return step;
+	return step;
 }
 
-
 void QP_SpinBox::setRange(float minVal, float maxVal) {
-    if (minVal <= maxVal) {
-        _floatminval = minVal;
-        _floatmaxval = maxVal;
-        QRangeControl::setRange(int(minVal * 100.0), int(maxVal * 100.0));
-        val->setRange(minVal, maxVal, 2);
-    }
+	if (minVal <= maxVal) {
+		_floatminval = minVal;
+		_floatmaxval = maxVal;
+		QRangeControl::setRange(int(minVal * 100.0), int(maxVal * 100.0));
+		val->setRange(minVal, maxVal, 2);
+	}
 }
 
 
 void QP_SpinBox::setRange(PedSector minVal, PedSector maxVal) {
-    float f_minvalue = 0;
-    float f_maxvalue = 0;
+	float f_minvalue = 0;
+	float f_maxvalue = 0;
 
-    _pedminval = minVal;
-    _pedmaxval = maxVal;
+	_pedminval = minVal;
+	_pedmaxval = maxVal;
 
-    if (_format == 0) { f_minvalue = float(minVal * 1.0 / MBYTE_SECTORS);
-                        f_maxvalue = float(maxVal * 1.0 / MBYTE_SECTORS); } else
-    if (_format == 1) { f_minvalue = float(minVal * 1.0 / GBYTE_SECTORS);
-                        f_maxvalue = float(maxVal * 1.0 / GBYTE_SECTORS); }
+	if (_format == 0) { f_minvalue = float(minVal * 1.0 / MBYTE_SECTORS);
+						f_maxvalue = float(maxVal * 1.0 / MBYTE_SECTORS); } else
+	if (_format == 1) { f_minvalue = float(minVal * 1.0 / GBYTE_SECTORS);
+						f_maxvalue = float(maxVal * 1.0 / GBYTE_SECTORS); }
 
-    setRange(f_minvalue, f_maxvalue);
+	setRange(f_minvalue, f_maxvalue);
 }
 
 
 void QP_SpinBox::getRange(float &minVal, float &maxVal) {
-    minVal = _floatminval;
-    maxVal = _floatmaxval;
+	minVal = _floatminval;
+	maxVal = _floatmaxval;
 }
 
 PedSector QP_SpinBox::pedValue() {
-    return _pedvalue;
+	return _pedvalue;
 }
 
 PedSector QP_SpinBox::pedMaxValue() {
-    return _pedmaxval;
+	return _pedmaxval;
 }
 
 void QP_SpinBox::stepUp() {
-    QSpinBox::stepUp();
+	QSpinBox::stepUp();
 
-    int diff = int(_floatmaxval * 100.0) - int(_floatvalue * 100.0);
-    if (diff <= 1) _pedvalue = _pedmaxval;
+	int diff = int(_floatmaxval * 100.0) - int(_floatvalue * 100.0);
+	if (diff <= 1) _pedvalue = _pedmaxval;
 }
 
 void QP_SpinBox::stepDown() {
-    QSpinBox::stepDown();
+	QSpinBox::stepDown();
 
-    int diff = int(_floatvalue * 100.0) - int(_floatminval * 100.0);
-    if (diff <= 1) _pedvalue = _pedminval;
+	int diff = int(_floatvalue * 100.0) - int(_floatminval * 100.0);
+	if (diff <= 1) _pedvalue = _pedminval;
 }
 
 void QP_SpinBox::setMaxValue(float maxvalue) {
-    _floatmaxval = maxvalue;
-    QSpinBox::setMaxValue(int(maxvalue * 100.0));
+	_floatmaxval = maxvalue;
+	QSpinBox::setMaxValue(int(maxvalue * 100.0));
 }
 
 void QP_SpinBox::setMinValue(float minvalue) {
-    _floatminval = minvalue;
-    QSpinBox::setMinValue(int(minvalue * 100.0));
+	_floatminval = minvalue;
+	QSpinBox::setMinValue(int(minvalue * 100.0));
 }
 
 void QP_SpinBox::valueChange() {
-    bool rc;
-    updateDisplay();
-    mapTextToValue(&rc);
+	bool rc;
+	updateDisplay();
+	mapTextToValue(&rc);
 
-    /*---don't update internal ped values!---*/
-    if (_update)
-        if (_floatvalue == _floatminval) _pedvalue = _pedminval; else
-        if (_floatvalue == _floatmaxval) _pedvalue = _pedmaxval; else {
-            if (_format == 0) _pedvalue = PedSector(_floatvalue * MBYTE_SECTORS); else
-            if (_format == 1) _pedvalue = PedSector(_floatvalue * GBYTE_SECTORS);
-        }
+	/*---don't update internal ped values!---*/
+	if (_update) {
+		if (_floatvalue == _floatminval)
+			_pedvalue = _pedminval;
+		else if (_floatvalue == _floatmaxval)
+			_pedvalue = _pedmaxval;
+		else {
+			if (_format == 0)
+				_pedvalue = PedSector(_floatvalue * MBYTE_SECTORS);
+			else if (_format == 1)
+				_pedvalue = PedSector(_floatvalue * GBYTE_SECTORS);
+		}
+	}
 
-    /*---ped value should be beetween min and max---*/
-    if (_pedvalue < _pedminval) _pedvalue = _pedminval;
-    if (_pedvalue > _pedmaxval) _pedvalue = _pedmaxval;
+	/*---ped value should be beetween min and max---*/
+	if (_pedvalue < _pedminval)
+		_pedvalue = _pedminval;
 
-    emit valueChanged(_pedvalue);
+	if (_pedvalue > _pedmaxval)
+		_pedvalue = _pedmaxval;
+
+	emit valueChanged(_pedvalue);
 }
 
 
 int QP_SpinBox::mapTextToValue(bool *ok) {
-    const char *txt = text();
-    _floatvalue = atof(txt);
-    *ok = true;
-    return int(_floatvalue * 100.0);
+	const char *txt = text();
+	_floatvalue = atof(txt);
+	*ok = true;
+	return int(_floatvalue * 100.0);
 }
 
 
 QString QP_SpinBox::mapValueToText(int v) {
-    float f = float(v) / 100.0;
-    QString buf;
-    buf.sprintf((const char *)format, f);
-    return buf;
+	float f = float(v) / 100.0;
+	QString buf;
+	buf.sprintf((const char *)format, f);
+	return buf;
 }

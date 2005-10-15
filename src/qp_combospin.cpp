@@ -24,50 +24,51 @@
 #include "qp_options.h"
 
 QP_ComboSpin::QP_ComboSpin(QWidget *parent, const char *name)
-    :QWidget(parent, name) {
-    layout = new QHBoxLayout(this); //, "layout");
+	:QWidget(parent, name)
+{
+	layout = new QHBoxLayout(this); //, "layout");
 
-    spinbox = new QP_SpinBox(this, "spinbox");
-    spinbox->setSizePolicy(QSizePolicy((QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, spinbox->sizePolicy().hasHeightForWidth()));
+	spinbox = new QP_SpinBox(this, "spinbox");
+	spinbox->setSizePolicy(QSizePolicy((QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, spinbox->sizePolicy().hasHeightForWidth()));
 
-    layout->addWidget(spinbox);
-    connect(spinbox, SIGNAL(valueChanged(PedSector)),
-            this, SIGNAL(valueChanged(PedSector)));
+	layout->addWidget(spinbox);
+	connect(spinbox, SIGNAL(valueChanged(PedSector)),
+		this, SIGNAL(valueChanged(PedSector)));
 
-    combobox = new QComboBox(false, this, "combobox");
-    combobox->setSizePolicy(QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, combobox->sizePolicy().hasHeightForWidth()));
-    connect(combobox, SIGNAL(activated(int)),
-            spinbox, SLOT(setFormat(int)));
-    layout->addWidget(combobox);
+	combobox = new QComboBox(false, this, "combobox");
+	combobox->setSizePolicy(QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, combobox->sizePolicy().hasHeightForWidth()));
+	connect(combobox, SIGNAL(activated(int)),
+		spinbox, SLOT(setFormat(int)));
+	layout->addWidget(combobox);
 
-    combobox->clear();
-    combobox->insertItem("MB");
-    combobox->insertItem("GB");
+	combobox->clear();
+	combobox->insertItem("MB");
+	combobox->insertItem("GB");
 }
 
 QP_ComboSpin::~QP_ComboSpin() {
 }
 
 void QP_ComboSpin::setRange(PedSector min, PedSector max) {
-    spinbox->setRange(min, max);
+	spinbox->setRange(min, max);
 }
 
 void QP_ComboSpin::setValue(PedSector val) {
-    spinbox->setValue(val);
+	spinbox->setValue(val);
 }
 
 void QP_ComboSpin::setMaxValue(PedSector max) {
-    spinbox->setMaxValue(max);
+	spinbox->setMaxValue(max);
 }
 
 void QP_ComboSpin::setMinValue(PedSector min) {
-    spinbox->setMinValue(min);
+	spinbox->setMinValue(min);
 }
 
 PedSector QP_ComboSpin::value() {
-    return spinbox->pedValue();
+	return spinbox->pedValue();
 }
 
 PedSector QP_ComboSpin::maxValue() {
-    return spinbox->pedMaxValue();
+	return spinbox->pedMaxValue();
 }
