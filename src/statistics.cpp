@@ -90,7 +90,6 @@ unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 	struct statfs sfs;
 	unsigned long long a, b, c;
 	bool bToBeUnmounted;
-	int nRes;
 	unsigned long lResult = 0; // to be returned
 	QString mnt;
 
@@ -102,8 +101,6 @@ unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 	/*---if not mounted -> mount it---*/
 	if (mnt.isEmpty()) {
 		mkdir (TMP_MOUNTPOINT, 755);
-		memset(szMountPoint, 0, sizeof(szMountPoint)-1);
-		snprintf(szMountPoint, sizeof(szMountPoint)-1, "%s", TMP_MOUNTPOINT);
 		int nRes = my_mount(partinfo, TMP_MOUNTPOINT);
 		if(nRes != 0) // Can't mount --> can't get statistics
 			return 0L;
