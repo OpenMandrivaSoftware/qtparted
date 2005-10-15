@@ -93,14 +93,14 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	/*---the window is so designed:
 	 *
 	 * .------------------------------.
-	 * |QSplitter	 |			   |
-	 * |			  |			   |
+	 * |QSplitter     |               |
+	 * |              |               |
 	 * | +----------+ | +-----------+ |
 	 * | |NavView   | | |DiskView   | |
-	 * | |		  | | |		   | |
-	 * | |		  | | |		   | |
+	 * | |	        | | |           | |
+	 * | |          | | |           | |
 	 * | +----------+ | +-----------+ |
-	 * |			  |			   |
+	 * |              |               |
 	 * `------------------------------'
 	 */
 
@@ -115,16 +115,16 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	navSplit->setResizeMode(navview, QSplitter::KeepSize);
 	/*---connect the selected signal (when user, for example, select /dev/hda)---*/
 	connect(navview, SIGNAL(sigSelectDevice(QP_Device *)),
-			this, SLOT(slotSelectDevice(QP_Device *)));
+		this, SLOT(slotSelectDevice(QP_Device *)));
 
 	/*---add the DiskView widget---*/
 	diskview = new QP_DiskView(navSplit);
 	/*---emitted when you select a partition---*/
 	connect(diskview, SIGNAL(sigSelectPart(QP_PartInfo *)),
-			this, SLOT(slotSelectPart(QP_PartInfo *)));
+		this, SLOT(slotSelectPart(QP_PartInfo *)));
 	/*---emit when the user want to popup the context menu---*/
 	connect(diskview, SIGNAL(sigPopup(QPoint)),
-			this, SLOT(slotPopup(QPoint)));	
+		this, SLOT(slotPopup(QPoint)));	
 	connect(diskview, SIGNAL(sigDevicePopup(QPoint)),
 	        this, SLOT(slotDevicePopup(QPoint)));	
 	/*---connect the sigTimer used for dlgprogress during "update progressbar"---*/

@@ -49,89 +49,87 @@
 
 
 class QP_MainWindow : public QMainWindow {
-Q_OBJECT
-
+	Q_OBJECT
 public:
-    QP_MainWindow(QP_Settings *, QWidget *parent, const char *name);
-    ~QP_MainWindow();
-    void init();                       /*---init the mainwindow        ---*/
-    void refreshDiskView();
-    void setpopupmenu(QPopupMenu *);
-    QPopupMenu *popupmenu();
-    QPopupMenu *mnuDisks;
-    QPopupMenu *mnuDevice;
-    QAction *actUndo;
-    QAction *actCommit;
-    QAction *actQuit;
-    QAction *actProperty;
-    QAction *actCreate;
-    QAction *actFormat;
-    QAction *actResize;
-    QAction *actMove;
-    QAction *actDelete;
-    QAction *actConfig;
-    QAction *actWhatThis;
-    QAction *actAbout;
-    QAction *actAboutQT;
-    QAction *actNavProperty;
-    QAction *actNavPartTable;
-    QP_DiskView *diskview;
-    QP_dlgCreate *dlgcreate;            /*---the create dialog         ---*/
-    QP_dlgFormat *dlgformat;            /*---the format dialog         ---*/
-    QP_dlgResize *dlgresize;            /*---the resize dialog         ---*/
-    QP_dlgProgress *dlgprogress;        /*---the progress dialog       ---*/
-    QP_dlgConfig *dlgconfig;            /*---the configuration dialog  ---*/
-    QP_dlgDevProperty *dlgdevprop;      /*---the device property dialog---*/
-    QP_NavView *navview;                /*---the disk navigation widget---*/
-    QP_Settings *settings;
-
+	QP_MainWindow(QP_Settings *, QWidget *parent, const char *name);
+	~QP_MainWindow();
+	void init();		   /*---init the mainwindow		---*/
+	void refreshDiskView();
+	void setpopupmenu(QPopupMenu *);
 
 protected:
-    void createAction();
-    void addMenuBar();
-    void addStatusBar();
-    void addToolBar();
-    void buildDisksMenu();
-    void loadSettings();
-    void ShowMoveResizeDialog(QTParted::actType moveresize);
-    void InitMenu();
-    void InitProgressDialog();
-    void DoneProgressDialog();
+	QPopupMenu *popupmenu();
+	QPopupMenu *mnuDisks;
+	QPopupMenu *mnuDevice;
+	QAction *actUndo;
+	QAction *actCommit;
+	QAction *actQuit;
+	QAction *actProperty;
+	QAction *actCreate;
+	QAction *actFormat;
+	QAction *actResize;
+	QAction *actMove;
+	QAction *actDelete;
+	QAction *actConfig;
+	QAction *actWhatThis;
+	QAction *actAbout;
+	QAction *actAboutQT;
+	QAction *actNavProperty;
+	QAction *actNavPartTable;
+	QP_DiskView *diskview;
+	QP_dlgCreate *dlgcreate;	/*---the create dialog		 ---*/
+	QP_dlgFormat *dlgformat;	/*---the format dialog		 ---*/
+	QP_dlgResize *dlgresize;	/*---the resize dialog		 ---*/
+	QP_dlgProgress *dlgprogress;	/*---the progress dialog	   ---*/
+	QP_dlgConfig *dlgconfig;	/*---the configuration dialog  ---*/
+	QP_dlgDevProperty *dlgdevprop;	/*---the device property dialog---*/
+	QP_NavView *navview;		/*---the disk navigation widget---*/
+	QP_Settings *settings;
 
+protected:
+	void createAction();
+	void addMenuBar();
+	void addStatusBar();
+	void addToolBar();
+	void buildDisksMenu();
+	void loadSettings();
+	void ShowMoveResizeDialog(QTParted::actType moveresize);
+	void InitMenu();
+	void InitProgressDialog();
+	void DoneProgressDialog();
 
 private:
-    QVBox *central;
-    QPopupMenu* _popupmenu;
-    QPopupMenu* _navpopupmenu;
-    QPopupMenu *mnuOperations;
-    int mnuSetActiveID;
-    int mnuSetHiddenID;
+	QVBox *central;
+	QPopupMenu* _popupmenu;
+	QPopupMenu* _navpopupmenu;
+	QPopupMenu *mnuOperations;
+	int mnuSetActiveID;
+	int mnuSetHiddenID;
 
 protected slots:
-    void slotCreate();
-    void slotFormat();
-    void slotResize();
-    void slotMove();
-    void slotDelete();
-    void slotConfig();
-    void slotProperty();
-    void slotWhatsThis();
-    void slotAbout();
-    void slotAboutQT();
-    void slotNavProperty();
-    void slotNavPartTable();
-    void slotSelectPart(QP_PartInfo *);
-    void slotDevicePopup(QPoint pos);
-    void slotPopup(QPoint pos);
-    void slotSelectDevice(QP_Device *);
-    void slotSetActive();
-    void slotSetHidden();
-    void slotUndo();
-    void slotCommit();
-    void slotDiskChanged();
+	void slotCreate();
+	void slotFormat();
+	void slotResize();
+	void slotMove();
+	void slotDelete();
+	void slotConfig();
+	void slotProperty();
+	void slotWhatsThis();
+	void slotAbout();
+	void slotAboutQT();
+	void slotNavProperty();
+	void slotNavPartTable();
+	void slotSelectPart(QP_PartInfo *);
+	void slotDevicePopup(QPoint pos);
+	void slotPopup(QPoint pos);
+	void slotSelectDevice(QP_Device *);
+	void slotSetActive();
+	void slotSetHidden();
+	void slotUndo();
+	void slotCommit();
+	void slotDiskChanged();
 
 signals:
-    void sigSplashInfo(const QString &);
+	void sigSplashInfo(const QString &);
 };
-
 #endif
