@@ -23,29 +23,29 @@
 #include "qp_options.h"
 
 QP_PartList::QP_PartList(QWidget *parent, const char *name, WFlags f)
-    :QWidget(parent, name, f) {
+	:QWidget(parent, name, f) {
 }
 
 QP_PartList::~QP_PartList() {
 }
 
 QP_PartInfo *QP_PartList::selPartInfo() {
-    return _selPartInfo;
+	return _selPartInfo;
 }
 
 void QP_PartList::setselPartInfo(QP_PartInfo *partinfo) {
-    _selPartInfo = partinfo;
+	_selPartInfo = partinfo;
 }
 
 void QP_PartList::clear() {
 }
 
 QP_Device *QP_PartList::device() {
-    return _device;
+	return _device;
 }
 
 void QP_PartList::setDevice(QP_Device *device) {
-    _device = device;
+	_device = device;
 }
 
 void QP_PartList::addPrimary(QP_PartInfo *) {
@@ -58,9 +58,9 @@ void QP_PartList::draw() {
 }
 
 float QP_PartList::mb_hdsize() {
-    return _mb_hdsize;
+	return _mb_hdsize;
 }
 
 void QP_PartList::set_mb_hdsize(float mb_hdsize) {
-    _mb_hdsize = mb_hdsize;
+	_mb_hdsize = mb_hdsize;
 }

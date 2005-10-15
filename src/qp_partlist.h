@@ -34,33 +34,32 @@
 #include "qp_libparted.h"
 
 class QP_PartList : public QWidget {
-Q_OBJECT
-
+	Q_OBJECT
 public:
-    QP_PartList(QWidget *parent=0, const char *name=0, WFlags f = 0);
-    ~QP_PartList();
-    QP_PartInfo *selPartInfo();                  /*---return selected partition              ---*/
-    void setselPartInfo(QP_PartInfo *);          /*---change the selected partition          ---*/
-    void clear();                                /*---clear the chart                        ---*/
-    QP_Device *device();                         /*---return the device                      ---*/
-    void setDevice(QP_Device *);                 /*---set the Device                         ---*/
-    void addPrimary(QP_PartInfo *);              /*---add a Primary or Extended partition    ---*/
-    void addLogical(QP_PartInfo *);              /*---add a Logical partition                ---*/
-    void draw();                                 /*---repaint the widget                     ---*/
-    float mb_hdsize();                           /*---return the size of the hardisk         ---*/
-    void set_mb_hdsize(float);                   /*---set the size of the hardisk            ---*/
+	QP_PartList(QWidget *parent=0, const char *name=0, WFlags f = 0);
+	~QP_PartList();
+	QP_PartInfo *selPartInfo();		/*---return selected partition              ---*/
+	void setselPartInfo(QP_PartInfo *);	/*---change the selected partition          ---*/
+	void clear();				/*---clear the chart                        ---*/
+	QP_Device *device();			/*---return the device                      ---*/
+	void setDevice(QP_Device *);		/*---set the Device                         ---*/
+	void addPrimary(QP_PartInfo *);		/*---add a Primary or Extended partition    ---*/
+	void addLogical(QP_PartInfo *);		/*---add a Logical partition                ---*/
+	void draw();				/*---repaint the widget                     ---*/
+	float mb_hdsize();			/*---return the size of the hardisk         ---*/
+	void set_mb_hdsize(float);		/*---set the size of the hardisk            ---*/
 
 private:
-    float _mb_hdsize;                            /*---size of the harddisk in megabyte       ---*/
-    QP_Device *_device;                          /*---the device                             ---*/
+	float _mb_hdsize;			/*---size of the harddisk in megabyte       ---*/
+	QP_Device *_device;			/*---the device                             ---*/
 
 protected:
-    QP_PartInfo *_selPartInfo;                   /*---partition selected                     ---*/
+	QP_PartInfo *_selPartInfo;		/*---partition selected                     ---*/
 
 signals:
-    void sigSelectPart(QP_PartInfo *);           /*---emitted when you change the selection  ---*/
-    void sigDevicePopup(QPoint);                 /*---emitted when you want to popup (device)---*/
-    void sigPopup(QPoint);                       /*---emitted when you want to pop (partition)--*/
+	void sigSelectPart(QP_PartInfo *);	/*---emitted when you change the selection  ---*/
+	void sigDevicePopup(QPoint);		/*---emitted when you want to popup (device)---*/
+	void sigPopup(QPoint);			/*---emitted when you want to pop (partition)--*/
 };
 
 #endif
