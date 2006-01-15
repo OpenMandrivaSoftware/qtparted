@@ -45,10 +45,11 @@
 
 bool QP_FSWrap::fs_open(QString cmdline) {
 
-    /*---this force stderr to stdout---*/
-    QString dupcmdline = QString("%1 %2")
-                    .arg(cmdline)
-                    .arg(QString("2>&1"));
+    /*---this force stderr to stdout and a parsable language---*/
+    QString dupcmdline = QString("%1 %2 %3")
+	    .arg("LC_ALL=POSIX")
+            .arg(cmdline)
+            .arg(QString("2>&1"));
 
     /*---open a pipe from the command line---*/
     fp = popen(dupcmdline, "r");
