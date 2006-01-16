@@ -43,13 +43,15 @@
 
 #define my_min(a,b) ((a)<(b) ? (a):(b))
 
-bool QP_FSWrap::fs_open(QString cmdline) {
+bool QP_FSWrap::fs_open(QString cmdline, bool localized) {
 
     /*---this force stderr to stdout and a parsable language---*/
-    QString dupcmdline = QString("%1 %2 %3")
-	    .arg("LC_ALL=POSIX")
+    QString dupcmdline = QString("%1 %2")
             .arg(cmdline)
             .arg(QString("2>&1"));
+
+    if(!localized)
+	    dupcmdline="LC_ALL=POSIX " + dupcmdline;
 
     /*---open a pipe from the command line---*/
     fp = popen(dupcmdline, "r");
@@ -150,7 +152,7 @@ bool QP_FSWrap::qpMount(QString device) {
             .arg(lstExternalTools->getPath(MOUNT))
             .arg(szcmdline);
     
-    if (!fs_open(cmdline)) {
+    if (!fs_open(cmdline, true)) {
         _message = QString(NOTFOUND);
         return false;
     }

@@ -161,7 +161,7 @@ public:
 protected:
     bool qpMount(QString device);
     bool qpUMount(QString device);
-    bool fs_open(QString cmdline);
+    bool fs_open(QString cmdline, bool localized=false);
     char *fs_getline();
     int fs_close();
     QString _message;
