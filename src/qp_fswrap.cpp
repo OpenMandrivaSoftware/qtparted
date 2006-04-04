@@ -97,27 +97,23 @@ QP_FSWrap *QP_FSWrap::fswrap(QString name)
 
 QString QP_FSWrap::get_label(PedPartition * part, QString name)
 {
-	if (name.compare("ntfs") == 0) {
+	if (name.compare("ntfs") == 0)
 		return QP_FSNtfs::_get_label(part);
-	} else if (name.compare("jfs") == 0) {
+	else if (name.compare("jfs") == 0)
 		return QP_FSJfs::_get_label(part);
-	} else if (name.compare("ext3") == 0) {
+	else if (name.compare("ext3") == 0)
 		return QP_FSExt3::_get_label(part);
-	} else if (name.compare("xfs") == 0) {
+	else if (name.compare("xfs") == 0)
 		return QP_FSXfs::_get_label(part);
-	}
-	if (name.compare("fat16") == 0) {
+	else if (name.compare("fat16") == 0)
 		return QP_FSFat16::_get_label(part);
-	}
-	if (name.compare("fat32") == 0) {
+	else if (name.compare("fat32") == 0)
 		return QP_FSFat32::_get_label(part);
-	}
-	if (name.compare("ext2") == 0) {
+	else if (name.compare("ext2") == 0)
 		return QP_FSExt2::_get_label(part);
-	}
-	if (name.compare("reiserfs") == 0) {
+	else if (name.compare("reiserfs") == 0)
 		return QP_FSReiserFS::_get_label(part);
-	} else
+	else
 		return QString::null;
 }
 
@@ -148,10 +144,7 @@ bool QP_FSWrap::qpMount(QString device)
 	qpUMount(device);
 
 	/*---mount the partition---*/
-	sprintf(szcmdline, "%s %s", device.latin1(), TMP_MOUNTPOINT);
-	QString cmdline = QString("%1 %2")
-	                  .arg(lstExternalTools->getPath(MOUNT))
-	                  .arg(szcmdline);
+	QString cmdline = lstExternalTools->getPath(MOUNT) + " " + device + " " + TMP_MOUNTPOINT;
 
 	if (!fs_open(cmdline, true)) {
 		_message = QString(NOTFOUND);
@@ -162,8 +155,7 @@ bool QP_FSWrap::qpMount(QString device)
 	while ((cline = fs_getline())) {
 		QString line = QString(cline);
 
-		QRegExp rx;
-		rx = QRegExp("^mount: (.*)$");
+		QRegExp rx = QRegExp("^mount: (.*)$");
 		if (rx.search(line) == 0) {
 			QString capError = rx.cap(1);
 			_message = capError;
@@ -319,8 +311,6 @@ bool QP_FSNtfs::resize(QP_LibParted * _libparted, bool write,
 
 bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 {
-	char szcmdline[200];
-
 	/*---init of the error message---*/
 	_message = QString::null;
 
@@ -328,10 +318,8 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 	PedSector size = (PedSector) ((newsize - 1) * 512);
 
 	/*---read-only test---*/
-	sprintf(szcmdline, "-n -ff -s %lld %s", size, dev.latin1());
-	QString cmdline = QString("%1 %2")
-	                  .arg(lstExternalTools->getPath(NTFSRESIZE))
-	                  .arg(szcmdline);
+	QString cmdline = lstExternalTools->getPath(NTFSRESIZE) + " " +
+	                  "-n -ff -s " + QString::number(size) + " " + dev;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -408,10 +396,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 
 
 	/*---ok, the readonly test seems ok... now we resize it!---*/
-	sprintf(szcmdline, "-ff -s %lld %s", size, dev.latin1());
-	cmdline = QString("%1 %2")
-	          .arg(lstExternalTools->getPath(NTFSRESIZE))
-	          .arg(szcmdline);
+	cmdline = lstExternalTools->getPath(NTFSRESIZE) + " -ff -s " + QString::number(size) + " " + dev;
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
 		return false;
@@ -477,7 +462,6 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 
 bool QP_FSNtfs::mkpartfs(QString dev, QString label)
 {
-	char szcmdline[200];
 	QString cmdline;
 
 	/*---init of the error message---*/
@@ -485,13 +469,10 @@ bool QP_FSNtfs::mkpartfs(QString dev, QString label)
 
 	/*---prepare the command line---*/
 	if (label.isEmpty())
-		sprintf(szcmdline, "-f -s 512 %s", dev.latin1());
+		cmdline = "-f -s 512 " + dev;
 	else
-		sprintf(szcmdline, "-f -s 512 -L %s %s", label.latin1(),
-			dev.latin1());
-	cmdline = QString("%1 %2")
-	          .arg(lstExternalTools->getPath(MKNTFS))
-	          .arg(szcmdline);
+		cmdline = "-f -s 512 -L " + label + " " + dev;
+	cmdline = lstExternalTools->getPath(MKNTFS) + " " + cmdline;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
