@@ -79,20 +79,20 @@ int QP_FSWrap::fs_close()
 
 QP_FSWrap *QP_FSWrap::fswrap(QString name)
 {
-	if (name.compare("ntfs") == 0) {
-		QP_FSWrap *fswrap = new QP_FSNtfs();
-		return fswrap;
-	} else if (name.compare("jfs") == 0) {
-		QP_FSWrap *fswrap = new QP_FSJfs();
-		return fswrap;
-	} else if (name.compare("ext3") == 0) {
-		QP_FSWrap *fswrap = new QP_FSExt3();
-		return fswrap;
-	} else if (name.compare("xfs") == 0) {
-		QP_FSWrap *fswrap = new QP_FSXfs();
-		return fswrap;
-	} else
-		return NULL;
+	QP_FSWrap *fswrap;
+
+	if (name.compare("ntfs") == 0)
+		fswrap = new QP_FSNtfs();
+	else if (name.compare("jfs") == 0)
+		fswrap = new QP_FSJfs();
+	else if (name.compare("ext3") == 0)
+		fswrap = new QP_FSExt3();
+	else if (name.compare("xfs") == 0)
+		fswrap = new QP_FSXfs();
+	else
+		fswrap = 0;
+
+	return fswrap;
 }
 
 QString QP_FSWrap::get_label(PedPartition * part, QString name)
