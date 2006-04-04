@@ -1110,7 +1110,7 @@ QString QP_FSFat32::_get_label(PedPartition * part)
 #ifdef PED_SECTOR_SIZE // PED_SECTOR_SIZE is gone in parted 1.7.x
 	char *buffer=new char[PED_SECTOR_SIZE];
 #else
-	char *buffer=new char[part->disk->sector_size];
+	char *buffer=new char[part->disk->dev->sector_size];
 #endif
 	char label[12];
 
