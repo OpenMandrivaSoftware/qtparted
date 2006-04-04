@@ -1,10 +1,9 @@
 /*
     qtparted - a frontend to libparted for manipulating disk partitions
     Copyright (C) 2002-2003 Vanni Brutto
-
     Vanni Brutto <zanac (-at-) libero dot it>
 
-    Copyright (C) 2005 Bernhard Rosenkraenzer
+    Copyright (C) 2005-2006 Bernhard Rosenkraenzer
     bero (-at-) arklinux dot org
 
     This program is free software; you can redistribute it and/or modify
@@ -1108,17 +1107,23 @@ QString QP_FSFat16::_get_label(PedPartition *)
 /*---FAT32 WRAPPER---------------------------------------------------------------*/
 QString QP_FSFat32::_get_label(PedPartition * part)
 {
-	char buffer[PED_SECTOR_SIZE];
+#ifdef PED_SECTOR_SIZE // PED_SECTOR_SIZE is gone in parted 1.7.x
+	char *buffer=new char[PED_SECTOR_SIZE];
+#else
+	char *buffer=new char[part->disk->sector_size];
+#endif
 	char label[12];
 
 	if (!QP_FSWrap::read_sector(part, 0, 1, buffer)) {
+		delete[] buffer;
 		return QString::null;
-	} else {
-		memset(label, 0, sizeof(label));
-		memcpy(label, buffer + 0x47, 11);
-		//printf("returned fat buffer: %s\n", label);
-		return QString(label);
 	}
+
+	memset(label, 0, sizeof(label));
+	memcpy(label, buffer + 0x47, 11);
+	//printf("returned fat buffer: %s\n", label);
+	delete[] buffer;
+	return QString(label);
 }
 
 /*---EXT2 WRAPPER----------------------------------------------------------------*/
