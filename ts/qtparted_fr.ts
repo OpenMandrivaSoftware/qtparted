@@ -34,15 +34,15 @@
     </message>
     <message>
         <source>An error has happened during ped_partition_set_system call.</source>
-        <translation>Une erreur s&apos;est produite pendant l&apos;appel ped_partition_set_system call.</translation>
+        <translation>Une erreur s&apos;est produite durant l&apos;appel ped_partition_set_system.</translation>
     </message>
     <message>
         <source>An error has happened during ped_partition_set_flag call.</source>
-        <translation>Une erreur s&apos;est produite pendant l&apos;appel ped_partition_set_flag.</translation>
+        <translation>Une erreur s&apos;est produite durant l&apos;appel ped_partition_set_flag.</translation>
     </message>
     <message>
         <source>An error has happened during ped_disk_delete_partition call.</source>
-        <translation>Une erreur s&apos;est produite pendant l&apos;appel ped_disk_delete_partition.</translation>
+        <translation>Une erreur s&apos;est produite durant l&apos;appel ped_disk_delete_partition.</translation>
     </message>
 </context>
 <context>
@@ -84,9 +84,9 @@ Please use a kernel with /proc/partitions support.</source>
 - required parted version: %4.%5.%6 (or better)
 
 Parted homepage: http://www.gnu.org/software/parted/</source>
-        <translation>Votre version de Parted est trop ancienne :
+        <translation>Votre version de parted est trop ancienne :
 - version installée : %1.%2.%3
-- version nécessaire : %4.%5.%6 (ou plus récent)
+- version nécessaire : %4.%5.%6 (ou plus récente)
 
 Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
@@ -288,7 +288,7 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Scanning all disk partitions.</source>
-        <translation>Scannage des partitions du disque.</translation>
+        <translation>Balayage des partitions du disque.</translation>
     </message>
     <message>
         <source>Partition %s is being used.</source>
@@ -296,15 +296,15 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Cannot change the active status on this partition</source>
-        <translation>Impossible de changer l&apos;état « actif » de cette partition</translation>
+        <translation>Impossible de modifier l&apos;état « actif » de cette partition</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during set_system, please report it!</source>
-        <translation>Un bug a été trouvé dans QtParted pendant l&apos;appel set_system. Merci de le signaler !!</translation>
+        <translation>Un bogue a été trouvé dans QtParted pendant l&apos;appel set_system. Merci de le signaler !</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during ped_file_system_type_get, please report it!</source>
-        <translation>Un bug a été trouvé dans QtParted pendant l&apos;appel ped_file_system_type_get. Merci de le signaler !!</translation>
+        <translation>Un bogue a été trouvé dans QtParted pendant l&apos;appel ped_file_system_type_get. Merci de le signaler !</translation>
     </message>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
@@ -312,11 +312,11 @@ Site web officiel : http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;resize&quot; scan, please report it!</source>
-        <translation>Un bug a été trouvé dans QtParted pendant le rafraichissement du redimensionnement. Merci de le signaler !!</translation>
+        <translation>Un bogue a été trouvé dans QtParted pendant le rafraichissement du redimensionnement. Merci de le signaler !</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;mkfs&quot; scan, please report it!</source>
-        <translation>Un bug a été trouvé dans QtParted pendant le rafraichissement  de « mkfs ». Merci de le signaler !!</translation>
+        <translation>Un bogue a été trouvé dans QtParted pendant le rafraichissement  de « mkfs ». Merci de le signaler !</translation>
     </message>
     <message>
         <source>Error committing device.
@@ -330,11 +330,11 @@ Merci de lire la FAQ pour ce type d&apos;erreur !</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;move&quot; scan, please report it!</source>
-        <translation>Un bug a été trouvé dans QtParted pendant le rafraichissement du déplacement. Merci de signaler ce bug !</translation>
+        <translation>Un bogue a été trouvé dans QtParted pendant le rafraichissement du déplacement. Merci de signaler ce bogue !</translation>
     </message>
     <message>
         <source>Cannot change the hidden status on this partition</source>
-        <translation>Impossible de changer l&apos;état « masqué » de cette partition</translation>
+        <translation>Impossible de modifier l&apos;état « masqué » de cette partition</translation>
     </message>
 </context>
 <context>
@@ -427,7 +427,7 @@ Son système de fichier est : %6</translation>
     </message>
     <message>
         <source>Enter &lt;b&gt;What&apos;s This&lt;/b&gt; modeIt enables the user to ask for help about widgets on the screen.</source>
-        <translation>Entrez &lt;b&gt;Qu&apos;est-ce que c&apos;est&lt;/b&gt;.</translation>
+        <translation>Entrez &lt;b&gt;Qu&apos;est-ce que c&apos;est&lt;/b&gt; permet à l&apos;utilisateur de demander de l&apos;aide à propos des widgets affichés à l&apos;écran.</translation>
     </message>
     <message>
         <source>Create</source>
@@ -476,7 +476,7 @@ Son système de fichier est : %6</translation>
     <message>
         <source>An internal error happened during partition scan.
 This means that you cannot resize or move this partition.</source>
-        <translation>Une erreur interne est survenue pendant le scannage de la partition.
+        <translation>Une erreur interne est survenue pendant le balayage de la partition.
 Il n&apos;est pas possible de redimensionner ou de déplacer cette partition.</translation>
     </message>
     <message>
@@ -554,7 +554,7 @@ Il n&apos;est pas possible de redimensionner ou de déplacer cette partition.</t
     </message>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation>C&apos;est une partition virtuelle. Il est impossible de la modifier. Merci d&apos;utiliser l&apos;annulation.</translation>
+        <translation>C&apos;est une partition virtuelle. Il est impossible de la modifier. Veuillez utiliser l&apos;annulation.</translation>
     </message>
     <message>
         <source>(No Active on Drive)</source>
@@ -568,7 +568,7 @@ Are you sure you want to change the active partition?</source>
         <translation>Partition active actuellement : %1
 Nouvelle partition active : %2
 
-Êtes-vous sûr de vouloir changer la partition active de cette façon ?</translation>
+Êtes-vous sûr de vouloir modifier la partition active de cette façon ?</translation>
     </message>
     <message>
         <source>&amp;Format</source>
@@ -580,7 +580,7 @@ Nouvelle partition active : %2
     </message>
     <message>
         <source>Format a new partition</source>
-        <translation>Formatte une nouvelle partition</translation>
+        <translation>Formate une nouvelle partition</translation>
     </message>
     <message>
         <source>&amp;Device property</source>
@@ -632,9 +632,9 @@ Toutes les données présentes seront perdues !</translation>
         <source>You&apos;re commiting all changes. Warning, you can lost data!
 Make sure also that you&apos;re not commiting a busy device...
 In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!</source>
-        <translation>Vous allez effectuer tous les changements. Attention, cela peut entrainer la perte de données !
+        <translation>Vous allez effectuer tous les modifications. Attention, cela peut entrainer la perte de données !
 Assurez-vous que le périphérique ne soit pas occupé...
-En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;effectuer les changements !</translation>
+En d&apos;autres termes, MERCI DE DÉMONTER TOUTES LES PARTITIONS avant d&apos;effectuer les modifications !</translation>
     </message>
     <message>
         <source>&amp;Device</source>
@@ -646,7 +646,7 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     </message>
     <message>
         <source>Some information about the disk device</source>
-        <translation>Affiche des informations à propos du disque dur</translation>
+        <translation>Affiche des informations du disque dur</translation>
     </message>
     <message>
         <source>Hide</source>
@@ -704,11 +704,11 @@ En d&apos;autres termes, MERCI DE DEMONTER TOUTES LES PARTITIONS avant d&apos;ef
     <name>QP_PartInfo</name>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation>C&apos;est une partition virtuelle. Il est impossible de la modifier. Merci d&apos;utiliser l&apos;annulation.</translation>
+        <translation>C&apos;est une partition virtuelle. Il est impossible de la modifier. Veuillez utiliser l&apos;annulation.</translation>
     </message>
     <message>
         <source>Bug during mkfs! Cannot format virtual partitions!</source>
-        <translation>Bug dans mkfs ! Impossible de formater des partitions virtuelles !</translation>
+        <translation>Bogue pendant l&apos;exécution de mkfs ! Impossible de formater des partitions virtuelles !</translation>
     </message>
     <message>
         <source>Cannot enlarge a partition if the disk device is busy</source>
