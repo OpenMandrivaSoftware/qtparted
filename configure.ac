@@ -3,14 +3,14 @@ dnl http://qtparted.sourceforge.net
 
 AC_PREREQ(2.53)
 
-AC_INIT([qtparted],[0.4.5-cvs],[zanac4ever@virgilio.it])
+AC_INIT([qtparted],[0.4.6],[zanac4ever@virgilio.it])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_SYSTEM
 AC_DEFINE([HOMEPAGE],["http://qtparted.sourceforge.net/"],["official web site"])
 
 PACKAGE=qtparted
-VERSION=0.4.5-cvs
+VERSION=0.4.6
 HOMEPAGE="http://qtparted.sourceforge.net/"
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
  
