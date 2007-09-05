@@ -35,6 +35,10 @@
 #include "qtparted.h"
 #include "qp_devlist.h"
 
+#ifndef PED_SECTOR_SIZE
+#define PED_SECTOR_SIZE PED_SECTOR_SIZE_DEFAULT
+#endif
+
 class QP_PartWidget;
 class QP_ListViewItem;
 class QP_LibParted;
