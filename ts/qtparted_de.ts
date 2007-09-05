@@ -91,7 +91,7 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>Cannot umount partition device: %1.Please do it by hand first to commit the changes!</source>
-        <translation>Kann eingebindene Partition nicht lösen: %1. Bitte diese manuell lösen um die Änderungen zu übernehmen!</translation>
+        <translation>Kann eingebundene Partition nicht lösen: %1. Bitte diese manuell lösen um die Änderungen zu übernehmen!</translation>
     </message>
     <message>
         <source>Utility for mount a filesystem.</source>
@@ -307,7 +307,7 @@ homepage von parted: http://www.gnu.org/software/parted/</translation>
     </message>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation>Dies ist eine virtuelle Partition, diese läßt sich nicht ändern: nehmen sie die änderungen an ihr stattdessen zurück.</translation>
+        <translation>Dies ist eine virtuelle Partition, diese lässt sich nicht ändern: nehmen sie die Änderungen an ihr stattdessen zurück.</translation>
     </message>
     <message>
         <source>A bug was found in QTParted during &quot;resize&quot; scan, please report it!</source>
@@ -540,7 +540,7 @@ Dies bedeutet, dass Sie diese Partition nicht verändern können.</translation>
     </message>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation>Dies ist eine virtuelle Partition, diese läßt sich nicht ändern: nehmen sie die änderungen an ihr stattdessen zurück.</translation>
+        <translation>Dies ist eine virtuelle Partition, diese lässt sich nicht ändern: nehmen sie die Änderungen an ihr stattdessen zurück.</translation>
     </message>
     <message>
         <source>primary</source>
@@ -702,7 +702,7 @@ In anderen Worten, BITTE ALLE LAUFWERKSVERBINDUNGEN ZU DIESEM LAUFWERK LÖSEN, b
     <name>QP_PartInfo</name>
     <message>
         <source>This is a virtual partition. You cannot alter it: use undo instead.</source>
-        <translation>Dies ist eine virtuelle Partition, diese läßt sich nicht ändern: nehmen sie die änderungen an ihr stattdessen zurück.</translation>
+        <translation>Dies ist eine virtuelle Partition, diese lässt sich nicht ändern: nehmen sie die Änderungen an ihr stattdessen zurück.</translation>
     </message>
     <message>
         <source>Bug during mkfs! Cannot format virtual partitions!</source>
