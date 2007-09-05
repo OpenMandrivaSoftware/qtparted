@@ -1,6 +1,6 @@
-EXTRA_DIST = qtparted_ca.qm qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_ua.qm
+EXTRA_DIST = qtparted_ca.qm qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_sv.qm qtparted_ua.qm
 
-trans_DATA = qtparted_ca.qm qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_ua.qm
+trans_DATA = qtparted_ca.qm qtparted_cs.qm qtparted_de.qm qtparted_es.qm qtparted_fr.qm qtparted_it.qm qtparted_pl.qm qtparted_ru.qm qtparted_sv.qm qtparted_ua.qm
 transdir   = $(prefix)/share/qtparted/locale
 
 qtparted_ca.qm:
@@ -34,6 +34,10 @@ qtparted_pl.qm:
 qtparted_ru.qm:
 	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_ru.ts
 	lrelease qtparted_ru.ts
+
+qtparted_sv.qm:
+	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_sv.ts
+	lrelease qtparted_sv.ts
 
 qtparted_ua.qm:
 	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_ua.ts
