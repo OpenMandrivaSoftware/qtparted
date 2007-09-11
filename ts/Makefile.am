@@ -20,12 +20,12 @@ qtparted_es.qm:
 	lrelease qtparted_es.ts
 
 qtparted_fi.qm:
-	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_fr.ts
-	lrelease qtparted_fr.ts
-
-qtparted_fi.qm:
 	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_fi.ts
 	lrelease qtparted_fi.ts
+
+qtparted_fr.qm:
+	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_fr.ts
+	lrelease qtparted_fr.ts
 
 qtparted_it.qm:
 	lupdate -verbose ../src/*.cpp ../src/*.h ../src/*.ui -ts qtparted_it.ts
