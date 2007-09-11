@@ -114,6 +114,7 @@ INTERFACES = qp_ui_create.ui     \
 TRANSLATIONS = ../ts/qtparted_it.ts \
                ../ts/qtparted_de.ts \
                ../ts/qtparted_es.ts \
+               ../ts/qtparted_fi.ts \
                ../ts/qtparted_fr.ts \
                ../ts/qtparted_pl.ts \
                ../ts/qtparted_cs.ts \
