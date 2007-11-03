@@ -29,8 +29,8 @@
 #define QP_DEVLIST_H
 
 #include <time.h>
-#include <qstring.h>
-#include <qptrlist.h>
+#include <QList>
+#include <QString>
 #include "qp_settings.h"
 
 
@@ -68,7 +68,7 @@ public:
     QP_DevList(QP_Settings *);
     ~QP_DevList();
     void getDevices();          //probe all devices
-    QPtrList<QP_Device> devlist;
+    QList<QP_Device*> devlist;
 
 private:
     QP_Settings *_settings;

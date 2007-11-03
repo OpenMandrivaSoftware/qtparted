@@ -28,9 +28,8 @@
 #ifndef QT_LIBPARTED_H
 #define QT_LIBPARTED_H
 
-#include <qptrlist.h>
-#include <qwidget.h>
-#include <qstrlist.h>
+#include <QList>
+#include <QWidget>
 #include <parted/parted.h>
 #include "qtparted.h"
 #include "qp_devlist.h"
@@ -137,8 +136,8 @@ public:
     static qtp_DriveInfo device_info(QString);
     static bool checkForParted();                            /*---return if it is installed the right version of libparted---*/
     void get_filesystem(QP_FileSystem *);
-    QPtrList<QP_PartInfo> partlist;
-    QPtrList<QP_PartInfo> logilist;
+    QList<QP_PartInfo*> partlist;
+    QList<QP_PartInfo*> logilist;
     bool partition_set_flag_active(QP_PartInfo *, bool);     /*---set active flag---*/
     bool partition_set_flag_hidden(QP_PartInfo *, bool);     /*---set hidden flag---*/
     bool partition_set_flag_active(int, bool);               /*---set active flag---*/

@@ -28,8 +28,8 @@
 #ifndef QP_LISTCHART_H
 #define QP_LISTCHART_H
 
-#include <qwidget.h>
-#include <qptrlist.h>
+#include <QWidget>
+#include <QList>
 #include "qp_partlist.h"
 #include "qp_partition.h"
 #include "qp_extended.h"
@@ -53,8 +53,8 @@ public:
 protected:
     QWidget *container;                   /*---Widget in which you attach partitions        ---*/
     QP_PartInfo *extpartinfo;             /*---QP_Extended contain logical partitions       ---*/
-    QPtrList<QP_ChartItem> partlist;      /*---list of the primary/extended partitions      ---*/
-    QPtrList<QP_ChartItem> logilist;      /*---list of the logical partitions               ---*/
+    QList<QP_ChartItem*> partlist;      /*---list of the primary/extended partitions      ---*/
+    QList<QP_ChartItem*> logilist;      /*---list of the logical partitions               ---*/
     void paintEvent(QPaintEvent *);       /*---reimplemented to draw a small border ;)      ---*/
     void resizeEvent(QResizeEvent *);     /*---reimplemented to resize partitions inside    ---*/
     void mouseReleaseEvent(QMouseEvent *);/*---reimplemented to get mouse popup             ---*/

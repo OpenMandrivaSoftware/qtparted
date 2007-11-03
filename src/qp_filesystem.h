@@ -30,9 +30,9 @@
 #ifndef QP_FILESYSTEM_H
 #define QP_FILESYSTEM_H
 
-#include <qcolor.h>
-#include <qpixmap.h>
-#include <qptrlist.h>
+#include <QColor>
+#include <QPixmap>
+#include <QList>
 #include "qp_libparted.h"
 
 class QP_FSWrap;
@@ -93,8 +93,8 @@ public:
     QP_FileSystemSpec *free(); /*---virtual property used for "free" partition    ---*/
     QP_FileSystemSpec *unknow(); /*---as above but for "unknow" partition         ---*/
 
-    QPtrList<QP_FileSystemSpec> filesystemlist;
-    QPtrList<QP_FSWrap> fswraplist;
+    QList<QP_FileSystemSpec*> filesystemlist;
+    QList<QP_FSWrap*> fswraplist;
 
 private:
     QP_FileSystemSpec *_free;
@@ -103,4 +103,3 @@ private:
 /*-----------------------------------------------------------------------------------*/
 
 #endif
-

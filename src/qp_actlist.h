@@ -28,9 +28,9 @@
 #ifndef QP_ACTLIST_H
 #define QP_ACTLIST_H
 
-#include <qptrlist.h>
-#include <qstring.h>
-#include <qobject.h>
+#include <QList>
+#include <QString>
+#include <QObject>
 #include "qp_libparted.h"
 #include "qp_fswrap.h"
 
@@ -100,19 +100,19 @@ public:
 	void commit();   //commit all operations
 	PedDisk *disk(); //return the actual state of the disk
 	QP_PartInfo *partActive(); //return the partinfo that is bootable
-	QPtrList<QP_PartInfo> partlist;
-	QPtrList<QP_PartInfo> logilist;
+	QList<QP_PartInfo*> partlist;
+	QList<QP_PartInfo*> logilist;
 
 private:
 	void partition_get_flags(QP_PartInfo *, PedPartition *); //will get the active flag
 	void ins_newdisk();
-	QPtrList<QP_ActListItem> actlist;
-	QPtrList<PedDisk> listdisk;
+	QList<QP_ActListItem*> actlist;
+	QList<PedDisk*> listdisk;
 	PedDisk *_disk;
 	QP_LibParted *_libparted;
 	QP_PartInfo *_partActive; //a pointer to the partinfo that is current active (ie bootable)
-	QPtrList<QP_PartInfo> orig_partlist;
-	QPtrList<QP_PartInfo> orig_logilist;
+	QList<QP_PartInfo*> orig_partlist;
+	QList<QP_PartInfo*> orig_logilist;
 
 signals:
 	/*---emitted when the state of the disk was changed---*/

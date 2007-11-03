@@ -28,9 +28,8 @@
 #ifndef QP_EXTTOOLS_H
 #define QP_EXTTOOLS_H
 
-#include <qptrlist.h>
-#include <qstring.h>
-
+#include <QList>
+#include <QString>
 
 class QP_ExternalTool {
 public:
@@ -63,10 +62,10 @@ public:
     QString getDescription(QString);
     void apply();
     void cancel();
-    QPtrList<QP_ExternalTool> lstTools;
+    QList<QP_ExternalTool*> lstTools;
 
 protected:
-    QPtrList<QP_ExternalTool> lstToolsOld;
+    QList<QP_ExternalTool*> lstToolsOld;
 
 };
 
