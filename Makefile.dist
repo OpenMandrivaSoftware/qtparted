@@ -3,7 +3,8 @@ all:
 	@autoheader
 	@aclocal
 	@automake -ac
-	make -f admin/Makefile.common cvs
+	@autoconf
+	#make -f admin/Makefile.common cvs
 
 dist:
 	perl admin/cvs-clean.pl

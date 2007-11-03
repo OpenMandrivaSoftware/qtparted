@@ -30,8 +30,7 @@ AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_STRUCT_TM
 
-dnl AC_PROG_LIBTOOL
-KDE_PROG_LIBTOOL
+AC_PROG_LIBTOOL
 
 case "$host_os" in
     linux*)
