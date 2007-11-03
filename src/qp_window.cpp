@@ -86,7 +86,8 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	dlgdevprop = new QP_dlgDevProperty(this, "dlgDevProperty");
 
 	/*---this is the central widget of the window (where i will attach the qsplitter---*/
-	central = new QVBox(this);
+	central = new QWidget(this);
+	QVBoxLayout *centralLayout=new QVBoxLayout(central);
 	setCentralWidget(central);
 
 
@@ -107,6 +108,7 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	
 	/*---make the vertical splitter---*/
 	QSplitter *navSplit = new QSplitter(central);
+	centralLayout->addWidget(navSplit);
 	navSplit->setOpaqueResize(true); //I like opaque resize ;-)
 
 	/*---add the navigator view (on the left) to the splitter---*/
@@ -169,11 +171,11 @@ void QP_MainWindow::refreshDiskView() {
 	dlgprogress->hide();
 }
 
-void QP_MainWindow::setpopupmenu(QPopupMenu *popupmenu) {
+void QP_MainWindow::setpopupmenu(QMenu *popupmenu) {
 	_popupmenu = popupmenu;
 }
 
-QPopupMenu* QP_MainWindow::popupmenu() {
+QMenu* QP_MainWindow::popupmenu() {
 	return _popupmenu;
 }
 
@@ -316,7 +318,7 @@ void QP_MainWindow::createAction() {
 
 void QP_MainWindow::addMenuBar() {
 	/*---File menu---*/
-	QPopupMenu *mnuFile = new QPopupMenu;
+	QMenu *mnuFile = new QMenu;
 	menuBar()->insertItem(tr("&File"), mnuFile);
 	actUndo->addTo(mnuFile);
 	actCommit->addTo(mnuFile);
@@ -327,7 +329,7 @@ void QP_MainWindow::addMenuBar() {
    
 
 	/*---Action menu---*/
-	mnuOperations = new QPopupMenu;
+	mnuOperations = new QMenu;
 	mnuOperations->setCheckable(true);
 	menuBar()->insertItem(tr("&Operations"), mnuOperations);
 	actProperty->addTo(mnuOperations);
@@ -353,11 +355,11 @@ void QP_MainWindow::addMenuBar() {
 
 
 	/*---Disk menu---*/
-	mnuDisks = new QPopupMenu;
+	mnuDisks = new QMenu;
 	menuBar()->insertItem(tr("&Disks"), mnuDisks);
 	
 	/*---Device menu---*/
-	mnuDevice = new QPopupMenu;
+	mnuDevice = new QMenu;
 	mnuDevice->setEnabled(false);
 	menuBar()->insertItem(tr("&Device"), mnuDevice);
 	actUndo->addTo(mnuDevice);
@@ -365,13 +367,13 @@ void QP_MainWindow::addMenuBar() {
 
 
 	/*---Options menu---*/
-	QPopupMenu *mnuOptions = new QPopupMenu;
+	QMenu *mnuOptions = new QMenu;
 	menuBar()->insertItem(tr("&Options"), mnuOptions);
 	actConfig->addTo(mnuOptions);
 
    
 	/*---Help menu---*/
-	QPopupMenu *mnuHelp = new QPopupMenu;
+	QMenu *mnuHelp = new QMenu;
 	menuBar()->insertItem(tr("&Help"), mnuHelp);
 	actWhatThis->addTo(mnuHelp);
 	mnuHelp->insertSeparator();
@@ -380,7 +382,7 @@ void QP_MainWindow::addMenuBar() {
 	
 
 	/*---disk navigator popup menu---*/
-	_navpopupmenu = new QPopupMenu;
+	_navpopupmenu = new QMenu;
 	actNavProperty->addTo(_navpopupmenu);
 	actNavPartTable->addTo(_navpopupmenu);
 }

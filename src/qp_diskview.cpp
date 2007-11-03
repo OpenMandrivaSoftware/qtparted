@@ -1,219 +1,222 @@
 /*
-    qtparted - a frontend to libparted for manipulating disk partitions
-    Copyright (C) 2002-2003 Vanni Brutto
+   qtparted - a frontend to libparted for manipulating disk partitions
+   Copyright (C) 2002-2003 Vanni Brutto
 
-    Vanni Brutto <zanac (-at-) libero dot it>
+   Vanni Brutto <zanac (-at-) libero dot it>
 
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
+   Copyright (C) 2007 Bernhard Rosenkraenzer <bero@arklinux.org>
 
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
 #include "qp_diskview.moc"
 #include "qp_options.h"
 
-QP_DiskView::QP_DiskView(QWidget *parent, const char *name, WFlags f)
-    :QVBox(parent, name, f) {
-    /*---the device is initialized---*/
-    /*---you cannot call setDevice here or you'll get a segfault!---*/
-    _qpdevice = NULL;
+QP_DiskView::QP_DiskView(QWidget *parent, Qt::WindowFlags f)
+	:QWidget(parent, f),_layout(this) {
+	/*---the device is initialized---*/
+	/*---you cannot call setDevice here or you'll get a segfault!---*/
+	_qpdevice = NULL;
 
-    /*---create the listchart, attach it and connect the signals---*/
-    listchart = new QP_ListChart(this);
-    connect(listchart, SIGNAL(sigSelectPart(QP_PartInfo *)),
-            this, SLOT(slotListChartSelectPart(QP_PartInfo *)));
-    connect(listchart, SIGNAL(sigPopup(QPoint)),
-            this, SIGNAL(sigPopup(QPoint)));
-    connect(listchart, SIGNAL(sigDevicePopup(QPoint)),
-            this, SIGNAL(sigDevicePopup(QPoint)));
+	/*---create the listchart, attach it and connect the signals---*/
+	listchart = new QP_ListChart(this);
+	connect(listchart, SIGNAL(sigSelectPart(QP_PartInfo *)),
+			this, SLOT(slotListChartSelectPart(QP_PartInfo *)));
+	connect(listchart, SIGNAL(sigPopup(QPoint)),
+			this, SIGNAL(sigPopup(QPoint)));
+	connect(listchart, SIGNAL(sigDevicePopup(QPoint)),
+			this, SIGNAL(sigDevicePopup(QPoint)));
+	_layout.addWidget(listchart);
 
-    /*---create the listview, attach it and connect the signals---*/
-    listview = new QP_ListView(this);
-    connect(listview, SIGNAL(sigSelectPart(QP_PartInfo *)),
-            this, SLOT(slotListViewSelectPart(QP_PartInfo *)));
-    connect(listview, SIGNAL(sigPopup(QPoint)),
-            this, SIGNAL(sigPopup(QPoint)));
+	/*---create the listview, attach it and connect the signals---*/
+	listview = new QP_ListView(this);
+	connect(listview, SIGNAL(sigSelectPart(QP_PartInfo *)),
+			this, SLOT(slotListViewSelectPart(QP_PartInfo *)));
+	connect(listview, SIGNAL(sigPopup(QPoint)),
+			this, SIGNAL(sigPopup(QPoint)));
+	_layout.addWidget(listview);
 
-    /*---create the wrapper to parted---*/
-    libparted = new QP_LibParted();
+	/*---create the wrapper to parted---*/
+	libparted = new QP_LibParted();
 
-    /*---enable/disable fastscan---*/
-    libparted->setFastScan(false);
+	/*---enable/disable fastscan---*/
+	libparted->setFastScan(false);
 
-    /*---connect the signal "update progressbar"---*/
-    connect(libparted, SIGNAL(sigTimer(int, QString, QString)),
-            this, SIGNAL(sigTimer(int, QString, QString)));
+	/*---connect the signal "update progressbar"---*/
+	connect(libparted, SIGNAL(sigTimer(int, QString, QString)),
+			this, SIGNAL(sigTimer(int, QString, QString)));
 
-    /*---connect the signal "update progressbar" during commit!!---*/
-    connect(libparted, SIGNAL(sigOperations(QString, QString, int, int)),
-            this, SIGNAL(sigOperations(QString, QString, int, int)));
+	/*---connect the signal "update progressbar" during commit!!---*/
+	connect(libparted, SIGNAL(sigOperations(QString, QString, int, int)),
+			this, SIGNAL(sigOperations(QString, QString, int, int)));
 
-    /*---connect the signal to get if the disk changed (used for undo/commit)---*/
-    connect(libparted, SIGNAL(sigDiskChanged()),
-            this, SIGNAL(sigDiskChanged()));
+	/*---connect the signal to get if the disk changed (used for undo/commit)---*/
+	connect(libparted, SIGNAL(sigDiskChanged()),
+		this, SIGNAL(sigDiskChanged()));
 }
 
 QP_DiskView::~QP_DiskView() {
 }
 
 QP_PartInfo *QP_DiskView::selPartInfo() {
-    return listview->selPartInfo();
+	return listview->selPartInfo();
 }
 
 void QP_DiskView::setDevice(QP_Device *dev) {
-    /*---the device was empty? exit!---*/
-    if (dev == NULL) return;
+	/*---the device was empty? exit!---*/
+	if (dev == NULL) return;
 
-    /*---if a device was selected clear QP_PartList widgets and delete libparted---*/
-    if (_qpdevice != NULL) {
-        /*---clear of QP_PartList---*/
-        clear();
-    }
+	/*---if a device was selected clear QP_PartList widgets and delete libparted---*/
+	if (_qpdevice != NULL) {
+		/*---clear of QP_PartList---*/
+		clear();
+	}
 
-    /*---change the device in the chart and list---*/
-    listview->setDevice(dev);
-    listchart->setDevice(dev);
+	/*---change the device in the chart and list---*/
+	listview->setDevice(dev);
+	listchart->setDevice(dev);
 
-    /*---selecte the _device string---*/
-    _qpdevice = dev;
+	/*---selecte the _device string---*/
+	_qpdevice = dev;
 
-    /*---update the libparte device---*/
-    libparted->setDevice(dev);
+	/*---update the libparte device---*/
+	libparted->setDevice(dev);
 
-    /*---fully redraw of the partitions (using QP_PartList widgets)---*/
-    update_partlist();
+	/*---fully redraw of the partitions (using QP_PartList widgets)---*/
+	update_partlist();
 }
 
 void QP_DiskView::update_partlist() {
-    /*---scan all partitions---*/
-    libparted->scan_partitions();
+	/*---scan all partitions---*/
+	libparted->scan_partitions();
 
-    /*---a simple wrapper for filesystems---*/
-    filesystem = libparted->filesystem;
+	/*---a simple wrapper for filesystems---*/
+	filesystem = libparted->filesystem;
 
-    /*---get the size of the hd and set it to QP_PartList---*/
-    set_mb_hdsize(libparted->mb_hdsize());
+	/*---get the size of the hd and set it to QP_PartList---*/
+	set_mb_hdsize(libparted->mb_hdsize());
 
-    /*---refresh QP_PartList widgets!---*/
-    refresh_widgets();
+	/*---refresh QP_PartList widgets!---*/
+	refresh_widgets();
 }
 
 void QP_DiskView::refresh() {
-    /*---clear of QP_PartList---*/
-    clear();
+	/*---clear of QP_PartList---*/
+	clear();
 
-    update_partlist();
+	update_partlist();
 }
 
 void QP_DiskView::setLayout(int layout) {
-              if (layout == 0) {
-                  listview->show();
-                  listchart->show();
-    } else if (layout == 1) {
-                  listview->hide();
-                  listchart->show();
-    } else if (layout == 2) {
-                  listview->show();
-                  listchart->hide();
-    }
+	if (layout == 0) {
+		listview->show();
+		listchart->show();
+	} else if (layout == 1) {
+		listview->hide();
+		listchart->show();
+	} else if (layout == 2) {
+		listview->show();
+		listchart->hide();
+	}
 }
 
 bool QP_DiskView::canUndo() {
-    return libparted->canUndo();
+	return libparted->canUndo();
 }
 
 void QP_DiskView::undo() {
-    /*---undo last operation---*/
-    libparted->undo();
+	/*---undo last operation---*/
+	libparted->undo();
 
-    /*---refresh the listview+listchart---*/
-    refresh();
+	/*---refresh the listview+listchart---*/
+	refresh();
 }
 
 void QP_DiskView::commit() {
-    /*---commit all operations---*/
-    libparted->commit();
+	/*---commit all operations---*/
+	libparted->commit();
 
-    /*---refresh the listview+listchart---*/
-    refresh();
+	/*---refresh the listview+listchart---*/
+	refresh();
 }
 
 void QP_DiskView::refresh_widgets() {
-    /*---loop for adding primary/extended partitions---*/
-    QP_PartInfo *p;
-    for (p = (QP_PartInfo*)libparted->partlist.first(); p; p = (QP_PartInfo*)libparted->partlist.next()) {
-        addPrimary(p);
+	/*---loop for adding primary/extended partitions---*/
+	QP_PartInfo *p;
+	for (p = (QP_PartInfo*)libparted->partlist.first(); p; p = (QP_PartInfo*)libparted->partlist.next()) {
+		addPrimary(p);
 
-        if (p->type == QTParted::extended) {
-            QP_PartInfo *logi;
-            /*---loop for adding logical partitions---*/
-            for (logi = (QP_PartInfo*)libparted->logilist.first(); logi; logi = (QP_PartInfo*)libparted->logilist.next())
-                addLogical(logi);
-        }
-    }
+		if (p->type == QTParted::extended) {
+			QP_PartInfo *logi;
+			/*---loop for adding logical partitions---*/
+			for (logi = (QP_PartInfo*)libparted->logilist.first(); logi; logi = (QP_PartInfo*)libparted->logilist.next())
+				addLogical(logi);
+		}
+	}
 
-    /*---redraw QP_PartList widgets---*/
-    draw();
+	/*---redraw QP_PartList widgets---*/
+	draw();
 }
 
 void QP_DiskView::clear() {
-    listview->clear();
-    listchart->clear();
+	listview->clear();
+	listchart->clear();
 }
 
 void QP_DiskView::addPrimary(QP_PartInfo *partinfo) {
-    listview->addPrimary(partinfo);
-    listchart->addPrimary(partinfo);
+	listview->addPrimary(partinfo);
+	listchart->addPrimary(partinfo);
 }
 
 void QP_DiskView::addLogical(QP_PartInfo *partinfo) {
-     listview->addLogical(partinfo);
-     listchart->addLogical(partinfo);
+	 listview->addLogical(partinfo);
+	 listchart->addLogical(partinfo);
 }
 
 void QP_DiskView::draw() {
-    listview->draw();
-    listchart->draw();
+	listview->draw();
+	listchart->draw();
 }
 
 void QP_DiskView::set_mb_hdsize(float mb_hdsize) {
-    listview->set_mb_hdsize(mb_hdsize);
-    listchart->set_mb_hdsize(mb_hdsize);
+	listview->set_mb_hdsize(mb_hdsize);
+	listchart->set_mb_hdsize(mb_hdsize);
 }
 
 void QP_DiskView::slotListChartSelectPart(QP_PartInfo *partinfo) {
-    /*---syncronize selection of listview and listchart---*/
-    listchart->blockSignals(true);
-    listview->blockSignals(true);
-    listchart->setselPartInfo(partinfo);
-    listview->setselPartInfo(partinfo);
-    listchart->blockSignals(false);
-    listview->blockSignals(false);
+	/*---syncronize selection of listview and listchart---*/
+	listchart->blockSignals(true);
+	listview->blockSignals(true);
+	listchart->setselPartInfo(partinfo);
+	listview->setselPartInfo(partinfo);
+	listchart->blockSignals(false);
+	listview->blockSignals(false);
 
-    /*---emit the selected signals---*/
-    emit sigSelectPart(partinfo);
+	/*---emit the selected signals---*/
+	emit sigSelectPart(partinfo);
 }
 
 void QP_DiskView::slotListViewSelectPart(QP_PartInfo *partinfo) {
-    /*---syncronize selection of listview and listchart---*/
-    listchart->blockSignals(true);
-    listview->blockSignals(true);
-    listview->setselPartInfo(partinfo);
-    listchart->setselPartInfo(partinfo);
-    listview->blockSignals(false);
-    listchart->blockSignals(false);
+	/*---syncronize selection of listview and listchart---*/
+	listchart->blockSignals(true);
+	listview->blockSignals(true);
+	listview->setselPartInfo(partinfo);
+	listchart->setselPartInfo(partinfo);
+	listview->blockSignals(false);
+	listchart->blockSignals(false);
 
-    /*---emit the selected signals---*/
-    emit sigSelectPart(partinfo);
+	/*---emit the selected signals---*/
+	emit sigSelectPart(partinfo);
 }
-

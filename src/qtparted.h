@@ -31,7 +31,7 @@
 #define RS_SHRINK 1
 #define RS_ENLARGE 2
 
-class Q_EXPORT QTParted {
+class Q_DECL_EXPORT QTParted {
 public:
     enum partType {
         primary,

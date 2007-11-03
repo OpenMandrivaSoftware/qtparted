@@ -28,12 +28,12 @@
 #ifndef QP_MAINWINDOW_H
 #define QP_MAINWINDOW_H
 
-#include <qmainwindow.h>
-#include <qlayout.h>
-#include <qvbox.h>
-#include <qtoolbutton.h>
-#include <qaction.h>
-#include <qpopupmenu.h>
+#include <QMainWindow>
+#include <QLayout>
+#include <QWidget>
+#include <QToolButton>
+#include <QAction>
+#include <QMenu>
 
 #include "qtparted.h"
 #include "qp_libparted.h"
@@ -55,12 +55,12 @@ public:
 	~QP_MainWindow();
 	void init();		   /*---init the mainwindow		---*/
 	void refreshDiskView();
-	void setpopupmenu(QPopupMenu *);
+	void setpopupmenu(QMenu *);
 
 protected:
-	QPopupMenu *popupmenu();
-	QPopupMenu *mnuDisks;
-	QPopupMenu *mnuDevice;
+	QMenu *popupmenu();
+	QMenu *mnuDisks;
+	QMenu *mnuDevice;
 	QAction *actUndo;
 	QAction *actCommit;
 	QAction *actQuit;
@@ -99,10 +99,10 @@ protected:
 	void DoneProgressDialog();
 
 private:
-	QVBox *central;
-	QPopupMenu* _popupmenu;
-	QPopupMenu* _navpopupmenu;
-	QPopupMenu *mnuOperations;
+	QWidget *central;
+	QMenu* _popupmenu;
+	QMenu* _navpopupmenu;
+	QMenu *mnuOperations;
 	int mnuSetActiveID;
 	int mnuSetHiddenID;
 

@@ -34,7 +34,7 @@
 #include "qp_ui_create.ui.h"
 #include "qp_libparted.h"
 
-class QP_dlgCreate : public QP_UICreate {
+class QP_dlgCreate : public Ui_QP_UICreate {
 	Q_OBJECT
 
 public:

@@ -28,7 +28,7 @@
 #include "qp_common.h"
 #include "qp_options.h"
 
-QP_dlgConfig::QP_dlgConfig(QWidget *, const char *) {
+QP_dlgConfig::QP_dlgConfig(QWidget *p):Ui_QP_UIConfig() {
     /*---clear combo box used for external tools---*/
     cmbExtTools->clear();
 
