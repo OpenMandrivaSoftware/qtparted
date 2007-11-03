@@ -30,7 +30,7 @@
 #ifndef QP_DLGPROGRESS_H
 #define QP_DLGPROGRESS_H
 
-#include "qp_ui_progress.h"
+#include "qp_ui_progress.ui.h"
 
 class QP_dlgProgress : public QP_UIProgress
 {

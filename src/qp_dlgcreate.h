@@ -31,7 +31,7 @@
 #define QP_DLGCREATE_H
 
 #include "qtparted.h"
-#include "qp_ui_create.h"
+#include "qp_ui_create.ui.h"
 #include "qp_libparted.h"
 
 class QP_dlgCreate : public QP_UICreate {

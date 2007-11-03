@@ -30,7 +30,7 @@
 #ifndef QP_DLGDEVPROP_H
 #define QP_DLGDEVPROP_H
 
-#include "qp_ui_devprop.h"
+#include "qp_ui_devprop.ui.h"
 
 class QP_dlgDevProperty : public QP_UIDeviceProperty {
 Q_OBJECT

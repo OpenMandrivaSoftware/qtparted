@@ -31,7 +31,7 @@
 #define QP_DLGCONFIG_H
 
 #include "qtparted.h"
-#include "qp_ui_config.h"
+#include "qp_ui_config.ui.h"
 
 class QP_dlgConfig : public QP_UIConfig {
 	Q_OBJECT

@@ -32,7 +32,7 @@
 
 #include "qtparted.h"
 #include "qp_sizepart.h"
-#include "qp_ui_resize.h"
+#include "qp_ui_resize.ui.h"
 #include "qp_libparted.h"
 
 class QP_dlgResize : public QP_UIResize {

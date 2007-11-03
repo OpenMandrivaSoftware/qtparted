@@ -1,9 +1,8 @@
 sbin_PROGRAMS = qtparted
 
 INCLUDES = -I. -I$(qt_includes) -I$(all_includes) 
-KDE_OPTIONS = qtonly
 
-qtparted_METASOURCES = AUTO
+uis = qp_ui_config.ui.h qp_ui_create.ui.h qp_ui_format.ui.h qp_ui_progress.ui.h qp_ui_resize.ui.h qp_ui_devprop.ui.h
 
 qtparted_SOURCES = qp_ui_config.ui	\
 		   qp_ui_create.ui	\
