@@ -3,14 +3,14 @@ dnl http://qtparted.sourceforge.net
 
 AC_PREREQ(2.53)
 
-AC_INIT([qtparted],[0.4.6],[zanac4ever@virgilio.it])
+AC_INIT([qtparted],[0.5.0],[info@arklinux.org])
 AC_CONFIG_SRCDIR([configure.ac])
 AC_CONFIG_HEADERS([config.h])
 AC_CANONICAL_SYSTEM
 AC_DEFINE([HOMEPAGE],["http://qtparted.sourceforge.net/"],["official web site"])
 
 PACKAGE=qtparted
-VERSION=0.4.6
+VERSION=0.5.0
 HOMEPAGE="http://qtparted.sourceforge.net/"
 AM_INIT_AUTOMAKE($PACKAGE, $VERSION)
  
@@ -99,17 +99,6 @@ if test "$devel_support" = "yes" ; then
   AC_DEFINE([DEVEL_SUPPORT], ["enabled"], ["Enable if you are a developer"])
 fi
 
-dnl option Qt-3.0 support
-AC_ARG_ENABLE(qt30support,[  --enable-qt30support    If you have the old Qt-3.0 version, you have to enable it],
-    qt30_support=$enableval,
-    qt30_support=no
-)
-if test "$qt30_support" = "yes" ; then
-  AC_DEFINE([QT30COMPATIBILITY],[],["Qt 3.0 support"])
-fi
-
-dnl AM_KDE_WITH_NLS
-
 dnl Checking for libparted. (FIXME for libparted detection)
 AC_CHECK_LIB(uuid, uuid_generate, [], AC_MSG_ERROR([*** uuid library (libuuid) not found]))
 AC_CHECK_LIB(dl, dlopen,          [], AC_MSG_ERROR([*** dl library (libdl) not found]))
@@ -117,7 +106,7 @@ AC_CHECK_LIB(parted, ped_malloc,  [], AC_MSG_ERROR([*** libparted >= 1.6.0 devel
 Please install first (e.g. run "apt-get install parted-devel" on Ark Linux) ***]))
 
 dnl options for volume-name-labels
-AC_ARG_ENABLE(labels,[  --enable-labels       Enable volume name labels support (needs parted-1.6.7)],
+AC_ARG_ENABLE(labels,[  --enable-labels       Enable volume name labels support (needs parted >= 1.6.7)],
     labels_support=$enableval,
     labels_support=no
 )
@@ -244,25 +233,19 @@ AC_SUBST(FILESYS_NTFS_SUPPORT)
 AC_SUBST(FILESYS_JFS_SUPPORT)
 AC_SUBST(FILESYS_XFS_SUPPORT)
 
-dnl KDE_USE_QT(3)
 AC_ENABLE_SHARED(yes)
-AC_PATH_QT(3.0)
 
-PATH_QTDIR="$QTDIR"
-AC_SUBST(PATH_QTDIR)
+dnl Check for Qt 4.x
+ARK_QT4_GUI
 
 dnl Check for Qt "lrelease" translation program
-AC_PATH_PROG(QTPATH_LRELEASE,       lrelease, missing)
+AC_PATH_PROG(QTPATH_LRELEASE,       lrelease, missing, [$PATH:$ark_cv_lib_qt_dir/bin])
+PATH_QTDIR=$ark_cv_lib_qt_dir
+AC_SUBST(PATH_QTDIR)
 
 if test "$QTPATH_LRELEASE" = "missing" ; then
   AC_MSG_ERROR([*** lrelease (Qt translation compiler) not found. Please, reinstall Qt])
 fi
-
-dnl export Qt paths
-AC_SUBST(all_libraries)
-AC_SUBST(all_includes)
-AC_SUBST(qt_libraries)
-AC_SUBST(qt_includes)
 
 dnl set compilation variables
 CPPFLAGS="$CPPFLAGS -fexceptions $QTE_NORTTI -Wall -Wno-deprecated" dnl "--no-rtti"

@@ -74,9 +74,9 @@ noinst_HEADERS =   qtparted.h		\
 		   qp_spinbox.h		\
 		   statistics.h
 
-qtparted_LDFLAGS = @QTPARTED_LDFLAGS@ @QTPARTED_LIBS@ -L$(qt_libraries) $(all_libraries) $(LIBS)
+qtparted_LDFLAGS = @QTPARTED_LDFLAGS@ @QTPARTED_LIBS@ $(all_libraries) $(LIBS)
 
-qtparted_LDADD   = -ldl -lparted $(LIB_QPE) $(LIB_QT)
+qtparted_LDADD   = -ldl -lparted -lQtCore -lQtGui
 
 DISTCLEANFILES = $(piguicqt_METASOURCES)
 MAINTAINERCLEANFILES = Makefile.in
