@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "qp_partlist.h"
+#include "qp_partlist.moc"
 #include "qp_options.h"
 
 QP_PartList::QP_PartList(QWidget *parent, const char *name, WFlags f)

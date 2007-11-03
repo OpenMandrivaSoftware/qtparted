@@ -24,7 +24,7 @@
 #include <qlineedit.h>
 
 #include "qp_combospin.h"
-#include "qp_dlgresize.h"
+#include "qp_dlgresize.moc"
 #include "qp_options.h"
 
 QP_dlgResize::QP_dlgResize(QWidget *, const char *) {

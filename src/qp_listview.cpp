@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "qp_listview.h"
+#include "qp_listview.moc"
 #include "qp_filesystem.h"
 #include "qp_options.h"
 

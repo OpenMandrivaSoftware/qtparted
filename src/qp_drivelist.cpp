@@ -24,7 +24,7 @@
 #include <qstrlist.h>
 #include <sys/param.h>  // MAXPATHLEN
 
-#include "qp_drivelist.h"
+#include "qp_drivelist.moc"
 #include "qp_libparted.h"
 #include "qp_common.h"
 #include "qp_options.h"

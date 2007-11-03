@@ -22,7 +22,7 @@
 #include <qapplication.h>
 #include <qmessagebox.h>
 #include "qp_filesystem.h"
-#include "qp_actlist.h"
+#include "qp_actlist.moc"
 #include "qp_options.h"
 #include "qp_debug.h"
 #include "statistics.h"

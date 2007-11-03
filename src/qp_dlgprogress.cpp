@@ -23,7 +23,7 @@
 #include <qprogressbar.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include "qp_dlgprogress.h"
+#include "qp_dlgprogress.moc"
 #include "qp_options.h"
 
 QP_dlgProgress::QP_dlgProgress(QWidget *parent, const char *name)

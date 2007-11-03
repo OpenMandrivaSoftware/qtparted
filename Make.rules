@@ -1,0 +1,19 @@
+BUILT_SOURCES = $(mocs) $(uis)
+
+plugindir = $(pkglibdir)/plugins
+
+AM_MAKEFLAGS = -r
+
+AM_CPPFLAGS = $(LOCAL_CPPFLAGS) -D_REENTRANT -DQT_SHARED \
+	-I$(top_srcdir) -I$(top_srcdir)/src \
+	-DDATADIR=\"$(pkgdatadir)\" \
+	-DVERSION=\"@VERSION@\" \
+	-DBUILDING_QTPARTED
+
+CLEANFILES = $(BUILT_SOURCES)
+
+%.ui.h: %.ui
+	@QT@/bin/uic $< -o $@
+	
+%.moc: %
+	@QT@/bin/moc $(AM_CPPFLAGS) $< -o $@

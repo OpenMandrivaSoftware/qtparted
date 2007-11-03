@@ -31,7 +31,7 @@
 
 #include <config.h>
 
-#include "qp_fswrap.h"
+#include "qp_fswrap.moc"
 #include "qp_actlist.h"
 #include "qp_common.h"
 #include "qp_options.h"

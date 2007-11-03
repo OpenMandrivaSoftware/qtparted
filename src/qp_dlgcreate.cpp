@@ -24,7 +24,7 @@
 #include <qradiobutton.h>
 #include <qlabel.h>
 #include "qp_combospin.h"
-#include "qp_dlgcreate.h"
+#include "qp_dlgcreate.moc"
 #include "qp_filesystem.h"
 #include "qp_options.h"
 

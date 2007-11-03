@@ -21,7 +21,7 @@
 
 #include <qlabel.h>
 #include <qstring.h>
-#include "qp_dlgdevprop.h"
+#include "qp_dlgdevprop.moc"
 #include "qp_options.h"
 
 QP_dlgDevProperty::QP_dlgDevProperty(QWidget *, const char *) {

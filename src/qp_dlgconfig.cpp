@@ -24,7 +24,7 @@
 #include <qtooltip.h>
 #include <qwhatsthis.h>
 
-#include "qp_dlgconfig.h"
+#include "qp_dlgconfig.moc"
 #include "qp_common.h"
 #include "qp_options.h"
 

@@ -22,7 +22,7 @@
 #include <qlayout.h>
 #include <qvbox.h>
 
-#include "qp_navview.h"
+#include "qp_navview.moc"
 #include "qp_options.h"
 
 QP_NavView::QP_NavView(QWidget *parent, QP_Settings *settings)

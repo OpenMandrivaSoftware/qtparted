@@ -25,7 +25,7 @@
 #include <qstyle.h>
 #include <qpixmap.h>
 
-#include "qp_partwidget.h"
+#include "qp_partwidget.moc"
 #include "qp_filesystem.h"
 #include "qp_options.h"
 

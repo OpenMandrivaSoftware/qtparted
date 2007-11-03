@@ -24,7 +24,7 @@
 #include <qradiobutton.h>
 
 #include "qp_combospin.h"
-#include "qp_dlgformat.h"
+#include "qp_dlgformat.moc"
 #include "qp_options.h"
 
 QP_dlgFormat::QP_dlgFormat(QWidget *, const char *) {

@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "qp_diskview.h"
+#include "qp_diskview.moc"
 #include "qp_options.h"
 
 QP_DiskView::QP_DiskView(QWidget *parent, const char *name, WFlags f)

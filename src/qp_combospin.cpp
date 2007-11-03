@@ -20,7 +20,7 @@
 */
 
 
-#include "qp_combospin.h"
+#include "qp_combospin.moc"
 #include "qp_options.h"
 
 QP_ComboSpin::QP_ComboSpin(QWidget *parent, const char *name)

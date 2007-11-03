@@ -23,7 +23,7 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 
-#include "qp_dlgabout.h"
+#include "qp_dlgabout.moc"
 #include "qp_options.h"
 
 QP_dlgAbout::QP_dlgAbout(const QPixmap &icon, const QString &content, QWidget *par)

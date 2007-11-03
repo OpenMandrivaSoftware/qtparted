@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "qp_partition.h"
+#include "qp_partition.moc"
 #include "qp_options.h"
 
 QP_Partition::QP_Partition(QP_PartInfo *pinfo, QWidget *parent, const char *name, WFlags f):QP_PartWidget(pinfo, parent, name, f) {

@@ -25,7 +25,7 @@
 #include <qstyle.h>
 #include <qpixmap.h>
 
-#include "qp_sizepart.h"
+#include "qp_sizepart.moc"
 #include "qp_options.h"
 #include "xpm/left_arrow.xpm"
 #include "xpm/right_arrow.xpm"

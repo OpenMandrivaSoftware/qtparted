@@ -25,7 +25,7 @@
 #include <qmessagebox.h>
 #include <stdlib.h>
 #include <qapplication.h>
-#include "qp_libparted.h"
+#include "qp_libparted.moc"
 #include "qp_filesystem.h"
 #include "qp_fswrap.h"
 #include "qp_actlist.h"

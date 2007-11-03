@@ -32,7 +32,7 @@
 #include <qwhatsthis.h>
 #include <qmessagebox.h>
 #include "qp_common.h"
-#include "qp_window.h"
+#include "qp_window.moc"
 #include "qp_filesystem.h"
 #include "qp_dlgabout.h"
 #include "qp_options.h"

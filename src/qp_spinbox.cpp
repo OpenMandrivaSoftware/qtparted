@@ -21,7 +21,7 @@
 
 #include <stdlib.h>
 
-#include "qp_spinbox.h"
+#include "qp_spinbox.moc"
 #include "qp_options.h"
 
 QP_SpinBox::QP_SpinBox(QWidget *parent, const char *name)

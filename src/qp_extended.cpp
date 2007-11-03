@@ -19,7 +19,7 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include "qp_extended.h"
+#include "qp_extended.moc"
 
 
 QP_Extended::QP_Extended(QP_PartInfo *pinfo, QWidget *parent, const char *name, WFlags f)
