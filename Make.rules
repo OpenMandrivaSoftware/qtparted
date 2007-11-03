@@ -15,5 +15,5 @@ CLEANFILES = $(BUILT_SOURCES)
 %.ui.h: %.ui
 	@QT@/bin/uic $< -o $@
 	
-%.moc: %
+%.moc: %.h
 	@QT@/bin/moc $(AM_CPPFLAGS) $< -o $@
