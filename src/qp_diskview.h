@@ -29,7 +29,7 @@
 #define QP_DISKVIEW_H
 
 #include <QWidget>
-#include <QVBoxLayout>
+#include <Q3VBoxLayout>
 #include "qp_libparted.h"
 #include "qp_partlist.h"
 #include "qp_listview.h"
@@ -40,7 +40,7 @@ class QP_DiskView : public QWidget {
 Q_OBJECT
 
 public:
-	QP_DiskView(QWidget *parent=0, WFlags f = 0);
+	QP_DiskView(QWidget *parent=0, Qt::WFlags f = 0);
 	~QP_DiskView();
 	QP_PartInfo *selPartInfo();					/*---return the selected partition			 ---*/
 	void setDevice(QP_Device *);				   /*---set the device (example: /dev/hda)		---*/
@@ -77,7 +77,7 @@ protected slots:
 	void slotListViewSelectPart(QP_PartInfo *);	/*---connected to receive signal from ListView ---*/
 
 protected:
-	QVBoxLayout	_layout;
+	Q3VBoxLayout	_layout;
 };
 
 #endif

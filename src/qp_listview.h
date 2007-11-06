@@ -29,7 +29,7 @@
 #define QP_LISTVIEW_H
 
 #include <qwidget.h>
-#include <qlistview.h>
+#include <Q3ListView>
 #include "qp_devlist.h"
 #include "qp_partlist.h"
 
@@ -41,9 +41,9 @@
 /*                                                                                ---*/
 /* adaption to qtparted by Vanni Brutto                                           ---*/
 /*                                                                                ---*/
-class QP_ListViewItem : public QListViewItem {
+class QP_ListViewItem : public Q3ListViewItem {
 public:
-    QP_ListViewItem(QListView *parent,
+    QP_ListViewItem(Q3ListView *parent,
             const QString &number,
             const QString &diskName,
             const QString &fstype,
@@ -54,7 +54,7 @@ public:
             const QString &endStr,
             const QString &label,
             QP_PartInfo *pinfo);
-    QP_ListViewItem(QListViewItem *parent,
+    QP_ListViewItem(Q3ListViewItem *parent,
             const QString &number,
             const QString &diskName,
             const QString &fstype,
@@ -84,7 +84,7 @@ public:
 /*                                                                                ---*/
 /* adaption to qtparted by Vanni Brutto                                           ---*/
 /*                                                                                ---*/
-class QP_RealListView : public QListView {
+class QP_RealListView : public Q3ListView {
 Q_OBJECT
 
 public:
@@ -107,8 +107,8 @@ signals:
 
 
 protected slots:
-    void selectionChanged(QListViewItem *);      /*---connected to get when user change a selected line---*/
-    void rightButtonClicked(QListViewItem *, const QPoint &, int);  /*---the user want to popup a menu ---*/
+    void selectionChanged(Q3ListViewItem *);      /*---connected to get when user change a selected line---*/
+    void rightButtonClicked(Q3ListViewItem *, const QPoint &, int);  /*---the user want to popup a menu ---*/
 };
 /*-----------------------------------------------------------------------------------*/
 
@@ -125,7 +125,7 @@ class QP_ListView : public QP_PartList {
 Q_OBJECT
 
 public:
-    QP_ListView(QWidget *parent=0, const char *name=0, WFlags f = 0);
+    QP_ListView(QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
     ~QP_ListView();
     void setselPartInfo(QP_PartInfo *);
     void setDevice(QP_Device *);           /*---ovverride the setDevice method         ---*/

@@ -29,7 +29,7 @@
 #define QP_DRIVELIST_H
 
 #include <QAction>
-#include <QListView>
+#include <Q3ListView>
 #include <QWidget>
 #include <QList>
 #include <QMenu>
@@ -38,10 +38,10 @@
 class QP_DeviceNode {
 public:
 	QAction *action;
-	QListViewItem *listitem;
+	Q3ListViewItem *listitem;
 };
 
-class QP_DriveList : public QListView {
+class QP_DriveList : public Q3ListView {
 	Q_OBJECT
 
 public:
@@ -49,7 +49,7 @@ public:
 	~QP_DriveList();
 	void setPopup(QMenu *); /*---set the popup menu (right click)---*/
 	void buildView();
-	QListViewItem *addDevice(QString, QListViewItem *);
+	Q3ListViewItem *addDevice(QString, Q3ListViewItem *);
 	QActionGroup *agDevices();
 	QP_Device *selDevice(); /*---return the selected device---*/
 
@@ -64,9 +64,9 @@ signals:
 	void onItem(QString);
 
 public slots:
-	void slotListSelected(QListViewItem *);
+	void slotListSelected(Q3ListViewItem *);
 	void slotActionSelected(QAction *);
-	void slotPopUp(QListViewItem *, const QPoint &, int);
+	void slotPopUp(Q3ListViewItem *, const QPoint &, int);
 };
 
 #endif

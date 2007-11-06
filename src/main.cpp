@@ -27,10 +27,10 @@
  */
 
 #include <getopt.h>
-#include <qapplication.h>
+#include <QApplication>
 #include <qtranslator.h>
 #include <qmessagebox.h>
-#include <qtextcodec.h>
+#include <QLocale>
 #include <qsplashscreen.h>
 #include <qtimer.h>
 #include "qp_libparted.h"
@@ -131,7 +131,7 @@ int main(int argc, char *argv[]) {
 
 	/*---install translation file for application strings---*/
 	QTranslator *translator = new QTranslator(0);
-	translator->load(QString(DATADIR "/locale/qtparted_") + QString(QTextCodec::locale()));
+	translator->load(QString("qtparted_"+QLocale::system().name()), QString(DATADIR "/locale"));
 	app.installTranslator(translator);
 
 	/*---initialize the debug system---*/
@@ -148,9 +148,8 @@ int main(int argc, char *argv[]) {
 	QP_Settings settings;
 
 	mainwindow = new QP_MainWindow(&settings, 0, "QP_MainWindow");
-	app.setMainWidget(mainwindow);
 
-	QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"), Qt::WType_Modal | Qt::WStyle_Customize | Qt::WStyle_NoBorder | Qt::WDestructiveClose);
+	QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"));
 	splash->connect(mainwindow, SIGNAL(sigSplashInfo(const QString &)),
 			SLOT(message(const QString &)));
 	splash->finish(mainwindow);

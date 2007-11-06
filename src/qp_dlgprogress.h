@@ -31,8 +31,10 @@
 #define QP_DLGPROGRESS_H
 
 #include "qp_ui_progress.ui.h"
+//Added by qt3to4:
+#include <QCloseEvent>
 
-class QP_dlgProgress : public QP_UIProgress
+class QP_dlgProgress : public Ui::QP_UIProgress
 {
 	Q_OBJECT
 

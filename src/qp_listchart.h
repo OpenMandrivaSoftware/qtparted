@@ -33,6 +33,10 @@
 #include "qp_partlist.h"
 #include "qp_partition.h"
 #include "qp_extended.h"
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QResizeEvent>
+#include <QMouseEvent>
 
 class QP_ChartItem;
 
@@ -41,7 +45,7 @@ class QP_ListChart : public QP_PartList {
 Q_OBJECT
 
 public:
-    QP_ListChart(QWidget *parent=0, const char *name=0, WFlags f = 0);
+    QP_ListChart(QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
     ~QP_ListChart();
     void setselPartInfo(QP_PartInfo *);   /*---change the selected partition                ---*/
     void clear();                         /*---clear the chart (remove attached partition)  ---*/

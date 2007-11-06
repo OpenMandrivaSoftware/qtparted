@@ -35,7 +35,7 @@
 #include "qp_ui_resize.ui.h"
 #include "qp_libparted.h"
 
-class QP_dlgResize : public QP_UIResize {
+class QP_dlgResize : public Ui::QP_UIResize {
 	Q_OBJECT
 
 public:

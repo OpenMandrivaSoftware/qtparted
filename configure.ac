@@ -236,6 +236,7 @@ AC_ENABLE_SHARED(yes)
 
 dnl Check for Qt 4.x
 ARK_QT4_GUI
+ARK_QT4_COMPAT
 
 dnl Check for Qt "lrelease" translation program
 AC_PATH_PROG(QTPATH_LRELEASE,       lrelease, missing, [$PATH:$ark_cv_lib_qt_dir/bin])

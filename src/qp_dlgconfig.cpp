@@ -23,7 +23,7 @@
 #include <qlineedit.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
-
+#include "qp_exttools.h"
 #include "qp_dlgconfig.moc"
 #include "qp_common.h"
 #include "qp_options.h"

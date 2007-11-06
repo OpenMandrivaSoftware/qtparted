@@ -32,7 +32,7 @@
 
 #include "qp_ui_devprop.ui.h"
 
-class QP_dlgDevProperty : public QP_UIDeviceProperty {
+class QP_dlgDevProperty : public Ui::QP_UIDeviceProperty {
 Q_OBJECT
 
 public:

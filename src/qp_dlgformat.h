@@ -34,7 +34,7 @@
 #include "qp_ui_format.ui.h"
 #include "qp_libparted.h"
 
-class QP_dlgFormat : public QP_UIFormat {
+class QP_dlgFormat : public Ui::QP_UIFormat {
 Q_OBJECT
 
 public:

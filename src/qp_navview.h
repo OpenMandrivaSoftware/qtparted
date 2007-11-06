@@ -30,6 +30,7 @@
 
 #include <qwidget.h>
 #include <qlabel.h>
+#include <QMenu>
 
 #include "qp_drivelist.h"
 #include "qp_libparted.h"
@@ -41,7 +42,7 @@ Q_OBJECT
 public:
     QP_NavView(QWidget *parent=0, QP_Settings *settings=0);
     ~QP_NavView();
-    void setPopup(QPopupMenu *); /*---set the popup menu (right click)---*/
+    void setPopup(QMenu *); /*---set the popup menu (right click)---*/
     void init();
     QActionGroup *agDevices();
     QP_Device *selDevice(); /*---return the selected device---*/

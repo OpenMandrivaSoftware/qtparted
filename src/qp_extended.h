@@ -32,12 +32,14 @@
 #include <qwidget.h>
 #include "qp_partwidget.h"
 #include "qp_partition.h"
+//Added by qt3to4:
+#include <QResizeEvent>
 
 class QP_Extended : public QP_PartWidget {
 Q_OBJECT
 
 public:
-    QP_Extended(QP_PartInfo *, QWidget *parent=0, const char *name=0, WFlags f = 0);
+    QP_Extended(QP_PartInfo *, QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
     ~QP_Extended();
     QWidget *container; // Widget in which you attach logical partition
     QP_Partition *addLogical(QP_PartInfo *); //Add logical partition to the container

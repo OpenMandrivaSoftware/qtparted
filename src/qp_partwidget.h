@@ -34,12 +34,15 @@
 #include <qwidget.h>
 #include "qtparted.h"
 #include "qp_libparted.h"
+//Added by qt3to4:
+#include <QPaintEvent>
+#include <QMouseEvent>
 
 class QP_PartWidget : public QWidget {
 Q_OBJECT
 
 public:
-    QP_PartWidget(QP_PartInfo *, QWidget *parent=0, const char *name=0, WFlags f = 0);
+    QP_PartWidget(QP_PartInfo *, QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
     ~QP_PartWidget();
     void setSelected(bool);                         /*---this give the focus to the partition---*/
     bool Selected();                                /*---return if the partition was selected---*/
