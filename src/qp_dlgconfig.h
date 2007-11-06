@@ -33,9 +33,8 @@
 #include "qtparted.h"
 #include "qp_ui_config.ui.h"
 
-class QP_dlgConfig : public Ui_QP_UIConfig {
+class QP_dlgConfig : public Ui::QP_UIConfig {
 	Q_OBJECT
-
 public:
 	QP_dlgConfig(QWidget *parent=0);
 	~QP_dlgConfig();

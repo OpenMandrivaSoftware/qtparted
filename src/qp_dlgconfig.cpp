@@ -18,25 +18,28 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
 #include <qcombobox.h>
 #include <qlineedit.h>
 #include <qtooltip.h>
-#include <qwhatsthis.h>
-#include "qp_exttools.h"
+#include <q3whatsthis.h>
 #include "qp_dlgconfig.moc"
 #include "qp_common.h"
 #include "qp_options.h"
 
-QP_dlgConfig::QP_dlgConfig(QWidget *p):Ui_QP_UIConfig() {
+QP_dlgConfig::QP_dlgConfig(QWidget *p):Ui::QP_UIConfig() {
     /*---clear combo box used for external tools---*/
     cmbExtTools->clear();
-
-    QP_ExternalTool *p;
-    for (p = (QP_ExternalTool *)lstExternalTools->lstTools.first(); p;
-            p = (QP_ExternalTool *)lstExternalTools->lstTools.next())
-        cmbExtTools->insertItem(p->name());
-
+    QList<QP_ExternalTool*>::iterator it;
+    for (it = lstExternalTools->lstTools.begin(); it != lstExternalTools->lstTools.end(); ++it)
+    {
+	cmbExtTools->insertItem((*it)->name());
+    }
+    /*
+    QP_ExternalTool *et;
+    for (et = (QP_ExternalTool *)lstExternalTools->lstTools.first(); et;
+            et = (QP_ExternalTool *)lstExternalTools->lstTools.next())
+        cmbExtTools->insertItem(et->name());
+    */
     /*---connect the combo type slot---*/
     connect(cmbExtTools, SIGNAL(activated(int)),
             this, SLOT(slotToolChanged(int)));
@@ -71,7 +74,7 @@ void QP_dlgConfig::slotToolChanged(int) {
 
     QString tooltip = lstExternalTools->getDescription(cmbExtTools->currentText());
     QToolTip::add(txtPath, tooltip);
-    QWhatsThis::add(txtPath, tooltip);
+    Q3WhatsThis::add(txtPath, tooltip);
 }
 
 void QP_dlgConfig::slotPathChanged(const QString &path) {
