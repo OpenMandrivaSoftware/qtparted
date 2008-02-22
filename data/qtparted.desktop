@@ -1,12 +1,13 @@
 [Desktop Entry]
 Exec=qtparted
 Name=QTParted
-Icon=qtparted.xpm
+Icon=qtparted
 Terminal=false
 Type=Application
-Comment=Application for partitioning a disk
-Comment[it]=Applicazione per il partizionamento di un disco
-Comment[fr]=Application pour partitionner un disque
-Comment[fi]=Kiintolevyn partitiointityökalu
+GenericName=Disk Partitioning Tool
+GenericName[it]=Partizionamento di un disco
+GenericName[fr]=Partitionner un disque
+GenericName[fi]=Kiintolevyn partitiointityökalu
+GenericName[de]=Partitionierungstool
 Encoding=UTF-8
 Categories=Application;System;QT;
