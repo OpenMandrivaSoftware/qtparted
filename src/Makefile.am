@@ -2,23 +2,10 @@ sbin_PROGRAMS = qtparted
 
 INCLUDES = -I. -I$(qt_includes) -I$(all_includes) 
 
-uis = qp_ui_config.ui.h qp_ui_create.ui.h qp_ui_format.ui.h qp_ui_progress.ui.h qp_ui_resize.ui.h qp_ui_devprop.ui.h
-mocs = qp_dlgconfig.moc qp_actlist.moc qp_combospin.moc qp_diskview.moc qp_dlgabout.moc qp_dlgcreate.moc qp_dlgdevprop.moc qp_dlgformat.moc qp_dlgprogress.moc qp_dlgresize.moc qp_drivelist.moc qp_extended.moc qp_fswrap.moc qp_libparted.moc qp_listchart.moc qp_listview.moc qp_navview.moc qp_partition.moc qp_partlist.moc qp_partwidget.moc qp_settings.moc qp_sizepart.moc qp_spinbox.moc qp_window.moc
+mocs = qp_actlist.moc qp_combospin.moc qp_diskview.moc qp_dlgabout.moc qp_drivelist.moc qp_extended.moc qp_fswrap.moc qp_libparted.moc qp_listchart.moc qp_listview.moc qp_navview.moc qp_partition.moc qp_partlist.moc qp_partwidget.moc qp_settings.moc qp_sizepart.moc qp_spinbox.moc qp_window.moc
 
-qtparted_SOURCES = qp_ui_config.ui	\
-		   qp_ui_create.ui	\
-		   qp_ui_format.ui	\
-		   qp_ui_progress.ui	\
-		   qp_ui_resize.ui	\
-		   qp_ui_devprop.ui	\
-		   main.cpp		\
+qtparted_SOURCES = main.cpp		\
 		   qp_dlgabout.cpp	\
-		   qp_dlgconfig.cpp	\
-		   qp_dlgcreate.cpp	\
-		   qp_dlgformat.cpp	\
-		   qp_dlgresize.cpp	\
-		   qp_dlgprogress.cpp   \
-		   qp_dlgdevprop.cpp	\
 		   qp_drivelist.cpp	\
 		   qp_devlist.cpp	\
 		   qp_libparted.cpp	\
@@ -45,12 +32,6 @@ qtparted_SOURCES = qp_ui_config.ui	\
 
 noinst_HEADERS =   qtparted.h		\
 		   qp_dlgabout.h	\
-		   qp_dlgconfig.h	\
-		   qp_dlgcreate.h	\
-		   qp_dlgformat.h	\
-		   qp_dlgresize.h	\
-		   qp_dlgprogress.h	\
-		   qp_dlgdevprop.h	\
 		   qp_drivelist.h	\
 		   qp_devlist.h		\
 		   qp_libparted.h	\
@@ -76,7 +57,7 @@ noinst_HEADERS =   qtparted.h		\
 
 qtparted_LDFLAGS = @QTPARTED_LDFLAGS@ @QTPARTED_LIBS@ $(all_libraries) $(LIBS)
 
-qtparted_LDADD   = -ldl -lparted -lQtCore -lQtGui
+qtparted_LDADD   = -ldl -lparted -lQtCore -lQtGui -lQt3Support
 
 DISTCLEANFILES = $(piguicqt_METASOURCES)
 MAINTAINERCLEANFILES = Makefile.in

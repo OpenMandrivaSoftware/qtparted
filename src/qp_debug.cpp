@@ -97,7 +97,7 @@ int QP_Debug::open()
 		       dt.time().hour(), dt.time().minute(), dt.time().second());
 
    // open the file
-   m_fDebug = fopen(strFilename.latin1(), "w+");
+   m_fDebug = fopen(strFilename.toLatin1(), "w+");
    if (!m_fDebug)
       return -1;
 

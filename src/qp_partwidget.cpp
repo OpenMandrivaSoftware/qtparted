@@ -29,8 +29,8 @@
 #include "qp_filesystem.h"
 #include "qp_options.h"
 
-QP_PartWidget::QP_PartWidget(QP_PartInfo *pinfo, QWidget *parent, const char *name, WFlags f)
-    :QWidget(parent, name, f) {
+QP_PartWidget::QP_PartWidget(QP_PartInfo *pinfo, QWidget *parent, Qt::WFlags f)
+    :QWidget(parent, f) {
     _Selected = false;
     partinfo = pinfo;   //Pointer to the QP_PartInfo class wich contain info about the partition
 }
@@ -97,11 +97,13 @@ void QP_PartWidget::paintEvent(QPaintEvent *) {
     }
 
     /*--- draw a small border around if the partition has focus ---*/
-    if (Selected()) {
-        QStyle::SFlags flags = QStyle::Style_Default;
+    if (Selected()) {	
+	/* Change stile when partition has focus
+	QStyle::SFlags flags = QStyle::Style_Default;
     	flags |= QStyle::Style_Enabled;
     	flags |= QStyle::Style_HasFocus;
         style().drawPrimitive(QStyle::PE_FocusRect, &paint, rect(), colorGroup(), flags);
+	*/
     }
 
     /*---get the font metrics of the paint area---*/
@@ -123,7 +125,7 @@ void QP_PartWidget::paintEvent(QPaintEvent *) {
 
     
         /*---if the size of the label is too big just use the size!---*/
-        QSize sizeText = fm.size(SingleLine, label);
+        QSize sizeText = fm.size(Qt::TextSingleLine, label);
         if (sizeText.width() > width()-10) {
             /*---use the size in MByte or in GByte---*/
             if (partinfo->mb_min_size() > 1024) {
@@ -139,12 +141,12 @@ void QP_PartWidget::paintEvent(QPaintEvent *) {
     }
 
     /*---get the size of the label---*/
-    QSize sizeText = fm.size(SingleLine, label);
+    QSize sizeText = fm.size(Qt::TextSingleLine, label);
 
     /*---if this is a primary or a logical partition draw label and pixmap---*/
     if (partinfo->type != QTParted::extended) {
         if (sizeText.width() <= width()-10) {
-            paint.setPen(QPen(black, 1)); 
+            paint.setPen(QPen(Qt::black, 1)); 
 
             QPoint pt;
             pt.setX((width()-sizeText.width())/2);

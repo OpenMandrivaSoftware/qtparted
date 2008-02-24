@@ -19,16 +19,17 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <qlayout.h>
-#include <qvbox.h>
-
+#include <QLayout>
+#include <QPalette>
 #include "qp_navview.moc"
 #include "qp_options.h"
 
 QP_NavView::QP_NavView(QWidget *parent, QP_Settings *settings)
-    :QWidget(parent, "Navigation Frame") {
+    :QWidget(parent) {
 
-    QVBoxLayout *box = new QVBoxLayout(this, 6, 6);
+    QVBoxLayout *box = new QVBoxLayout(this);
+    box->setMargin(6);
+    box->setSpacing(6);
 
 
     /*---Drive List on the left (it display a tree with hda, hdb /etc /etc) ---*
@@ -57,14 +58,19 @@ QP_NavView::QP_NavView(QWidget *parent, QP_Settings *settings)
     
 
     //DRIVEINFO
-    QVBox *titleBox = new QVBox(this);
-    titleBox->setFrameStyle(QFrame::Box | QFrame::Plain);
-    titleBox->setBackgroundColor(black);
-    titleBox->setMargin(2);
-    titleBox->setSpacing(2);
+    QWidget *titleBox = new QWidget;
+    QVBoxLayout *titleBoxLayout = new QVBoxLayout;
+    //titleBox->setFrameStyle(QFrame::Box | QFrame::Plain);
+    QPalette tbp(titleBox->palette());
+    tbp.setColor(titleBox->backgroundRole(), Qt::black);
+    titleBox->setPalette(tbp);
+    titleBoxLayout->setMargin(2);
+    titleBoxLayout->setSpacing(2);
 
     QLabel *infoTitle = new QLabel("<qt><center><b>" + tr("Drive Info") + "</b></center></qt>", titleBox);
-    infoTitle->setBackgroundColor(QColor(0xa8, 0xa8, 0xff));
+    QPalette itp(infoTitle->palette()); 
+    itp.setColor(infoTitle->backgroundRole(), QColor(0xa8, 0xa8, 0xff));
+    infoTitle->setPalette(itp);
     details = new QLabel(titleBox);
     box->addWidget(titleBox);
 
@@ -75,7 +81,7 @@ QP_NavView::QP_NavView(QWidget *parent, QP_Settings *settings)
 QP_NavView::~QP_NavView() { 
 }
 
-void QP_NavView::setPopup(QPopupMenu *popup) {
+void QP_NavView::setPopup(QMenu *popup) {
     drivelist->setPopup(popup);
 }
 

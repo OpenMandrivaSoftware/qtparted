@@ -21,22 +21,18 @@
 
 #include "qp_settings.moc"
 #include "qp_common.h"
-#include "qp_options.h"
 
-QP_Settings::QP_Settings() {
-#ifndef QT30COMPATIBILITY
-    settings.setPath(PROG_NAME, PROG_NAME);
-#endif
-    _layout = settings.readNumEntry("/qtparted/layout", 0);
+QP_Settings::QP_Settings():settings(QSettings::SystemScope, PROG_NAME, PROG_NAME) {
+    _layout = settings.value("/qtparted/layout", 0).toInt();
 
-    QString mkntfs_path = settings.readEntry("/qtparted/" MKNTFS, MKNTFS_PATH);
-    QString ntfsresize_path = settings.readEntry("/qtparted/" NTFSRESIZE, NTFSRESIZE_PATH);
-    QString mkfs_ext3_path = settings.readEntry("/qtparted/" MKFS_EXT3, MKFS_EXT3_PATH);
-    QString mkfs_jfs_path = settings.readEntry("/qtparted/" MKFS_JFS, MKFS_JFS_PATH);
-    QString mkfs_xfs_path = settings.readEntry("/qtparted/" MKFS_XFS, MKFS_XFS_PATH);
-    QString mount_path = settings.readEntry("/qtparted/" MOUNT, MOUNT_PATH);
-    QString umount_path = settings.readEntry("/qtparted/" UMOUNT, UMOUNT_PATH);
-    QString xfs_growfs_path = settings.readEntry("/qtparted/" XFS_GROWFS, XFS_GROWFS_PATH);
+    QString mkntfs_path = settings.value("/qtparted/" MKNTFS, MKNTFS_PATH).toString();
+    QString ntfsresize_path = settings.value("/qtparted/" NTFSRESIZE, NTFSRESIZE_PATH).toString();
+    QString mkfs_ext3_path = settings.value("/qtparted/" MKFS_EXT3, MKFS_EXT3_PATH).toString();
+    QString mkfs_jfs_path = settings.value("/qtparted/" MKFS_JFS, MKFS_JFS_PATH).toString();
+    QString mkfs_xfs_path = settings.value("/qtparted/" MKFS_XFS, MKFS_XFS_PATH).toString();
+    QString mount_path = settings.value("/qtparted/" MOUNT, MOUNT_PATH).toString();
+    QString umount_path = settings.value("/qtparted/" UMOUNT, UMOUNT_PATH).toString();
+    QString xfs_growfs_path = settings.value("/qtparted/" XFS_GROWFS, XFS_GROWFS_PATH).toString();
 
     lstExternalTools->add(MKNTFS, 
                           mkntfs_path,
@@ -72,7 +68,7 @@ int QP_Settings::layout() {
 }
 
 void QP_Settings::setLayout(int layout) {
-    settings.writeEntry("/qtparted/layout", layout);
+    settings.setValue("/qtparted/layout", layout);
     _layout = layout;
 
     QString mkntfs_path = lstExternalTools->getPath(MKNTFS);
@@ -84,13 +80,13 @@ void QP_Settings::setLayout(int layout) {
     QString umount_path = lstExternalTools->getPath(UMOUNT);
     QString xfs_growfs_path = lstExternalTools->getPath(XFS_GROWFS);
 
-    settings.writeEntry("/qtparted/" MKNTFS, mkntfs_path);
-    settings.writeEntry("/qtparted/" NTFSRESIZE, ntfsresize_path);
-    settings.writeEntry("/qtparted/" MKFS_EXT3, mkfs_ext3_path);
-    settings.writeEntry("/qtparted/" MKFS_JFS, mkfs_jfs_path);
-    settings.writeEntry("/qtparted/" MKFS_XFS, mkfs_xfs_path);
-    settings.writeEntry("/qtparted/" MOUNT, mount_path);
-    settings.writeEntry("/qtparted/" XFS_GROWFS, xfs_growfs_path);
+    settings.setValue("/qtparted/" MKNTFS, mkntfs_path);
+    settings.setValue("/qtparted/" NTFSRESIZE, ntfsresize_path);
+    settings.setValue("/qtparted/" MKFS_EXT3, mkfs_ext3_path);
+    settings.setValue("/qtparted/" MKFS_JFS, mkfs_jfs_path);
+    settings.setValue("/qtparted/" MKFS_XFS, mkfs_xfs_path);
+    settings.setValue("/qtparted/" MOUNT, mount_path);
+    settings.setValue("/qtparted/" XFS_GROWFS, xfs_growfs_path);
 }
 
 time_t QP_Settings::getDevUpdate(QString device) {
@@ -98,10 +94,10 @@ time_t QP_Settings::getDevUpdate(QString device) {
                     .arg("/qtparted")
                     .arg(device);
     
-    QString time = settings.readEntry(entry, "0");
+    QString time = settings.value(entry, "0").toString();
 
     long long longTime;
-    sscanf(time.latin1(), "%lld", &longTime);
+    sscanf(time.toLatin1(), "%lld", &longTime);
 
     return (time_t)longTime;
 }
@@ -114,5 +110,5 @@ void QP_Settings::setDevUpdate(QString device, time_t time) {
     char buf[255];
     sprintf(buf, "%lld", (long long)time);
 
-    settings.writeEntry(entry, buf);
+    settings.setValue(entry, buf);
 }

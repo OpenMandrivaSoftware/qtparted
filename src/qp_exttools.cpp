@@ -27,8 +27,8 @@
 
 QP_ListExternalTools::QP_ListExternalTools() {
     /*---prevent from memory leak: when list are cleared destroy exttool object!---*/
-    lstTools.setAutoDelete(true);
-    lstToolsOld.setAutoDelete(true);
+    //lstTools.setAutoDelete(true);
+    //lstToolsOld.setAutoDelete(true);
 }
 
 QP_ListExternalTools::~QP_ListExternalTools() {
@@ -44,7 +44,11 @@ void QP_ListExternalTools::add(QString name, QString path, QString description) 
 
 QString QP_ListExternalTools::getPath(QString name) {
     QP_ExternalTool *p;
-    for (p = (QP_ExternalTool *)lstTools.first(); p; p = (QP_ExternalTool *)lstTools.next()) {
+    QListIterator <QP_ExternalTool *> toolit(lstTools);
+
+    while(toolit.hasNext())
+    {
+        p = toolit.next();
         if (p->name().compare(name) == 0) {
             return p->path();
         }
@@ -54,7 +58,11 @@ QString QP_ListExternalTools::getPath(QString name) {
 
 void QP_ListExternalTools::setPath(QString name, QString path) {
     QP_ExternalTool *p;
-    for (p = (QP_ExternalTool *)lstTools.first(); p; p = (QP_ExternalTool *)lstTools.next()) {
+    QListIterator <QP_ExternalTool *> toolit(lstTools);
+
+    while(toolit.hasNext())
+    {
+	p = toolit.next();
         if (p->name().compare(name) == 0) {
             p->setPath(path);
         }
@@ -63,7 +71,12 @@ void QP_ListExternalTools::setPath(QString name, QString path) {
 
 QString QP_ListExternalTools::getDescription(QString name) {
     QP_ExternalTool *p;
-    for (p = (QP_ExternalTool *)lstTools.first(); p; p = (QP_ExternalTool *)lstTools.next()) {
+
+    QListIterator <QP_ExternalTool *> toolit(lstTools);
+
+    while(toolit.hasNext())
+    {
+        p = toolit.next();
         if (p->name().compare(name) == 0) {
             return p->description();
         }
@@ -75,7 +88,11 @@ QString QP_ListExternalTools::getDescription(QString name) {
 void QP_ListExternalTools::apply() {
     lstToolsOld.clear();
     QP_ExternalTool *p;
-    for (p = (QP_ExternalTool *)lstTools.first(); p; p = (QP_ExternalTool *)lstTools.next()) {
+    QListIterator <QP_ExternalTool *> toolit(lstTools);
+
+    while(toolit.hasNext())
+    {
+        p = toolit.next();
         QP_ExternalTool *p_new = new QP_ExternalTool(p->name(), p->path(), p->description());
         lstToolsOld.append(p_new);
     }
@@ -84,7 +101,11 @@ void QP_ListExternalTools::apply() {
 void QP_ListExternalTools::cancel() {
     lstTools.clear();
     QP_ExternalTool *p;
-    for (p = (QP_ExternalTool *)lstToolsOld.first(); p; p = (QP_ExternalTool *)lstToolsOld.next()) {
+    QListIterator <QP_ExternalTool *> toolit(lstToolsOld);
+
+    while(toolit.hasNext())
+    {
+        p = toolit.next();
         QP_ExternalTool *p_new = new QP_ExternalTool(p->name(), p->path(), p->description());
         lstTools.append(p_new);
     }

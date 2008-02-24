@@ -83,14 +83,6 @@ QP_ActionList::QP_ActionList(QP_LibParted *libparted):_libparted(libparted)
 {
 	showDebug("%s", "actionlist::actionlist\n");
 
-	/*---prevent from memory leak: when list are cleared destroy actlistitem object!---*/
-	actlist.setAutoDelete(true);
-
-	/*---prevent from memory leak: when list are cleared destroy partinfo object!---*/
-	orig_logilist.setAutoDelete(true);
-	orig_partlist.setAutoDelete(true);
-
-
 	PedDisk *disk;
 
 	/*---save of the original device state---*/
@@ -160,7 +152,11 @@ void QP_ActionList::update_listpartitions() {
 		if (!(part->type & PED_PARTITION_FREESPACE)) {
 			/*---loop for all partition of the disk---*/
 			QP_PartInfo *p;
-			for (p = (QP_PartInfo*)orig_partlist.first(); p; p = (QP_PartInfo*)orig_partlist.next()) {
+			
+			for (int idx = 0; idx < orig_partlist.size(); idx++)
+			{
+			//for (p = (QP_PartInfo*)orig_partlist.first(); p; p = (QP_PartInfo*)orig_partlist.next()) {
+				p = orig_partlist.at(idx);
 				if (p->type != QTParted::extended) {
 					if ((p->_geometry.start == part->geom.start)
 					&&  (p->_geometry.end == part->geom.end)
@@ -170,7 +166,10 @@ void QP_ActionList::update_listpartitions() {
 				} else {
 					QP_PartInfo *logi;
 					/*---loop for every logical partitions---*/
-					for (logi = (QP_PartInfo*)orig_logilist.first(); logi; logi = (QP_PartInfo*)orig_logilist.next()) {
+					for(int index = 0; index < orig_logilist.size(); index++)
+					{
+					//for (logi = (QP_PartInfo*)orig_logilist.first(); logi; logi = (QP_PartInfo*)orig_logilist.next()) {
+						logi = orig_logilist.at(index);
 						if ((logi->_geometry.start == part->geom.start)
 						&&  (logi->_geometry.end == part->geom.end)
 						&&  (logi->_geometry.length == part->geom.length)) {
@@ -366,7 +365,10 @@ void QP_ActionList::scan_partitions() {
 	/*---loop for all partition of the disk---*/
 	QP_PartInfo *p;
 	int i = 0;
-	for (p = (QP_PartInfo*)orig_partlist.first(); p; p = (QP_PartInfo*)orig_partlist.next()) {
+	for (int idx = 0; idx < orig_partlist.size(); idx++)
+	{
+	//for (p = (QP_PartInfo*)orig_partlist.first(); p; p = (QP_PartInfo*)orig_partlist.next()) {
+		orig_partlist.at(idx);
 		if (p->type != QTParted::extended) {
 			i++;
 			if (!p->isFree()) {
@@ -387,7 +389,10 @@ void QP_ActionList::scan_partitions() {
 		} else {
 			QP_PartInfo *logi;
 			/*---loop for every logical partitions---*/
-			for (logi = (QP_PartInfo*)orig_logilist.first(); logi; logi = (QP_PartInfo*)orig_logilist.next()) {
+			for(int index = 0; index < orig_logilist.size(); index++)
+			{
+			//for (logi = (QP_PartInfo*)orig_logilist.first(); logi; logi = (QP_PartInfo*)orig_logilist.next()) {
+				logi = orig_logilist.at(index);
 				i++;
 				if (!logi->isFree()) {
 					/*---emit a signal for update the progressbar---*/
@@ -543,8 +548,11 @@ void QP_ActionList::get_partinfo(QP_PartInfo *partinfo, PedPartition *part) {
 
 	/*---loop for every action saved---*/
 	QP_ActListItem *pl;
-	for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
+	for(int idx = 0; idx < actlist.size(); idx++)
+	{
+	//for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
 		/*---if you saved a mkpart (Create) and the geometry match... man: we have a virtual!---*/
+		pl = actlist.at(idx);
 		if ((pl->_action == QTParted::create)
 		||  (pl->_action == QTParted::resize)
 		||  (pl->_action == QTParted::move)
@@ -613,7 +621,10 @@ void QP_ActionList::commit() {
 	int iTotAct = actlist.count() + 1;
 		
 	QP_ActListItem *pl;
-	for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
+	for (int idx = 0; idx < actlist.size(); idx++)
+	{
+	//for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
+		pl = actlist.at(idx);
 		showDebug("%s", "actionlist::commit, loop for commit\n");
 	
 		//---mkpart commit---

@@ -29,7 +29,7 @@
 #define QP_DISKVIEW_H
 
 #include <QWidget>
-#include <Q3VBoxLayout>
+#include <QVBoxLayout>
 #include "qp_libparted.h"
 #include "qp_partlist.h"
 #include "qp_listview.h"
@@ -77,7 +77,7 @@ protected slots:
 	void slotListViewSelectPart(QP_PartInfo *);	/*---connected to receive signal from ListView ---*/
 
 protected:
-	Q3VBoxLayout	_layout;
+	QVBoxLayout	_layout;
 };
 
 #endif

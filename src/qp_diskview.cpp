@@ -154,15 +154,22 @@ void QP_DiskView::commit() {
 
 void QP_DiskView::refresh_widgets() {
 	/*---loop for adding primary/extended partitions---*/
+	QListIterator <QP_PartInfo *> partit(libparted->partlist);
 	QP_PartInfo *p;
-	for (p = (QP_PartInfo*)libparted->partlist.first(); p; p = (QP_PartInfo*)libparted->partlist.next()) {
+	while(partit.hasNext())
+	{
+		p = partit.next();
 		addPrimary(p);
 
 		if (p->type == QTParted::extended) {
 			QP_PartInfo *logi;
 			/*---loop for adding logical partitions---*/
-			for (logi = (QP_PartInfo*)libparted->logilist.first(); logi; logi = (QP_PartInfo*)libparted->logilist.next())
+			QListIterator <QP_PartInfo *> logiit(libparted->logilist);
+			while(logiit.hasNext())
+			{
+				logi = logiit.next();
 				addLogical(logi);
+			}
 		}
 	}
 

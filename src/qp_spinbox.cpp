@@ -24,8 +24,8 @@
 #include "qp_spinbox.moc"
 #include "qp_options.h"
 
-QP_SpinBox::QP_SpinBox(QWidget *parent, const char *name)
-	:QSpinBox (parent, name)
+QP_SpinBox::QP_SpinBox(QWidget *parent)
+	:QSpinBox (parent)
 	,_floatminval(0)
 	,_floatmaxval(0)
 	,_pedminval(0)
@@ -38,9 +38,9 @@ QP_SpinBox::QP_SpinBox(QWidget *parent, const char *name)
 	/*---format of the displayed string (ie: 999.99)---*/
 	format = "%3.2f";
 	setValue((float)0);
-	setSteps(10, 10);
-	val = new QDoubleValidator(_floatminval, _floatmaxval, 2, this);
-	setValidator (val);
+	//setSteps(10, 10);
+	//val = new QDoubleValidator(_floatminval, _floatmaxval, 2, this);
+	//setValidator (val);
 }
 
 
@@ -80,7 +80,7 @@ void QP_SpinBox::setFormat(int format) {
 void QP_SpinBox::setValue(float value) {
 	char buf[20];
 	if (_floatminval <= value && value <= _floatmaxval) {
-		sprintf (buf, (const char *) format, value);
+		sprintf (buf, format.toLatin1(), value);
 		_floatvalue = value;
 		QSpinBox::setValue(int(value * 100.0));
 	}
@@ -136,7 +136,7 @@ void QP_SpinBox::setMinValue(PedSector minVal) {
 
 void QP_SpinBox::setStep (float s) {
 	step = s;
-	setSteps ((int)(step * 10.0), (int)(step * 10.0));
+	//setSteps ((int)(step * 10.0), (int)(step * 10.0));
 }
 
 float QP_SpinBox::getStep() const {
@@ -147,7 +147,7 @@ void QP_SpinBox::setRange(float minVal, float maxVal) {
 	if (minVal <= maxVal) {
 		_floatminval = minVal;
 		_floatmaxval = maxVal;
-		QRangeControl::setRange(int(minVal * 100.0), int(maxVal * 100.0));
+		//QRangeControl::setRange(int(minVal * 100.0), int(maxVal * 100.0));
 		val->setRange(minVal, maxVal, 2);
 	}
 }
@@ -198,17 +198,17 @@ void QP_SpinBox::stepDown() {
 
 void QP_SpinBox::setMaxValue(float maxvalue) {
 	_floatmaxval = maxvalue;
-	QSpinBox::setMaxValue(int(maxvalue * 100.0));
+	//QSpinBox::setMaxValue(int(maxvalue * 100.0));
 }
 
 void QP_SpinBox::setMinValue(float minvalue) {
 	_floatminval = minvalue;
-	QSpinBox::setMinValue(int(minvalue * 100.0));
+	//QSpinBox::setMinValue(int(minvalue * 100.0));
 }
 
 void QP_SpinBox::valueChange() {
 	bool rc;
-	updateDisplay();
+	//updateDisplay();
 	mapTextToValue(&rc);
 
 	/*---don't update internal ped values!---*/
@@ -237,7 +237,7 @@ void QP_SpinBox::valueChange() {
 
 
 int QP_SpinBox::mapTextToValue(bool *ok) {
-	const char *txt = text();
+	const char *txt = text().toLatin1();
 	_floatvalue = atof(txt);
 	*ok = true;
 	return int(_floatvalue * 100.0);
@@ -247,6 +247,6 @@ int QP_SpinBox::mapTextToValue(bool *ok) {
 QString QP_SpinBox::mapValueToText(int v) {
 	float f = float(v) / 100.0;
 	QString buf;
-	buf.sprintf((const char *)format, f);
+	buf.sprintf(format.toLatin1(), f);
 	return buf;
 }

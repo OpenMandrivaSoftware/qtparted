@@ -45,7 +45,7 @@ class QP_SizeContainer : public QWidget {
 Q_OBJECT
 
 public:
-    QP_SizeContainer(QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
+    QP_SizeContainer(QWidget *parent=0, Qt::WFlags f = 0);
     void setGeometry(int x, int y, int w, int h);
     void setMaxPartSector(PedSector);
     void setMinPartSector(PedSector);
@@ -79,7 +79,7 @@ class QP_SizePartition : public QWidget {
 Q_OBJECT
 
 public:
-    QP_SizePartition(QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
+    QP_SizePartition(QWidget *parent=0, Qt::WFlags f = 0);
     ~QP_SizePartition();
     void setMinSizeInPixel(int);
     void setMode(QTParted::actType);

@@ -27,28 +27,32 @@
 #include "qp_options.h"
 
 QP_dlgAbout::QP_dlgAbout(const QPixmap &icon, const QString &content, QWidget *par)
-    :QDialog(par, 0, TRUE) {
+    :QDialog(par, 0) {
 	QLabel *l;
-	QVBoxLayout *vb = new QVBoxLayout(this, 8);
-	QHBoxLayout *hb = new QHBoxLayout(vb);
-	QVBoxLayout *col;
+	QVBoxLayout *vb = new QVBoxLayout(this);
+	
+	QHBoxLayout *hb = new QHBoxLayout();
+	vb->setMargin(8);
+	vb->addLayout(hb);
 
-	col = new QVBoxLayout(hb);
+	QVBoxLayout *col = new QVBoxLayout();
+	hb->addLayout(col);
+
+	col = new QVBoxLayout();
+	hb->addLayout(col,1);
 	l = new QLabel(this);
 	l->setPixmap(icon);
 	col->addWidget(l);
-	col->addStretch(1);
 
-	col = new QVBoxLayout(hb);
+	col = new QVBoxLayout();
+	hb->addLayout(col,1);
 	l = new QLabel(this);
 	l->setText(content);
 	col->addWidget(l);
-	col->addStretch(1);
 
-	hb = new QHBoxLayout(vb);
-	hb->addStretch(1);
+	hb = new QHBoxLayout();
+	vb->addLayout(hb,1);
 	QPushButton *pb_ok = new QPushButton(tr("&OK"), this);
 	connect(pb_ok, SIGNAL(clicked()), SLOT(close()));
 	hb->addWidget(pb_ok);
-	hb->addStretch(1);
 }

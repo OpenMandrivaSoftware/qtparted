@@ -22,7 +22,7 @@
 #include "qp_listview.moc"
 #include "qp_filesystem.h"
 #include "qp_options.h"
-
+#include <QResizeEvent>
 #include <config.h>
 
 #define MIN_HDWIDTH 190
@@ -30,7 +30,7 @@
 
 /*----------QP_ListViewItem----------------------------------------------------------*/
 /*---                                                                             ---*/
-QP_ListViewItem::QP_ListViewItem(QListView *parent,
+QP_ListViewItem::QP_ListViewItem(Q3ListView *parent,
         const QString &number,
         const QString &diskName,
         const QString &fstype,
@@ -41,7 +41,7 @@ QP_ListViewItem::QP_ListViewItem(QListView *parent,
         const QString &endStr,
         const QString &label,
         QP_PartInfo *pinfo)
-    :QListViewItem(parent, number, diskName, fstype, status, sizeStr, usedStr, startStr, endStr) {
+    :Q3ListViewItem(parent, number, diskName, fstype, status, sizeStr, usedStr, startStr, endStr) {
 
     partinfo = pinfo;
     partinfo->listviewitem = this;
@@ -50,7 +50,7 @@ QP_ListViewItem::QP_ListViewItem(QListView *parent,
     setText(8, label);
 }
 
-QP_ListViewItem::QP_ListViewItem(QListViewItem *parent, 
+QP_ListViewItem::QP_ListViewItem(Q3ListViewItem *parent, 
         const QString &number,
         const QString &diskName, 
         const QString &fstype,
@@ -61,7 +61,7 @@ QP_ListViewItem::QP_ListViewItem(QListViewItem *parent,
         const QString &endStr,
         const QString &label,
         QP_PartInfo *pinfo)
-    :QListViewItem(parent, number, diskName, fstype, status, sizeStr, usedStr, startStr, endStr) {
+    :Q3ListViewItem(parent, number, diskName, fstype, status, sizeStr, usedStr, startStr, endStr) {
 
     partinfo = pinfo;
     partinfo->listviewitem = this;
@@ -78,7 +78,7 @@ QP_ListViewItem::QP_ListViewItem(QListViewItem *parent,
 /*----------QP_RealListView----------------------------------------------------------*/
 /*---                                                                             ---*/
 QP_RealListView::QP_RealListView(QWidget *parent, const char *name)
-    :QListView(parent, name) {
+    :Q3ListView(parent, name) {
 
     itemextended = NULL;
 
@@ -87,17 +87,17 @@ QP_RealListView::QP_RealListView(QWidget *parent, const char *name)
 
     addColumn(tr("Number"));
     addColumn(tr("Partition"));
-    setColumnAlignment(1, AlignCenter);
+    setColumnAlignment(1, Qt::AlignCenter);
     addColumn(tr("Type"));
     addColumn(tr("Status"));
     addColumn(tr("Size"));
-    setColumnAlignment(4, AlignRight);
+    setColumnAlignment(4, Qt::AlignRight);
     addColumn(tr("Used space"));
-    setColumnAlignment(5, AlignRight);
+    setColumnAlignment(5, Qt::AlignRight);
     addColumn(tr("Start"));
-    setColumnAlignment(6, AlignRight);
+    setColumnAlignment(6, Qt::AlignRight);
     addColumn(tr("End"));
-    setColumnAlignment(7, AlignRight);
+    setColumnAlignment(7, Qt::AlignRight);
 #ifdef LABELS_SUPPORT
     addColumn(tr("Label")); // number 8
 #endif // LABELS_SUPPORT
@@ -220,14 +220,14 @@ void QP_RealListView::addLogical(QP_PartInfo *partinfo, int number) {
 }
 
 
-void QP_RealListView::selectionChanged(QListViewItem *i) {
+void QP_RealListView::selectionChanged(Q3ListViewItem *i) {
     /*---emit the sigSelectPart signal---*/
     QP_ListViewItem *di = static_cast<QP_ListViewItem *>(i);
     emit sigSelectPart(di->partinfo);
 }
 
 
-void QP_RealListView::rightButtonClicked(QListViewItem *, const QPoint &point, int ) {
+void QP_RealListView::rightButtonClicked(Q3ListViewItem *, const QPoint &point, int ) {
     /*---emit the sigPopup signal---*/
   emit sigPopup(point);
 }
@@ -239,8 +239,8 @@ void QP_RealListView::rightButtonClicked(QListViewItem *, const QPoint &point, i
 
 /*----------QP_ListView--------------------------------------------------------------*/
 /*---                                                                             ---*/
-QP_ListView::QP_ListView(QWidget *parent, const char *name, WFlags f)
-    :QP_PartList(parent, name, f) {
+QP_ListView::QP_ListView(QWidget *parent, const char *name, Qt::WFlags f)
+    :QP_PartList(parent, f) {
 
     /*---init progressive number---*/
     number = 0;
@@ -268,7 +268,7 @@ void QP_ListView::setselPartInfo(QP_PartInfo *selpartinfo) {
     QP_PartList::setselPartInfo(selpartinfo);
 
     /*---just a wrap to the QP_RealListView---*/
-    listview->setSelected((QListViewItem *)selpartinfo->listviewitem, true);
+    listview->setSelected((Q3ListViewItem *)selpartinfo->listviewitem, true);
 }
 
 void QP_ListView::setDevice(QP_Device *device) {

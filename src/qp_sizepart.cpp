@@ -32,8 +32,8 @@
 
 #define ARROW_MARGIN 12
 
-QP_SizeContainer::QP_SizeContainer(QWidget *parent, const char *name, WFlags f)
-    :QWidget(parent, name, f) {
+QP_SizeContainer::QP_SizeContainer(QWidget *parent, Qt::WFlags f)
+    :QWidget(parent, f) {
     sizepartition = new QP_SizePartition(this);
 
     connect(sizepartition, SIGNAL(sigChangedStart()),
@@ -131,8 +131,8 @@ void QP_SizeContainer::slotChangedPos() {
 
 
 
-QP_SizePartition::QP_SizePartition(QWidget *parent, const char *name, WFlags f)
-    :QWidget(parent, name, f) {
+QP_SizePartition::QP_SizePartition(QWidget *parent, Qt::WFlags f)
+    :QWidget(parent, f) {
 
     setMouseTracking(true);
     mouseposition = MP_none;
@@ -297,8 +297,9 @@ void QP_SizePartition::paintEvent(QPaintEvent *) {
     
 
     /*---draw a small border around the widget---*/
-    QStyle::SFlags flags = QStyle::Style_Default;
+    /*QStyle::SFlags flags = QStyle::Style_Default;
 	flags |= QStyle::Style_Enabled;
 	flags |= QStyle::Style_HasFocus;
     style().drawPrimitive(QStyle::PE_FocusRect, &paint, rect(), colorGroup(), flags);
+    */
 }

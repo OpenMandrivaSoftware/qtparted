@@ -45,7 +45,7 @@ class QP_ListChart : public QP_PartList {
 Q_OBJECT
 
 public:
-    QP_ListChart(QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
+    QP_ListChart(QWidget *parent=0, Qt::WFlags f = 0);
     ~QP_ListChart();
     void setselPartInfo(QP_PartInfo *);   /*---change the selected partition                ---*/
     void clear();                         /*---clear the chart (remove attached partition)  ---*/

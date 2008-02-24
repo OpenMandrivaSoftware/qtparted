@@ -37,12 +37,6 @@
 
 #include "qtparted.h"
 #include "qp_libparted.h"
-#include "qp_dlgcreate.h"
-#include "qp_dlgformat.h"
-#include "qp_dlgresize.h"
-#include "qp_dlgprogress.h"
-#include "qp_dlgconfig.h"
-#include "qp_dlgdevprop.h"
 #include "qp_diskview.h"
 #include "qp_navview.h"
 #include "qp_settings.h"
@@ -51,7 +45,7 @@
 class QP_MainWindow : public QMainWindow {
 	Q_OBJECT
 public:
-	QP_MainWindow(QP_Settings *, QWidget *parent, const char *name);
+	QP_MainWindow(QP_Settings *, QWidget *parent);
 	~QP_MainWindow();
 	void init();		   /*---init the mainwindow		---*/
 	void refreshDiskView();
@@ -76,13 +70,15 @@ protected:
 	QAction *actAboutQT;
 	QAction *actNavProperty;
 	QAction *actNavPartTable;
+	QAction *actSetActive;
+	QAction *actHide;
 	QP_DiskView *diskview;
-	QP_dlgCreate *dlgcreate;	/*---the create dialog		 ---*/
-	QP_dlgFormat *dlgformat;	/*---the format dialog		 ---*/
-	QP_dlgResize *dlgresize;	/*---the resize dialog		 ---*/
-	QP_dlgProgress *dlgprogress;	/*---the progress dialog	   ---*/
-	QP_dlgConfig *dlgconfig;	/*---the configuration dialog  ---*/
-	QP_dlgDevProperty *dlgdevprop;	/*---the device property dialog---*/
+	//QP_dlgCreate *dlgcreate;	/*---the create dialog		 ---*/
+	//QP_dlgFormat *dlgformat;	/*---the format dialog		 ---*/
+	//QP_dlgResize *dlgresize;	/*---the resize dialog		 ---*/
+	//QP_dlgProgress *dlgprogress;	/*---the progress dialog	   ---*/
+	//QP_dlgConfig *dlgconfig;	/*---the configuration dialog  ---*/
+	//QP_dlgDevProperty *dlgdevprop;	/*---the device property dialog---*/
 	QP_NavView *navview;		/*---the disk navigation widget---*/
 	QP_Settings *settings;
 
@@ -107,17 +103,17 @@ private:
 	int mnuSetHiddenID;
 
 protected slots:
-	void slotCreate();
-	void slotFormat();
+	//void slotCreate();
+	//void slotFormat();
 	void slotResize();
 	void slotMove();
 	void slotDelete();
-	void slotConfig();
+	//void slotConfig();
 	void slotProperty();
 	void slotWhatsThis();
 	void slotAbout();
 	void slotAboutQT();
-	void slotNavProperty();
+	//void slotNavProperty();
 	void slotNavPartTable();
 	void slotSelectPart(QP_PartInfo *);
 	void slotDevicePopup(QPoint pos);

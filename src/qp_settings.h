@@ -26,8 +26,8 @@
 
 #include <time.h>
 #include <qobject.h>
-#include <qsettings.h>
-
+#include <QSettings>
+#include "qp_options.h"
 #ifndef QP_SETTINGS_H
 #define QP_SETTINGS_H
 

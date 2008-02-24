@@ -267,7 +267,7 @@ bool QP_PartInfo::isVirtual() {
 
 bool QP_PartInfo::partMount() {
 	// security: if already mounted
-	if (!_mountPoint.isNull()) umount(_mountPoint.latin1());
+	if (!_mountPoint.isNull()) umount(_mountPoint.toLatin1());
 
 	char type[255];
 
@@ -275,11 +275,11 @@ bool QP_PartInfo::partMount() {
 	  || (fsspec->name().compare("fat16") == 0))) {
 		strcpy(type, "vfat");
 	} else {
-		strcpy(type, fsspec->name().latin1());
+		strcpy(type, fsspec->name().toLatin1());
 	}
 
 	_mountPoint = TMP_MOUNTPOINT;
-	int nRes = mount(partname().latin1(), _mountPoint.latin1(), type, MS_NOATIME | MS_RDONLY, NULL);
+	int nRes = mount(partname().toLatin1(), _mountPoint.toLatin1(), type, MS_NOATIME | MS_RDONLY, NULL);
 	if (nRes == 0)
 		return true;
 	else
@@ -287,7 +287,7 @@ bool QP_PartInfo::partMount() {
 }
 
 bool QP_PartInfo::partUMount() {
-	return (bool)umount(_mountPoint.latin1());
+	return (bool)umount(_mountPoint.toLatin1());
 }
 
 QString QP_PartInfo::mountPoint() {
@@ -401,7 +401,7 @@ void QP_LibParted::setDevice(QP_Device *device) {
 		return ;
 	}
 	
-	const char *szdevice = device->shortname().latin1();
+	const char *szdevice = device->shortname().toLatin1();
 
 	dev = ped_device_get(szdevice);
 	if (dev == NULL) {
@@ -471,14 +471,20 @@ void QP_LibParted::scan_partitions() {
 
 	/*---loop for all partition of the disk---*/
 	QP_PartInfo *p;
-	for (p = (QP_PartInfo*)actlist->partlist.first(); p; p = (QP_PartInfo*)actlist->partlist.next()) {
+	for (int idx = 0 ; idx < actlist->partlist.size(); idx++)
+	{
+	//for (p = (QP_PartInfo*)actlist->partlist.first(); p; p = (QP_PartInfo*)actlist->partlist.next()) {
+	 	p = actlist->partlist.at(idx);
 		showDebug("%s", "update partlist of libparted using last partlist of actlist\n");
 		partlist.append(p);
 
 		if (p->type == QTParted::extended) {
 			QP_PartInfo *logi;
 			/*---loop for every logical partitions---*/
-			for (logi = (QP_PartInfo*)actlist->logilist.first(); logi; logi = (QP_PartInfo*)actlist->logilist.next()) {
+			for (int index = 0 ; index < actlist->logilist.size(); index++)
+			{
+			//for (logi = (QP_PartInfo*)actlist->logilist.first(); logi; logi = (QP_PartInfo*)actlist->logilist.next()) {
+				logi = actlist->logilist.at(index);
 				logilist.append(logi);
 			}
 		}
@@ -504,14 +510,20 @@ void QP_LibParted::scan_orig_partitions() {
 
 	/*---loop for all partition of the disk---*/
 	QP_PartInfo *p;
-	for (p = (QP_PartInfo*)actlist->orig_partlist.first(); p; p = (QP_PartInfo*)actlist->orig_partlist.next()) {
+	for (int idx = 0 ; idx < actlist->orig_partlist.size(); idx++)
+	{
+	//for (p = (QP_PartInfo*)actlist->orig_partlist.first(); p; p = (QP_PartInfo*)actlist->orig_partlist.next()) {
+		p = actlist->orig_partlist.at(idx);
 		showDebug("%s", "update partlist of libparted using \"orig\" partlist of actlist\n");
 		partlist.append(p);
 
 		if (p->type == QTParted::extended) {
 			QP_PartInfo *logi;
 			/*---loop for every logical partitions---*/
-			for (logi = (QP_PartInfo*)actlist->orig_logilist.first(); logi; logi = (QP_PartInfo*)actlist->orig_logilist.next()) {
+			for (int index = 0 ; index < actlist->orig_logilist.size(); index++)
+			{
+			//for (logi = (QP_PartInfo*)actlist->orig_logilist.first(); logi; logi = (QP_PartInfo*)actlist->orig_logilist.next()) {
+				logi = actlist->orig_logilist.at(index);
 				logilist.append(logi);
 			}
 		}
@@ -524,7 +536,7 @@ qtp_DriveInfo QP_LibParted::device_info(QString strdev) {
 	showDebug("%s", "libparted::device_info\n");
 	qtp_DriveInfo driveinfo;
 	
-	PedDevice *dev = ped_device_get((const char *)strdev.latin1());
+	PedDevice *dev = ped_device_get((const char *)strdev.toLatin1());
 
 	long double length = ( dev->length * (dev->sector_size / 1024.0) ) /1024.0;
   
@@ -573,7 +585,7 @@ bool QP_LibParted::checkForParted() {
 					"Parted homepage: http://www.gnu.org/software/parted/"))
 					.arg(major) .arg(minor) .arg(micro)
 					.arg(PARTED_REQUESTED_MAJOR) .arg(PARTED_REQUESTED_MINOR) .arg(PARTED_REQUESTED_MICRO);
-		showDebug("%s", label.latin1());
+		showDebug("%s", label.toStdString().c_str());
 		QMessageBox::information(NULL, PROG_NAME, label);
 		return false;
 	}
@@ -598,8 +610,10 @@ void QP_LibParted::get_filesystem(QP_FileSystem *filesystem) {
 		
 	/*---loop into fswraplist, and add it to sigTimer ('cause wrapper handle by itself)---*/
 	QP_FSWrap *p;
-	for (p = (QP_FSWrap *)filesystem->fswraplist.first(); p;
-			p = (QP_FSWrap *)filesystem->fswraplist.next()) {
+	for(int idx = 0; idx < filesystem->fswraplist.size(); idx++)
+	{
+	//for (p = (QP_FSWrap *)filesystem->fswraplist.first(); p; p = (QP_FSWrap *)filesystem->fswraplist.next()) {
+		p = filesystem->fswraplist.at(idx);
 		connect(p, SIGNAL(sigTimer(int, QString, QString)),
 				this, SIGNAL(sigTimer(int, QString, QString)));
 	}
@@ -713,7 +727,10 @@ QP_PartInfo * QP_LibParted::numToPartInfo(int num) {
 	/*---loop for all partition of the disk---*/
 	QP_PartInfo *partinfo = NULL;
 	QP_PartInfo *p;
-	for (p = (QP_PartInfo*)partlist.first(); p; p = (QP_PartInfo*)partlist.next()) {
+	for(int idx = 0; idx < partlist.size(); idx++)
+	{
+	//for (p = (QP_PartInfo*)partlist.first(); p; p = (QP_PartInfo*)partlist.next()) {
+		p = partlist.at(idx);
 		showDebug("%s", "libparted::numToPartInfo, scan for every partition\n");
 		/*---does this partition match?---*/
 		if (p->num == num)
@@ -723,8 +740,11 @@ QP_PartInfo * QP_LibParted::numToPartInfo(int num) {
 		} else {
 			QP_PartInfo *logi;
 			/*---loop for every logical partitions---*/
-			for (logi = (QP_PartInfo*)logilist.first(); logi; logi = (QP_PartInfo*)logilist.next()) {
+			for(int index = 0; index < logilist.size(); index++)
+			{
+			//for (logi = (QP_PartInfo*)logilist.first(); logi; logi = (QP_PartInfo*)logilist.next()) {
 				/*---does this partition match?---*/
+				logi = logilist.at(index);
 				if (logi->num == num)
 					partinfo = logi;
 			}
@@ -808,7 +828,7 @@ bool QP_LibParted::set_system(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec) 
 		goto error;
 	}
 
-	fs_type = ped_file_system_type_get(fsspec->name().latin1());
+	fs_type = ped_file_system_type_get(fsspec->name().toLatin1());
 	if (!fs_type) {
 		_message = QString(tr("A bug was found in QTParted during ped_file_system_type_get, please report it!"));
 		goto error;
@@ -857,7 +877,7 @@ int QP_LibParted::mkfs(QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QString
 	}
 
 	/*---get the file_system_id---*/
-	fs_type = ped_file_system_type_get(fsspec->name().latin1());
+	fs_type = ped_file_system_type_get(fsspec->name().toLatin1());
 	
 	/*---if there are not wrapper for write---*/
 	if (!fsspec->fswrap()
@@ -957,7 +977,7 @@ int QP_LibParted::mkpart(QTParted::partType type, PedSector start, PedSector end
 	}
 
 	/*---if it exist a wrapper change the file_system_id---*/
-	if (fswrap) fs_type = ped_file_system_type_get(fswrap->fsname().latin1());
+	if (fswrap) fs_type = ped_file_system_type_get(fswrap->fsname().toLatin1());
 
 	part = ped_partition_new (actlist->disk(), part_type, fs_type, start, end);
 	if (!part) {
@@ -1110,7 +1130,7 @@ int QP_LibParted::mkpartfs(QTParted::partType type,
 	PedConstraint *constraint;
 	PedFileSystem *fs;
 
-	fs_type = ped_file_system_type_get (fsspec->name().latin1());
+	fs_type = ped_file_system_type_get (fsspec->name().toLatin1());
 	if (!fs_type) {
 		showDebug("%s", "libparted::mkpartfs, ped_file_system_type_get ko\n");
 		goto error;
@@ -1745,7 +1765,7 @@ bool QP_LibParted::_partition_warn_busy(PedPartition* part) {
 		QString label = QString(tr("Partition %s is being used."));
 		if (ped_exception_throw(PED_EXCEPTION_ERROR,
 								(PedExceptionOption)PED_EXCEPTION_IGNORE_CANCEL,
-								label.latin1(),
+								label.toLatin1(),
 								path) != PED_EXCEPTION_IGNORE) goto error_free_path;
 	}
 	ped_free(path);

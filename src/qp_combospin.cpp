@@ -23,27 +23,28 @@
 #include "qp_combospin.moc"
 #include "qp_options.h"
 
-QP_ComboSpin::QP_ComboSpin(QWidget *parent, const char *name)
-	:QWidget(parent, name)
+QP_ComboSpin::QP_ComboSpin(QWidget *parent)
+	:QWidget(parent)
 {
 	layout = new QHBoxLayout(this); //, "layout");
 
-	spinbox = new QP_SpinBox(this, "spinbox");
-	spinbox->setSizePolicy(QSizePolicy((QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, spinbox->sizePolicy().hasHeightForWidth()));
+	spinbox = new QP_SpinBox(this);
+
+	//spinbox->setSizePolicy(QSizePolicy((QSizePolicy::SizeType)7, (QSizePolicy::SizeType)0, 0, 0, spinbox->sizePolicy().hasHeightForWidth()));
 
 	layout->addWidget(spinbox);
 	connect(spinbox, SIGNAL(valueChanged(PedSector)),
 		this, SIGNAL(valueChanged(PedSector)));
 
-	combobox = new QComboBox(false, this, "combobox");
-	combobox->setSizePolicy(QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, combobox->sizePolicy().hasHeightForWidth()));
+	combobox = new QComboBox(this);
+	//combobox->setSizePolicy(QSizePolicy( (QSizePolicy::SizeType)1, (QSizePolicy::SizeType)0, 0, 0, combobox->sizePolicy().hasHeightForWidth()));
 	connect(combobox, SIGNAL(activated(int)),
 		spinbox, SLOT(setFormat(int)));
 	layout->addWidget(combobox);
 
 	combobox->clear();
-	combobox->insertItem("MB");
-	combobox->insertItem("GB");
+	combobox->addItem("MB");
+	combobox->addItem("GB");
 }
 
 QP_ComboSpin::~QP_ComboSpin() {

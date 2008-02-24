@@ -44,7 +44,7 @@ PedSector space_stats(QP_PartInfo *partinfo) {
 	unsigned long a;
 	a = getFsUsedKiloBytes(partinfo);
 
-	/*printf ("device(%s)=%lu KB used\n", partinfo->partname().latin1(), a);*/
+	/*printf ("device(%s)=%lu KB used\n", partinfo->partname().toLatin1(), a);*/
 	if (a == 0) return -1;
 	else return a * KBYTE_SECTORS;
 }
@@ -60,9 +60,9 @@ int my_mount(QP_PartInfo *partinfo, const char *szMountPoint) {
 	  || (partinfo->fsspec->name().compare("fat16") == 0))) {
 		strcpy(type, "vfat");
 	} else {
-		strcpy(type, partinfo->fsspec->name().latin1());
+		strcpy(type, partinfo->fsspec->name().toLatin1());
 	}
-	return mount(partinfo->partname().latin1(),
+	return mount(partinfo->partname().toLatin1(),
 	             szMountPoint, type, MS_NOATIME | MS_RDONLY, NULL);
 }
 
@@ -108,7 +108,7 @@ unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 		mnt = TMP_MOUNTPOINT;
 	}
 
-	if (statfs(mnt, &sfs) != -1) {
+	if (statfs(mnt.toLatin1(), &sfs) != -1) {
 		a = (sfs.f_blocks - sfs.f_bavail); // used blocks count
 		b = a * sfs.f_bsize; // used bytes count
 		c = b / 1024LL; // user KiloBytes count
@@ -116,7 +116,7 @@ unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 	}
 
 	if (bToBeUnmounted) {
-		int nRes = umount(mnt);
+		int nRes = umount(mnt.toLatin1());
 		if (nRes != 0) {
 			QString label = QObject::tr("Cannot umount partition device: %1."
 			                "Please do it by hand first to commit the changes!")

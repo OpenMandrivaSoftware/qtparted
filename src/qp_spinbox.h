@@ -44,7 +44,7 @@ typedef long long PedSector;
 class QP_SpinBox : public QSpinBox {
 	Q_OBJECT
 public:
-	QP_SpinBox(QWidget *parent = 0L, const char *name = 0L);
+	QP_SpinBox(QWidget *parent = 0L);
 	~QP_SpinBox();
 
 	void setFormatString(const char *fmt);

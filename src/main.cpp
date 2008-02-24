@@ -147,7 +147,7 @@ int main(int argc, char *argv[]) {
 
 	QP_Settings settings;
 
-	mainwindow = new QP_MainWindow(&settings, 0, "QP_MainWindow");
+	mainwindow = new QP_MainWindow(&settings, 0);
 
 	QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"));
 	splash->connect(mainwindow, SIGNAL(sigSplashInfo(const QString &)),

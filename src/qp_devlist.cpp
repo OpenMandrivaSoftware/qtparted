@@ -69,7 +69,7 @@ bool QP_Device::newPartTable() {
 	PedDisk *disk;
 	const PedDiskType *type;
 	PedDiskType *def_type;
-	PedDevice *dev = ped_device_get(shortname());
+	PedDevice *dev = ped_device_get(shortname().toLatin1());
 
 	if (!dev)
 		goto error;
@@ -110,7 +110,7 @@ void QP_Device::setLongname(QString longname) {
 
 	/*---get the shortname---*/
 	char newstr[MAXPATHLEN];
-	convertDevfsNameToShortName(longname.latin1(), newstr, sizeof(newstr));
+	convertDevfsNameToShortName(longname.toLatin1(), newstr, sizeof(newstr));
 	_shortname = QString(newstr);
 }
 
@@ -230,9 +230,6 @@ int QP_Device::convertDevfsNameToShortName(const char *szDevfs, char *szShort, i
 
 QP_DevList::QP_DevList(QP_Settings *settings) {
 	_settings = settings;
-	
-	/*---prevent from memory leak: when list are cleared destroy partinfo object!---*/
-	devlist.setAutoDelete(true);
 }
 
 QP_DevList::~QP_DevList() {
@@ -248,7 +245,7 @@ void QP_DevList::getDevices() {
 		// Workaround for parted detecting CD-ROMs as harddisks
 		// FIXME remove if/when parted gets fixed
 		QString p(dev->path);
-		if(!p.startsWith("/dev/sd") && (p.contains("/dev/scd") || p.contains("/dev/sr") || access("/proc/ide/" + p.section('/', 2, 2) + "/cache", R_OK)))
+		if(!p.startsWith("/dev/sd") && (p.contains("/dev/scd") || p.contains("/dev/sr") || access(("/proc/ide/" + p.section('/', 2, 2) + "/cache").toLatin1(), R_OK)))
 			continue;
 		
 		QP_Device *device = new QP_Device(_settings);

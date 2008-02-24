@@ -22,8 +22,8 @@
 #include "qp_partlist.moc"
 #include "qp_options.h"
 
-QP_PartList::QP_PartList(QWidget *parent, const char *name, WFlags f)
-	:QWidget(parent, name, f) {
+QP_PartList::QP_PartList(QWidget *parent, Qt::WFlags f)
+	:QWidget(parent, f) {
 }
 
 QP_PartList::~QP_PartList() {

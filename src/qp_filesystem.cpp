@@ -156,9 +156,6 @@ QP_FSWrap *QP_FileSystemSpec::fswrap() {
 /*----------QP_FileSystemSpec--------------------------------------------------------*/
 /*---                                                                             ---*/
 QP_FileSystem::QP_FileSystem() {
-    fswraplist.setAutoDelete(true);
-    filesystemlist.setAutoDelete(true);
-        
     /*---make a "free" filesystem---*/
     _free = new QP_FileSystemSpec("free", false, false, false, false, false, NULL);
     filesystemlist.append(_free);
@@ -203,11 +200,12 @@ void QP_FileSystem::addFileSystem(QString name, bool create,
 }
 
 QP_FileSystemSpec *QP_FileSystem::nameToFSSpec(QString name) {
-    QP_FileSystemSpec *p;
-    for (p = (QP_FileSystemSpec*)filesystemlist.first(); p; p = (QP_FileSystemSpec*)filesystemlist.next())
+
+    foreach(QP_FileSystemSpec* p, filesystemlist)
+    {
         if (p->name().compare(name) == 0)
             return p;
-
+    }
     return unknow();
 }
 

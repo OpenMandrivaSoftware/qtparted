@@ -22,9 +22,9 @@
 #include <qapplication.h>
 #include <qsplitter.h>
 #include <qlabel.h>
-#include <qhbox.h>
+#include <Q3HBox>
 #include <qmenubar.h>
-#include <qpopupmenu.h>
+#include <QMenu>
 #include <qradiobutton.h>
 #include <qstatusbar.h>
 #include <qtoolbar.h>
@@ -53,8 +53,8 @@
 
 
 
-QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const char *name):QMainWindow(parent, name) {
-	setCaption(QString("%1 v%2").arg(PACKAGE).arg(VERSION));
+QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent):QMainWindow(parent) {
+	setWindowTitle(QString("%1 v%2").arg(PACKAGE).arg(VERSION));
 
 	/*---load the setting from disk---*/
 	settings = qpsettings;
@@ -68,22 +68,22 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	InitMenu();
 
 	/*---create the dialog used for "create" new partition---*/
-	dlgcreate = new QP_dlgCreate(this, "dlgCreate");
+	//dlgcreate = new QP_dlgCreate(this, "dlgCreate");
 
 	/*---create the dialog used for "format" existing partition---*/
-	dlgformat = new QP_dlgFormat(this, "dlgFormat");
+	//dlgformat = new QP_dlgFormat(this, "dlgFormat");
 
 	/*---create the dialog used for "resize" partition---*/
-	dlgresize = new QP_dlgResize(this, "dlgResize");
+	//dlgresize = new QP_dlgResize(this, "dlgResize");
 
 	/*---create the dialog used for "progress"---*/
-	dlgprogress = new QP_dlgProgress(this, "dlgProgress");
+	//dlgprogress = new QP_dlgProgress(this, "dlgProgress");
 
 	/*---create the dialog used for "configuration"---*/
-	dlgconfig = new QP_dlgConfig(this, "dlgConfig");
+	//dlgconfig = new QP_dlgConfig(this, "dlgConfig");
 
 	/*---create the dialog used for "device property"---*/
-	dlgdevprop = new QP_dlgDevProperty(this, "dlgDevProperty");
+	//dlgdevprop = new QP_dlgDevProperty(this, "dlgDevProperty");
 
 	/*---this is the central widget of the window (where i will attach the qsplitter---*/
 	central = new QWidget(this);
@@ -114,7 +114,7 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	/*---add the navigator view (on the left) to the splitter---*/
 	navview = new QP_NavView(navSplit, qpsettings);
 	/*---i like that navview will not be always resized!---*/
-	navSplit->setResizeMode(navview, QSplitter::KeepSize);
+	//navSplit->setResizeMode(navview, QSplitter::KeepSize);
 	/*---connect the selected signal (when user, for example, select /dev/hda)---*/
 	connect(navview, SIGNAL(sigSelectDevice(QP_Device *)),
 		this, SLOT(slotSelectDevice(QP_Device *)));
@@ -130,11 +130,11 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent, const cha
 	connect(diskview, SIGNAL(sigDevicePopup(QPoint)),
 	        this, SLOT(slotDevicePopup(QPoint)));	
 	/*---connect the sigTimer used for dlgprogress during "update progressbar"---*/
-	connect(diskview, SIGNAL(sigTimer(int, QString, QString)),
-	        dlgprogress, SLOT(slotTimer(int, QString, QString)));
+	//connect(diskview, SIGNAL(sigTimer(int, QString, QString)),
+	//        dlgprogress, SLOT(slotTimer(int, QString, QString)));
 	/*---connect the sigTimer used for dlgprogress during "commit operations"---*/
-	connect(diskview, SIGNAL(sigOperations(QString, QString, int, int)),
-	        dlgprogress, SLOT(slotOperations(QString, QString, int, int)));
+	//connect(diskview, SIGNAL(sigOperations(QString, QString, int, int)),
+	//        dlgprogress, SLOT(slotOperations(QString, QString, int, int)));
 	/*---connect the sigDiskChanged used for undo/commit---*/
 	connect(diskview, SIGNAL(sigDiskChanged()),
 	        this, SLOT(slotDiskChanged()));
@@ -168,7 +168,7 @@ void QP_MainWindow::refreshDiskView() {
 //	DoneProgressDialog();
 	
 	/*---closethe progress dialog---*/
-	dlgprogress->hide();
+	//dlgprogress->hide();
 }
 
 void QP_MainWindow::setpopupmenu(QMenu *popupmenu) {
@@ -181,8 +181,8 @@ QMenu* QP_MainWindow::popupmenu() {
 
 void QP_MainWindow::createAction() {
 	/*---Undo button (used in File menu)---*/
-	actUndo = new QAction(tr("&Undo"), QKeySequence(), this);
-	actUndo->setIconSet(QPixmap(tool_undo));
+	actUndo = new QAction(tr("&Undo"), this);
+	actUndo->setIcon(QPixmap(tool_undo));
 	actUndo->setToolTip(tr("Undo"));
 	actUndo->setWhatsThis(tr("Undo last operation"));
 	actUndo->setEnabled(false);
@@ -190,8 +190,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotUndo()));
 
 	/*---Commit button (used in File menu)---*/
-	actCommit = new QAction(tr("&Commit"), QKeySequence(), this);
-	actCommit->setIconSet(QPixmap(tool_save));
+	actCommit = new QAction(tr("&Commit"), this);
+	actCommit->setIcon(QPixmap(tool_save));
 	actCommit->setToolTip(tr("Commit"));
 	actCommit->setWhatsThis(tr("Commit all operations"));
 	actCommit->setEnabled(false);
@@ -199,8 +199,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotCommit()));
 
 	/*---Quit button (used in File menu)---*/
-	actQuit = new QAction(tr("&Quit"), QKeySequence(), this);
-	actQuit->setIconSet(QPixmap(tool_quit));
+	actQuit = new QAction(tr("&Quit"), this);
+	actQuit->setIcon(QPixmap(tool_quit));
 	actQuit->setToolTip(tr("Quit"));
 	actQuit->setWhatsThis(tr("Quit from the application"));
 	actQuit->setEnabled(true);
@@ -208,8 +208,8 @@ void QP_MainWindow::createAction() {
 	        qApp, SLOT(quit()));
 
 	/*---Property button (used in operations menu)---*/
-	actProperty = new QAction(tr("&Property"), QKeySequence(), this);
-	actProperty->setIconSet(QPixmap(tool_property));
+	actProperty = new QAction(tr("&Property"), this);
+	actProperty->setIcon(QPixmap(tool_property));
 	actProperty->setToolTip(tr("Property"));
 	actProperty->setWhatsThis(tr("Property of the selected partition"));
 	actProperty->setEnabled(false);
@@ -217,8 +217,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotProperty()));
 
 	/*---Create button (used in operations menu)---*/
-	actCreate = new QAction(tr("&Create"), QKeySequence(), this);
-	actCreate->setIconSet(QPixmap(tool_new));
+	actCreate = new QAction(tr("&Create"), this);
+	actCreate->setIcon(QPixmap(tool_new));
 	actCreate->setToolTip(tr("Create"));
 	actCreate->setWhatsThis(tr("Create a new partition"));
 	actCreate->setEnabled(false);
@@ -227,8 +227,8 @@ void QP_MainWindow::createAction() {
 
 
 	/*---Format button (used in operations menu)---*/
-	actFormat = new QAction(tr("&Format"), QKeySequence(), this);
-	actFormat->setIconSet(QPixmap(tool_format));
+	actFormat = new QAction(tr("&Format"), this);
+	actFormat->setIcon(QPixmap(tool_format));
 	actFormat->setToolTip(tr("Format"));
 	actFormat->setWhatsThis(tr("Format a new partition"));
 	actFormat->setEnabled(false);
@@ -236,8 +236,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotFormat()));
 
 	/*---Resize button (used in operations menu)---*/
-	actResize = new QAction(tr("&Resize"), QKeySequence(), this);
-	actResize->setIconSet(QPixmap(tool_resize));
+	actResize = new QAction(tr("&Resize"), this);
+	actResize->setIcon(QPixmap(tool_resize));
 	actResize->setToolTip(tr("Resize"));
 	actResize->setWhatsThis(tr("Resize a partition"));
 	actResize->setEnabled(false);
@@ -245,8 +245,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotResize()));
 
 	/*---Move button (used in operations menu)---*/
-	actMove = new QAction(tr("&Move"), QKeySequence(), this);
-	actMove->setIconSet(QPixmap(tool_move));
+	actMove = new QAction(tr("&Move"), this);
+	actMove->setIcon(QPixmap(tool_move));
 	actMove->setToolTip(tr("Move"));
 	actMove->setWhatsThis(tr("Move a partition"));
 	actMove->setEnabled(false);
@@ -254,8 +254,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotMove()));
 
 	/*---Delete button (used in operations menu)---*/
-	actDelete = new QAction(tr("&Delete"), QKeySequence(), this);
-	actDelete->setIconSet(QPixmap(tool_delete));
+	actDelete = new QAction(tr("&Delete"), this);
+	actDelete->setIcon(QPixmap(tool_delete));
 	actDelete->setToolTip(tr("Delete"));
 	actDelete->setWhatsThis(tr("Delete a new partition"));
 	actDelete->setEnabled(false);
@@ -263,8 +263,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotDelete()));
 
 	/*---Config button (used in options menu)---*/
-	actConfig = new QAction(tr("&Configuration..."), QKeySequence(), this);
-	actConfig->setIconSet(QPixmap(tool_property));
+	actConfig = new QAction(tr("&Configuration..."), this);
+	actConfig->setIcon(QPixmap(tool_property));
 	actConfig->setToolTip(tr("Configuration of QTParted"));
 	actConfig->setWhatsThis(tr("Open the configuration dialog"));
 	actConfig->setEnabled(true);
@@ -272,34 +272,34 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotConfig()));
    
 	/*---What this button (used in toolbutton bar)---*/
-	actWhatThis = new QAction(tr("What's &This"), QKeySequence(), this);
-	actWhatThis->setIconSet(QPixmap(tool_whatthis));
+	actWhatThis = new QAction(tr("What's &This"), this);
+	actWhatThis->setIcon(QPixmap(tool_whatthis));
 	actWhatThis->setToolTip(tr("What's This"));
 	actWhatThis->setWhatsThis(tr("Enter <b>What's This</b> mode"
 	                             "It enables the user to ask for help "
 	                             "about widgets on the screen."));
 	actWhatThis->setEnabled(true);
-	actWhatThis->setAccel(SHIFT+Key_F1);
+	actWhatThis->setShortcut(Qt::Key_Shift+Qt::Key_F1);
 	connect(actWhatThis, SIGNAL(activated()),
 	        this, SLOT(slotWhatsThis()));
 
 	/*---About button (used in operations help)---*/
-	actAbout = new QAction(tr("About &QTParted"), QKeySequence(), this);
+	actAbout = new QAction(tr("About &QTParted"), this);
 	actAbout->setToolTip(tr("About QTParted"));
 	actAbout->setWhatsThis(tr("Information about QTParted"));
 	connect(actAbout, SIGNAL(activated()),
 	        this, SLOT(slotAbout()));
 
 	/*---About QT button (used in operations help)---*/
-	actAboutQT = new QAction(tr("About Q&T"), QKeySequence(), this);
+	actAboutQT = new QAction(tr("About Q&T"), this);
 	actAboutQT->setToolTip(tr("About QT"));
 	actAboutQT->setWhatsThis(tr("Information about QT"));
 	connect(actAboutQT, SIGNAL(activated()),
 	        this, SLOT(slotAboutQT()));
 
 	/*---disk navigator property button (used when you right click on a device---*/
-	actNavProperty = new QAction(tr("&Device property"), QKeySequence(), this);
-	actNavProperty->setIconSet(QPixmap(tool_disk));
+	actNavProperty = new QAction(tr("&Device property"), this);
+	actNavProperty->setIcon(QPixmap(tool_disk));
 	actNavProperty->setToolTip(tr("See the property of this disk device"));
 	actNavProperty->setWhatsThis(tr("Some information about the disk device"));
 	actNavProperty->setEnabled(true);
@@ -307,8 +307,8 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotNavProperty()));
 
 	/*---disk navigator make partition table (used when you right click on a device---*/
-	actNavPartTable = new QAction(tr("&Make a new Partition Table"), QKeySequence(), this);
-	actNavPartTable->setIconSet(QPixmap(tool_format));
+	actNavPartTable = new QAction(tr("&Make a new Partition Table"), this);
+	actNavPartTable->setIcon(QPixmap(tool_format));
 	actNavPartTable->setToolTip(tr("This will make the partition table"));
 	actNavPartTable->setWhatsThis(tr("You're going to loose all partition data! Are you sure? :)"));
 	actNavPartTable->setEnabled(true);
@@ -319,36 +319,37 @@ void QP_MainWindow::createAction() {
 void QP_MainWindow::addMenuBar() {
 	/*---File menu---*/
 	QMenu *mnuFile = new QMenu;
-	menuBar()->insertItem(tr("&File"), mnuFile);
-	actUndo->addTo(mnuFile);
-	actCommit->addTo(mnuFile);
+	
+	mnuFile = menuBar()->addMenu(tr("&File"));
+	mnuFile->addAction(actUndo);
+	mnuFile->addAction(actCommit);
 	//
-	mnuFile->insertSeparator();
+	mnuFile->addSeparator();
 	//
-	actQuit->addTo(mnuFile);
-   
+	mnuFile->addAction(actQuit);
 
 	/*---Action menu---*/
 	mnuOperations = new QMenu;
-	mnuOperations->setCheckable(true);
-	menuBar()->insertItem(tr("&Operations"), mnuOperations);
-	actProperty->addTo(mnuOperations);
-	actCreate->addTo(mnuOperations);
-	actFormat->addTo(mnuOperations);
-	actResize->addTo(mnuOperations);
-	actMove->addTo(mnuOperations);
-	actDelete->addTo(mnuOperations);
+	
+        mnuOperations = menuBar()->addMenu(tr("&Operations"));
+	mnuOperations->addAction(actProperty);
+	mnuOperations->addAction(actCreate);
+	mnuOperations->addAction(actFormat);
+	mnuOperations->addAction(actResize);
+	mnuOperations->addAction(actMove);
+	mnuOperations->addAction(actDelete);
 	//
-	mnuOperations->insertSeparator();
+	mnuOperations->addSeparator();
 	//
-	mnuSetActiveID = mnuOperations->insertItem(tr("Set Active..."));
-	mnuOperations->connectItem(mnuSetActiveID, this, SLOT(slotSetActive()));
-	mnuOperations->setItemEnabled(mnuSetActiveID, false);
+	actSetActive = new QAction(tr("Set Active..."), this);
+	connect(actSetActive, SIGNAL(triggered()), this, SLOT(slotSetActive()));
+	actSetActive->setEnabled(false);
+	mnuOperations->addAction(actSetActive);
 
-	mnuSetHiddenID = mnuOperations->insertItem(tr("Hide"));
-	mnuOperations->connectItem(mnuSetHiddenID, this, SLOT(slotSetHidden()));
-	mnuOperations->setItemEnabled(mnuSetHiddenID, false);
-
+	actHide = new QAction(tr("Hide"), this);
+	connect(actHide, SIGNAL(triggered()), this, SLOT(slotSetHidde()));
+	actHide->setEnabled(false);
+	mnuOperations->addAction(actHide);
 
 	/*---set popupmenu for the action menu!---*/
 	setpopupmenu(mnuOperations);
@@ -356,84 +357,83 @@ void QP_MainWindow::addMenuBar() {
 
 	/*---Disk menu---*/
 	mnuDisks = new QMenu;
-	menuBar()->insertItem(tr("&Disks"), mnuDisks);
+	mnuDisks = menuBar()->addMenu(tr("&Disks"));
 	
 	/*---Device menu---*/
 	mnuDevice = new QMenu;
 	mnuDevice->setEnabled(false);
-	menuBar()->insertItem(tr("&Device"), mnuDevice);
-	actUndo->addTo(mnuDevice);
-	actCommit->addTo(mnuDevice);
+	mnuDevice = menuBar()->addMenu(tr("&Device"));
+	mnuDevice->addAction(actUndo);
+	mnuDevice->addAction(actCommit);
 
-
-	/*---Options menu---*/
+	/*---Options menu---
 	QMenu *mnuOptions = new QMenu;
 	menuBar()->insertItem(tr("&Options"), mnuOptions);
 	actConfig->addTo(mnuOptions);
-
+	*/
    
 	/*---Help menu---*/
 	QMenu *mnuHelp = new QMenu;
-	menuBar()->insertItem(tr("&Help"), mnuHelp);
-	actWhatThis->addTo(mnuHelp);
-	mnuHelp->insertSeparator();
-	actAbout->addTo(mnuHelp);
-	actAboutQT->addTo(mnuHelp);
-	
+	mnuHelp = menuBar()->addMenu(tr("&Help"));
+	mnuHelp->addAction(actWhatThis);
+	mnuHelp->addSeparator();
+	mnuHelp->addAction(actAbout);
+	mnuHelp->addAction(actAboutQT);
 
 	/*---disk navigator popup menu---*/
 	_navpopupmenu = new QMenu;
-	actNavProperty->addTo(_navpopupmenu);
-	actNavPartTable->addTo(_navpopupmenu);
+	_navpopupmenu->addAction(actNavProperty);
+	_navpopupmenu->addAction(actNavPartTable);
 }
 
 void QP_MainWindow::addStatusBar() {
 	/*---This functions is dummy! i have not yet decided if a statusbar is useful!---*/
 
 	/*---make an hbox and add it in the statusbar---*/
-	QHBox *hbox = new QHBox(statusBar());
-	hbox->setMargin(5);
-	hbox->setSpacing(6);
+	QWidget *hbox = new QWidget(statusBar());
+	QHBoxLayout *hboxlayout = new QHBoxLayout;
+	hboxlayout->setMargin(5);
+	hboxlayout->setSpacing(6);
 
 	/*---make a label, size it, set the text... and attach it to the hbox---*/
-	QLabel *lbl1 = new QLabel(hbox, "message");
+	QLabel *lbl1 = new QLabel("message", hbox);
 	lbl1->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-	lbl1->setAlignment(AlignLeft);
+	lbl1->setAlignment(Qt::AlignLeft);
 	QFont boldfont; boldfont.setWeight(QFont::Bold);
 	lbl1->setFont(boldfont);
 	lbl1->setText("Message");
 	lbl1->setMinimumHeight(lbl1->sizeHint().height());
 	lbl1->setText("QTParted :)");
-	QToolTip::add(lbl1, "Message area");
+	lbl1->setToolTip("Message area");
 	
 	/*---add a separator in the statusbar---*/
-	QFrame *frame = new QFrame(hbox, "frame");
+	QFrame *frame = new QFrame(hbox);
 	frame->setFrameShadow(QFrame::Sunken);
 	frame->setFrameShape(QFrame::VLine);
 
 	/*---make a label, size it, set the text... and attach it to the hbox---*/
-	QLabel *lbl2 = new QLabel(hbox, "message");
+	QLabel *lbl2 = new QLabel("message", hbox);
 	lbl2->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-	lbl2->setAlignment(AlignLeft);
+	lbl2->setAlignment(Qt::AlignLeft);
 	boldfont.setWeight(QFont::Bold);
 	lbl2->setFont(boldfont);
 	lbl2->setText("Message");
 	lbl2->setMinimumHeight(lbl2->sizeHint().height());
-	lbl2->setText("(C) 2002-2003 by Zanac / (C) 2005 Ark Linux");
-	QToolTip::add(lbl2, "Message area");
+	lbl2->setText("(C) 2002-2003 by Zanac / (C) 2005-2008 Ark Linux");
+	lbl2->setToolTip("Message area");
 	
-	frame = new QFrame(hbox, "frame");
+	frame = new QFrame(hbox);
 	frame->setFrameShadow(QFrame::Sunken);
 	frame->setFrameShape(QFrame::VLine);
 
-	QLabel *lblmsg = new QLabel(hbox, "message");
-	lblmsg->setAlignment(AlignLeft);
+	QLabel *lblmsg = new QLabel("message", hbox);
+	lblmsg->setAlignment(Qt::AlignLeft);
 	boldfont.setWeight(QFont::Bold);
 	lblmsg->setFont(boldfont);
 	lblmsg->setText("Message");
 	lblmsg->setMinimumHeight(lblmsg->sizeHint().height());
 	lblmsg->setText(QString::null);
-	QToolTip::add(lblmsg, "Message area");
+	lblmsg->setToolTip("Message area");
 
 	/*---add the hbox to the statusbar---*/
 	statusBar()->addWidget(hbox, 1);
@@ -444,26 +444,26 @@ void QP_MainWindow::addStatusBar() {
 
 void QP_MainWindow::addToolBar() {
 	/*---Operations toolbar---*/
-	QToolBar *toolUndoCommit = new QToolBar(this, "toolUndoCommit");
-	actUndo->addTo(toolUndoCommit);
-	actCommit->addTo(toolUndoCommit);
+	QToolBar *toolUndoCommit = new QToolBar(this);
+	toolUndoCommit->addAction(actUndo);
+	toolUndoCommit->addAction(actCommit);
 
 	/*---Operations toolbar---*/
-	QToolBar *toolOperations = new QToolBar(this, "toolOperations");
-	actProperty->addTo(toolOperations);
-	actCreate->addTo(toolOperations);
-	actFormat->addTo(toolOperations);
-	actResize->addTo(toolOperations);
-	actMove->addTo(toolOperations);
-	actDelete->addTo(toolOperations);
+	QToolBar *toolOperations = new QToolBar(this);
+	toolOperations->addAction(actProperty);
+	toolOperations->addAction(actCreate);
+	toolOperations->addAction(actFormat);
+	toolOperations->addAction(actResize);
+	toolOperations->addAction(actMove);
+	toolOperations->addAction(actDelete);
 
 	/*---What's this toolbar---*/
-	QToolBar *toolWhatThis = new QToolBar(this, "toolWhatThis");
-	actWhatThis->addTo(toolWhatThis);
+	QToolBar *toolWhatThis = new QToolBar(this);
+	toolWhatThis->addAction(actWhatThis);
 }
 
 void QP_MainWindow::buildDisksMenu() {
-	navview->agDevices()->addTo(mnuDisks);
+	mnuDisks->addActions(navview->agDevices()->actions());
 	navview->setPopup(_navpopupmenu);
 }
 
@@ -472,7 +472,9 @@ void QP_MainWindow::loadSettings() {
 	diskview->setLayout(settings->layout());
 }
 
+#if 0
 void QP_MainWindow::slotCreate() {
+
 	/*---init of the dialog box used for create new partition---*/
 	dlgcreate->init_dialog();
 
@@ -534,6 +536,7 @@ void QP_MainWindow::slotCreate() {
 		/*---refresh diskview widget!---*/
 		refreshDiskView();
 	}
+
 }
 
 void QP_MainWindow::slotFormat() {
@@ -577,21 +580,22 @@ void QP_MainWindow::slotFormat() {
 		refreshDiskView();
 	}
 }
+#endif
 
 void QP_MainWindow::slotResize() {
 	/*---there are not selected partitions!---*/
 	if (!diskview->selPartInfo()) return;
 
-	ShowMoveResizeDialog(QTParted::resize);
+	//ShowMoveResizeDialog(QTParted::resize);
 }
 
 void QP_MainWindow::slotMove() {
 	/*---there are not selected partitions!---*/
 	if (!diskview->selPartInfo()) return;
 
-	ShowMoveResizeDialog(QTParted::move);
+	//ShowMoveResizeDialog(QTParted::move);
 }
-
+#if 0
 void QP_MainWindow::ShowMoveResizeDialog(QTParted::actType moveresize) {
 	//FIXME: extended partition can be resized also on the "left"
 
@@ -663,7 +667,7 @@ void QP_MainWindow::ShowMoveResizeDialog(QTParted::actType moveresize) {
 		refreshDiskView();
 	}
 }
-
+#endif
 void QP_MainWindow::InitMenu() {
 	actProperty->setEnabled(false);
 	actCreate->setEnabled(false);
@@ -671,14 +675,14 @@ void QP_MainWindow::InitMenu() {
 	actResize->setEnabled(false);
 	actMove->setEnabled(false);
 	actDelete->setEnabled(false);
-	mnuOperations->setItemEnabled(mnuSetActiveID, false);
-	mnuOperations->setItemEnabled(mnuSetHiddenID, false);
+	actSetActive->setEnabled(false);
+	actHide->setEnabled(false);
 }
 
 void QP_MainWindow::InitProgressDialog() {
 	/*---initialize the progress dialog and show it---*/
-	dlgprogress->init_dialog();
-	dlgprogress->show();
+//	dlgprogress->init_dialog();
+//	dlgprogress->show();
 
 	/*---just update GUI---*/
 	qApp->processEvents();
@@ -688,7 +692,7 @@ void QP_MainWindow::DoneProgressDialog() {
 	/*---update GUI and disconnect sigTimer---*/
 	qApp->processEvents();
 
-	dlgprogress->exec();
+	//dlgprogress->exec();
 }
 
 void QP_MainWindow::slotDelete() {
@@ -711,7 +715,7 @@ void QP_MainWindow::slotDelete() {
 	/*---refresh diskview widget!---*/
 	refreshDiskView();
 }
-
+#if 0
 void QP_MainWindow::slotConfig() {
 	/*---init of the configuration dialog---*/
 	dlgconfig->init_dialog();
@@ -733,6 +737,7 @@ void QP_MainWindow::slotConfig() {
 		lstExternalTools->cancel();
 	}
 }
+#endif
 
 void QP_MainWindow::slotProperty() {
 	/*---there are not selected partitions!---*/
@@ -773,8 +778,9 @@ void QP_MainWindow::slotAbout() {
 	QString content = QString("<h3>%1 v%2</h3>\n").arg(PROG_NAME).arg(VERSION)
 	                + "<br>\n"
 	                + "Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br>\n"
-			+ "Copyright (C) 2005 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br>\n"
-			+ "(send bug reports to bero@arklinux.org)\n"
+			+ "Copyright (C) 2005-2008 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br>\n"
+			+ "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br>\n"
+			+ "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)\n"
 	                + HOMEPAGE
 	                + "<br>\n"
 	                + "<br>\n"
@@ -784,8 +790,9 @@ void QP_MainWindow::slotAbout() {
 	                + "<br>\n"
 	                + "See the AUTHORS file for more info about contributors.<br>\n";
 
-	QP_dlgAbout *w = new QP_dlgAbout(qtparted_xpm, content, this);
-	w->setCaption(tr("About"));
+	QP_dlglabout *w = new QP_dlgAbout(qtparted_xpm, content, this);
+	w->setWindowTitle(tr("About"));
+	w->setModal(true);
 	w->exec();
 	delete w;
 }
@@ -794,6 +801,7 @@ void QP_MainWindow::slotAboutQT() {
 	QMessageBox::aboutQt(this);
 }
 
+#if 0
 void QP_MainWindow::slotNavProperty() {
 	/*---init the dialog and show it!---*/
 	dlgdevprop->init_dialog();
@@ -820,6 +828,7 @@ void QP_MainWindow::slotNavProperty() {
 
 	dlgdevprop->show_dialog();
 }
+#endif
 
 void QP_MainWindow::slotNavPartTable() {
 	QString label = QString(tr("You're going to make a new partition table. Are you sure?\nAll data will be lost!"));
@@ -854,10 +863,10 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
 	if (!selDevice->partitionTable()
 	||  !selDevice->canUpdateGeometry()
 	||  (diskview->canUndo() && selDevice->isBusy())) {
-		mnuOperations->setItemEnabled(mnuSetActiveID, false);
-		mnuOperations->setItemChecked(mnuSetActiveID, partinfo->isActive());
-		mnuOperations->setItemEnabled(mnuSetHiddenID, false);
-		mnuOperations->setItemChecked(mnuSetHiddenID, partinfo->isHidden());
+		actSetActive->setEnabled(false);
+		actSetActive->setChecked(partinfo->isActive());
+		actHide->setEnabled(false);
+		actHide->setChecked(partinfo->isActive());
 
 		actCreate->setEnabled(false);
 		actFormat->setEnabled(false);
@@ -869,10 +878,10 @@ void QP_MainWindow::slotSelectPart(QP_PartInfo *partinfo) {
 	}
 	
 	/*---check/uncheck the active flag on the menu popup---*/
-	mnuOperations->setItemEnabled(mnuSetActiveID, partinfo->canBeActive());
-	mnuOperations->setItemChecked(mnuSetActiveID, partinfo->isActive());
-	mnuOperations->setItemEnabled(mnuSetHiddenID, partinfo->canBeHidden());
-	mnuOperations->setItemChecked(mnuSetHiddenID, partinfo->isHidden());
+	actSetActive->setEnabled(partinfo->canBeActive());
+	actSetActive->setChecked(partinfo->isActive());
+	actHide->setEnabled(partinfo->canBeHidden());
+	actHide->setChecked(partinfo->isHidden());
 
 	if (diskview->selPartInfo()->fsspec == diskview->filesystem->free()) {
 		/*---you cannot create more then 4 primary partions, but more then 4 logical!	---*/
@@ -932,9 +941,9 @@ void QP_MainWindow::slotSelectDevice(QP_Device *dev) {
 	diskview->setDevice(dev);
 
 	
-	if (dev->partitionTable())
+	if (dev->partitionTable());
 		/*---closethe progress dialog---*/
-		dlgprogress->hide();
+		//dlgprogress->hide();
 }
 
 void QP_MainWindow::slotSetActive() {
@@ -950,7 +959,8 @@ void QP_MainWindow::slotSetActive() {
 	else
 		oldActive = diskview->libparted->partActive()->partname();
 
-	bool active = mnuOperations->isItemChecked(mnuSetActiveID);
+	bool active = actSetActive->isChecked();
+
 	if (active)
 		newActive = noactive;
 	else

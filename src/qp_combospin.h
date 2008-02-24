@@ -35,7 +35,7 @@
 class QP_ComboSpin : public QWidget {
 	Q_OBJECT
 public:
-	QP_ComboSpin(QWidget *parent = 0L, const char *name = 0L);
+	QP_ComboSpin(QWidget *parent = 0L);
 	~QP_ComboSpin();
 	void setRange(PedSector, PedSector);
 	void setMaxValue(PedSector);

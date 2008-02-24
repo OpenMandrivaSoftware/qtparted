@@ -36,12 +36,8 @@ public:
     int width;
 };
 
-QP_ListChart::QP_ListChart(QWidget *parent, const char *name, WFlags f)
-    :QP_PartList(parent, name, f) {
-
-    /*---prevent memory leak when you call ::clear method!---*/
-    partlist.setAutoDelete(true);
-    logilist.setAutoDelete(true);
+QP_ListChart::QP_ListChart(QWidget *parent, Qt::WFlags f)
+    :QP_PartList(parent, f) {
 
     /*---prevent a segfualt in ::clear method!---*/
     _selPartInfo = NULL;
@@ -78,17 +74,19 @@ void QP_ListChart::clear() {
     /*--just "unselect" a partition. This prevent segfault in setselpartinfo---*/
     _selPartInfo = NULL;
     
-    QP_ChartItem *p = NULL;
-
     /*---destroy logical partition widgets attached---*/
-    for (p = (QP_ChartItem *)logilist.first(); p; p = (QP_ChartItem *)logilist.next()) 
-        delete p->partwidget;
+    QListIterator <QP_ChartItem*> it(logilist);
+    while(it.hasNext())
+    {
+        delete it.next()->partwidget;
+    }
 
     /*---destroy primary/extended partition widgets attached---*/
-    p = NULL;
-    for (p = (QP_ChartItem *)partlist.first(); p; p = (QP_ChartItem *)partlist.next()) 
-        delete p->partwidget;
-
+    QListIterator <QP_ChartItem *> partit(partlist);
+    while(partit.hasNext())
+    {
+        delete partit.next()->partwidget;
+    }
     /*---clear the pointer list of partition  ---*/
     /*---this is usefull to avoid memory leak!---*/
     logilist.clear();
@@ -153,8 +151,11 @@ void QP_ListChart::draw() {
     int totwidth = 0;
 
     /*---the first "for" loop is needed to calculate the totwidth---*/
+    QListIterator <QP_ChartItem *> partit(partlist);
     QP_ChartItem *p = NULL;
-    for (p = (QP_ChartItem *)partlist.first(); p; p = (QP_ChartItem *)partlist.next()) {
+    while(partit.hasNext())
+    {
+	p = partit.next();
         totwidth += p->width = MIN_PARTITION_WIDTH;
         if (totwidth > container->width())
             qFatal("Error calculating size of QP_ListChar! %d\n", container->width());
@@ -169,10 +170,15 @@ void QP_ListChart::draw() {
     /*---this "for" loop is needed to calculate how much partitions can grow---*/
     /*---it loop until partition fit the container                          ---*/
     p = NULL;
+    partit.toFront();
     while (totwidth < container->width()) {
         if (p == NULL)
-            p = (QP_ChartItem *)partlist.first();
-
+	{
+	    if(partit.hasNext())
+	    {
+		p = partit.next();
+	    }
+	}
         /*---calculate the size of the partition---*/
         float mbsize = p->partinfo->mb_end() - p->partinfo->mb_start();
 
@@ -185,13 +191,17 @@ void QP_ListChart::draw() {
             totwidth++;
         }
 
-        p = (QP_ChartItem *)partlist.next();
+        p = partit.next();
     }
 
     /*---the last "for" loop is needed to resize the partitions with the calculated width---*/
     int lastleft = 0;
     totwidth = 0;
-    for (p = (QP_ChartItem *)partlist.first(); p; p = (QP_ChartItem *)partlist.next()) {
+    p = NULL;
+    partit.toFront();
+    while(partit.hasNext())
+    {
+	p = partit.next();
         QP_PartWidget *partwidget = p->partwidget;
         partwidget->setGeometry(lastleft, 0, p->width, container->height());
         lastleft += p->width;
@@ -225,7 +235,11 @@ void QP_ListChart::draw_extended() {
 
     /*---the first "for" loop is needed to calculate the totwidth---*/
     QP_ChartItem *p = NULL;
-    for (p = (QP_ChartItem *)logilist.first(); p; p = (QP_ChartItem *)logilist.next()) {
+    QListIterator <QP_ChartItem *> logiit(logilist);
+
+    while(logiit.hasNext())
+    {
+	p = logiit.next();
         totwidth += p->width = MIN_PARTITION_WIDTH;
         //if (totwidth > extended->container->width())
         //    qFatal("Error calculating size of QP_ListChar! %d\n", container->width());
@@ -238,9 +252,15 @@ void QP_ListChart::draw_extended() {
     /*---this "for" loop is needed to calculate how much partitions can grow---*/
     /*---it loop until partition fit the container                          ---*/
     p = NULL;
+    logiit.toFront();
     while (totwidth < extended->container->width()) {
         if (p == NULL)
-            p = (QP_ChartItem *)logilist.first();
+	{
+	    if(logiit.hasNext())
+	    {
+ 		p = logiit.next();
+	    }
+	}
 
         /*---calculate the size of the extended partition---*/
         float extsize = extpartinfo->end - extpartinfo->start;
@@ -257,12 +277,15 @@ void QP_ListChart::draw_extended() {
             totwidth++;
         }
 
-        p = (QP_ChartItem *)logilist.next();
+        p = logiit.next();
     }
 
     /*---the last "for" loop is needed to resize the partitions with the calculated width---*/
     int lastleft = 0;
-    for (p = (QP_ChartItem *)logilist.first(); p; p = (QP_ChartItem *)logilist.next()) {
+    logiit.toFront();
+    while(logiit.hasNext())
+    {
+	p = logiit.next();
         QP_PartWidget *partwidget = p->partwidget;
         partwidget->setGeometry(lastleft, 0, p->width, extended->container->height());
         lastleft += p->width;

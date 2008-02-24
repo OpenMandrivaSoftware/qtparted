@@ -54,7 +54,7 @@ bool QP_FSWrap::fs_open(QString cmdline, bool localized)
 		dupcmdline = "LC_ALL=POSIX " + dupcmdline;
 
 	/*---open a pipe from the command line---*/
-	fp = popen(dupcmdline, "r");
+	fp = popen(dupcmdline.toLatin1(), "r");
 
 	if (fp)
 		return true;
@@ -155,7 +155,7 @@ bool QP_FSWrap::qpMount(QString device)
 		QString line = QString(cline);
 
 		QRegExp rx = QRegExp("^mount: (.*)$");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			QString capError = rx.cap(1);
 			_message = capError;
 			error = true;
@@ -168,7 +168,7 @@ bool QP_FSWrap::qpMount(QString device)
 
 bool QP_FSWrap::qpUMount(QString device)
 {
-	int ret = umount(device.latin1());
+	int ret = umount(device.toLatin1());
 	if (ret) {
 		_message = QString(strerror(errno));
 		return false;
@@ -332,7 +332,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 
 		if (!error) {
 			rx = QRegExp("^ERROR.*: (.*)");
-			if (rx.search(line) == 0) {
+			if (rx.indexIn(line) == 0) {
 				QString captured = rx.cap(1);
 				_message = QString(captured);
 				error = true;
@@ -341,7 +341,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 
 		if (!error) {
 			rx = QRegExp("^The volume end is fragmented.*");
-			if (rx.search(line) == 0) {
+			if (rx.indexIn(line) == 0) {
 				_message =
 				    QString
 				    ("The partition is fragmented.");
@@ -358,9 +358,9 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 #endif
 		//example: 34,72 percent completed
 		rx = QRegExp("^.* (\\d*),(\\d*) percent completed.*$");
-		if (rx.search(linesub) == 0) {
+		if (rx.indexIn(linesub) == 0) {
 			QString capIntPercent = rx.cap(1);
-			printf("letto: %s\n", capIntPercent.latin1());
+			printf("letto: %s\n", capIntPercent.toLatin1());
 			//QString capFloatPercent = rx.cap(2);
 
 			bool rc;
@@ -375,7 +375,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 		//BETA: change could with might with ntfsresize 1.9
 		//rx = QRegExp("^Now You could resize at \\d* bytes or (\\d*) .*");
 		rx = QRegExp("^.*You ..... resize at \\d* bytes or (\\d*) .*");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			QString captured = rx.cap(1);
 			_message = QString("The partition is fragmented. Try to defragment it, or resize to %1MB")
 			           .arg(captured);
@@ -413,7 +413,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 #endif
 		//example: 34,72 percent completed
 		rx = QRegExp("^.* (\\d*),(\\d*) percent completed.*$");
-		if (rx.search(linesub) == 0) {
+		if (rx.indexIn(linesub) == 0) {
 			QString capIntPercent = rx.cap(1);
 			//QString capFloatPercent = rx.cap(2);
 
@@ -428,20 +428,20 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 		}
 		//rx = QRegExp("^Successfully resized NTFS on device");
 		rx = QRegExp("^.*[Ss]uccessfully.*");
-		if (rx.search(line) == 0)
+		if (rx.indexIn(line) == 0)
 			success = true;
 		rx = QRegExp("^Nothing to do: NTFS volume size is already OK.");
-		if (rx.search(line) == 0)
+		if (rx.indexIn(line) == 0)
 			success = true;
 
 		rx = QRegExp("^Syncing device.*");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			emit sigTimer(99, QString(tr("Syncing device.")),
 				      QString::null);
 		}
 
 		rx = QRegExp("^ERROR.*: (.*)");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			QString captured = rx.cap(1);
 			_message = QString(captured);
 		}
@@ -484,11 +484,11 @@ bool QP_FSNtfs::mkpartfs(QString dev, QString label)
 
 		QRegExp rx;
 		rx = QRegExp("^mkntfs completed successfully. Have a nice day.");
-		if (rx.search(line) == 0)
+		if (rx.indexIn(line) == 0)
 			success = true;
 
 		rx = QRegExp("^ERROR.*: (.*)");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			QString captured = rx.cap(1);
 			_message = QString(captured);
 			success = false;
@@ -522,9 +522,9 @@ PedSector QP_FSNtfs::min_size(QString dev)
 
 		QRegExp rx;
 		rx = QRegExp("^.*You ..... resize at (\\d*) bytes or (\\d*) .*");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			QString captured = rx.cap(1);
-			sscanf(captured.latin1(), "%lld", &size);
+			sscanf(captured.toLatin1(), "%lld", &size);
 			size /= 512;
 			size += 8 * MEGABYTE_SECTORS;
 
@@ -664,7 +664,7 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo * partinfo, PedSector)
 
 		QRegExp rx;
 		rx = QRegExp("^mount: (.*)$");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			QString capError = rx.cap(1);
 			_message = capError;
 			error = true;
@@ -709,7 +709,7 @@ bool QP_FSJfs::mkpartfs(QString dev, QString label)
 
 		QRegExp rx;
 		rx = QRegExp("^Format completed successfully.");
-		if (rx.search(line) == 0)
+		if (rx.indexIn(line) == 0)
 			success = true;
 	}
 	fs_close();
@@ -782,12 +782,12 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 
 		QRegExp rx;
 		rx = QRegExp("^Writing inode tables");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			writenode = true;
 		}
 
 		rx = QRegExp("^Creating journal");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			writenode = false;
 			emit sigTimer(90,
 				      QString(tr
@@ -804,7 +804,7 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 			linesub.replace(QChar('\b'), " ");
 #endif
 			rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
-			if (rx.search(linesub) == 0) {
+			if (rx.indexIn(linesub) == 0) {
 				QString capActual = rx.cap(1);
 				QString capTotal = rx.cap(2);
 
@@ -821,7 +821,7 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 		}
 
 		rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
-		if (rx.search(line) == 0)
+		if (rx.indexIn(line) == 0)
 			success = true;
 	}
 	fs_close();
@@ -897,7 +897,7 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label)
 
 		QRegExp rx;
 		rx = QRegExp("^realtime =.*");
-		if (rx.search(line) == 0)
+		if (rx.indexIn(line) == 0)
 			success = true;
 	}
 	fs_close();
@@ -1006,7 +1006,7 @@ bool QP_FSXfs::xfsresize(bool write, QP_PartInfo * partinfo, PedSector)
 
 		QRegExp rx;
 		rx = QRegExp("^realtime =.*");
-		if (rx.search(line) == 0) {
+		if (rx.indexIn(line) == 0) {
 			error = false;
 		}
 	}
