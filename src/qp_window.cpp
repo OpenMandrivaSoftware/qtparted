@@ -18,7 +18,6 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-
 #include <qapplication.h>
 #include <qsplitter.h>
 #include <qlabel.h>
@@ -26,7 +25,7 @@
 #include <qmenubar.h>
 #include <QMenu>
 #include <qradiobutton.h>
-#include <qstatusbar.h>
+#include <QStatusBar>
 #include <qtoolbar.h>
 #include <qtooltip.h>
 #include <qwhatsthis.h>
@@ -34,7 +33,6 @@
 #include "qp_common.h"
 #include "qp_window.moc"
 #include "qp_filesystem.h"
-#include "qp_dlgabout.h"
 #include "qp_options.h"
 #include "qp_fswrap.h"
 
@@ -60,9 +58,9 @@ QP_MainWindow::QP_MainWindow(QP_Settings *qpsettings, QWidget *parent):QMainWind
 	settings = qpsettings;
 
 	createAction();
-	addToolBar();
-	addMenuBar();
-	addStatusBar();
+	setupToolBar();
+	setupMenuBar();
+	setupStatusBar();
 
 	/*---init "enabled" status on menuitem---*/
 	InitMenu();
@@ -316,7 +314,7 @@ void QP_MainWindow::createAction() {
 	        this, SLOT(slotNavPartTable()));
 }
 
-void QP_MainWindow::addMenuBar() {
+void QP_MainWindow::setupMenuBar() {
 	/*---File menu---*/
 	QMenu *mnuFile = new QMenu;
 	
@@ -386,70 +384,71 @@ void QP_MainWindow::addMenuBar() {
 	_navpopupmenu->addAction(actNavPartTable);
 }
 
-void QP_MainWindow::addStatusBar() {
-	/*---This functions is dummy! i have not yet decided if a statusbar is useful!---*/
-
-	/*---make an hbox and add it in the statusbar---*/
-	QWidget *hbox = new QWidget(statusBar());
+void QP_MainWindow::setupStatusBar() {
+	QWidget *hbox = new QWidget;
 	QHBoxLayout *hboxlayout = new QHBoxLayout;
 	hboxlayout->setMargin(5);
 	hboxlayout->setSpacing(6);
 
 	/*---make a label, size it, set the text... and attach it to the hbox---*/
-	QLabel *lbl1 = new QLabel("message", hbox);
+	QLabel *lbl1 = new QLabel;
 	lbl1->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 	lbl1->setAlignment(Qt::AlignLeft);
 	QFont boldfont; boldfont.setWeight(QFont::Bold);
 	lbl1->setFont(boldfont);
-	lbl1->setText("Message");
 	lbl1->setMinimumHeight(lbl1->sizeHint().height());
 	lbl1->setText("QTParted :)");
 	lbl1->setToolTip("Message area");
-	
+	hboxlayout->addWidget(lbl1);
+
 	/*---add a separator in the statusbar---*/
-	QFrame *frame = new QFrame(hbox);
+	QFrame *frame = new QFrame;
 	frame->setFrameShadow(QFrame::Sunken);
 	frame->setFrameShape(QFrame::VLine);
+	hboxlayout->addWidget(frame);
 
 	/*---make a label, size it, set the text... and attach it to the hbox---*/
-	QLabel *lbl2 = new QLabel("message", hbox);
+	QLabel *lbl2 = new QLabel;
 	lbl2->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
 	lbl2->setAlignment(Qt::AlignLeft);
 	boldfont.setWeight(QFont::Bold);
 	lbl2->setFont(boldfont);
-	lbl2->setText("Message");
 	lbl2->setMinimumHeight(lbl2->sizeHint().height());
 	lbl2->setText("(C) 2002-2003 by Zanac / (C) 2005-2008 Ark Linux");
 	lbl2->setToolTip("Message area");
-	
-	frame = new QFrame(hbox);
+	hboxlayout->addWidget(lbl2);
+
+	frame = new QFrame;
 	frame->setFrameShadow(QFrame::Sunken);
 	frame->setFrameShape(QFrame::VLine);
+	hboxlayout->addWidget(frame);
 
-	QLabel *lblmsg = new QLabel("message", hbox);
+	QLabel *lblmsg = new QLabel;
 	lblmsg->setAlignment(Qt::AlignLeft);
 	boldfont.setWeight(QFont::Bold);
 	lblmsg->setFont(boldfont);
-	lblmsg->setText("Message");
 	lblmsg->setMinimumHeight(lblmsg->sizeHint().height());
 	lblmsg->setText(QString::null);
 	lblmsg->setToolTip("Message area");
+	hboxlayout->addWidget(lblmsg);
+
+	hbox->setLayout(hboxlayout);
 
 	/*---add the hbox to the statusbar---*/
-	statusBar()->addWidget(hbox, 1);
+	statusBar()->addWidget(hbox,1);
 
 	/*---add the "grip" on the right of the statusbar---*/
 	statusBar()->setSizeGripEnabled(true);
 }
 
-void QP_MainWindow::addToolBar() {
+void QP_MainWindow::setupToolBar() {
 	/*---Operations toolbar---*/
-	QToolBar *toolUndoCommit = new QToolBar(this);
+	QToolBar *toolUndoCommit = new QToolBar;
 	toolUndoCommit->addAction(actUndo);
 	toolUndoCommit->addAction(actCommit);
 
 	/*---Operations toolbar---*/
-	QToolBar *toolOperations = new QToolBar(this);
+	QToolBar *toolOperations = new QToolBar;
 	toolOperations->addAction(actProperty);
 	toolOperations->addAction(actCreate);
 	toolOperations->addAction(actFormat);
@@ -458,8 +457,12 @@ void QP_MainWindow::addToolBar() {
 	toolOperations->addAction(actDelete);
 
 	/*---What's this toolbar---*/
-	QToolBar *toolWhatThis = new QToolBar(this);
+	QToolBar *toolWhatThis = new QToolBar;
 	toolWhatThis->addAction(actWhatThis);
+
+	this->addToolBar(toolUndoCommit);
+	this->addToolBar(toolOperations);
+	this->addToolBar(toolWhatThis);
 }
 
 void QP_MainWindow::buildDisksMenu() {
@@ -775,26 +778,36 @@ void QP_MainWindow::slotWhatsThis() {
 }
 
 void QP_MainWindow::slotAbout() {
-	QString content = QString("<h3>%1 v%2</h3>\n").arg(PROG_NAME).arg(VERSION)
-	                + "<br>\n"
-	                + "Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br>\n"
-			+ "Copyright (C) 2005-2008 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br>\n"
-			+ "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br>\n"
-			+ "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)\n"
-	                + HOMEPAGE
-	                + "<br>\n"
-	                + "<br>\n"
-	                + "QTParted is free software, covered by the GNU General Public License, and you are welcome to change it and/or distribute copies of it under certain conditions.<br>\n"
-	                + "<br>\n"
-	                + "A Partition Magic Clone written in C++ using the Qt GUI Toolkit.<br>\n"
-	                + "<br>\n"
-	                + "See the AUTHORS file for more info about contributors.<br>\n";
+	QString content = QMessageBox::tr("<h3>About %1 v%2</h3>"
+			"<p>%3</p>"
+			"<p>QTParted is free software, covered by the GNU General Public License"
+			" and you are welcome to change it and/or distribute copies of it under"
+			" certain conditions</p>"
+			"<p>QTParted are currently maintained by <a href=\"http://www.arklinux.org\">Ark Linux Team</a>. Go to "
+			" <a href=\"%4\">%4</a> for more "
+			"information.</p>")
+			.arg(QMessageBox::tr(PROG_NAME))
+			.arg(QMessageBox::tr(VERSION))
+			.arg(QMessageBox::tr("Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br />"
+					 	"Copyright (C) 2005-2008 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
+						"Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br />"
+						"(send bug reports to bero@arklinux.org and/or deux@arklinux.org)"))
+			.arg(QMessageBox::tr(HOMEPAGE));
 
-	QP_dlglabout *w = new QP_dlgAbout(qtparted_xpm, content, this);
-	w->setWindowTitle(tr("About"));
-	w->setModal(true);
-	w->exec();
-	delete w;
+	QMessageBox mb(this);
+
+	mb.setWindowTitle(QMessageBox::tr("About %1 v%2").arg(PROG_NAME).arg(VERSION));
+	mb.setText(content);
+
+	QImage logo(qtparted_xpm);
+	QPixmap pm = QPixmap::fromImage(logo);
+	if (!pm.isNull())
+	{
+		mb.setIconPixmap(pm);
+	}
+	
+	mb.addButton(QMessageBox::Ok);
+	mb.exec();
 }
 
 void QP_MainWindow::slotAboutQT() {

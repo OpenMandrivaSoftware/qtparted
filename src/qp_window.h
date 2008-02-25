@@ -84,9 +84,9 @@ protected:
 
 protected:
 	void createAction();
-	void addMenuBar();
-	void addStatusBar();
-	void addToolBar();
+	void setupMenuBar();
+	void setupStatusBar();
+	void setupToolBar();
 	void buildDisksMenu();
 	void loadSettings();
 	void ShowMoveResizeDialog(QTParted::actType moveresize);

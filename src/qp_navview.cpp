@@ -1,8 +1,7 @@
 /*
     qtparted - a frontend to libparted for manipulating disk partitions
-    Copyright (C) 2002-2003 Vanni Brutto
-
-    Vanni Brutto <zanac (-at-) libero dot it>
+    Copyright (C) 2002-2003 Vanni Brutto <zanac (-at-) libero dot it>
+    Copyright (C) 2007-2008 David Tio <deux (-at-) arklinux dot org >
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -49,30 +48,35 @@ QP_NavView::QP_NavView(QWidget *parent, QP_Settings *settings)
 
 
     //DRIVELIST
-    drivelist = new QP_DriveList(this, "drivelist", settings);
+    drivelist = new QP_DriveList(this, settings);
     connect(drivelist, SIGNAL(sigSelectDevice(QP_Device *)),
          this, SIGNAL(sigSelectDevice(QP_Device *)));
     box->addWidget(drivelist);
-    connect(drivelist, SIGNAL(sigSelectDevice(QP_Device *)),
-            this, SLOT(displayInfo(QP_Device *)));
     
+    connect(drivelist, SIGNAL(deviceSelected(QP_Device *)),
+            this, SLOT(displayInfo(QP_Device *)));
 
     //DRIVEINFO
-    QWidget *titleBox = new QWidget;
-    QVBoxLayout *titleBoxLayout = new QVBoxLayout;
-    //titleBox->setFrameStyle(QFrame::Box | QFrame::Plain);
-    QPalette tbp(titleBox->palette());
-    tbp.setColor(titleBox->backgroundRole(), Qt::black);
-    titleBox->setPalette(tbp);
-    titleBoxLayout->setMargin(2);
-    titleBoxLayout->setSpacing(2);
+    QFrame *infoBox = new QFrame;
+    infoBox->setFrameStyle( QFrame::Box | QFrame::Plain);
 
-    QLabel *infoTitle = new QLabel("<qt><center><b>" + tr("Drive Info") + "</b></center></qt>", titleBox);
-    QPalette itp(infoTitle->palette()); 
-    itp.setColor(infoTitle->backgroundRole(), QColor(0xa8, 0xa8, 0xff));
-    infoTitle->setPalette(itp);
-    details = new QLabel(titleBox);
-    box->addWidget(titleBox);
+    QVBoxLayout *infoBoxLayout = new QVBoxLayout;
+    infoBoxLayout->setMargin(2);
+    infoBoxLayout->setSpacing(2);
+
+    QLabel *infoTitle = new QLabel("<qt><center><b>" + tr("Drive Info") + "</b></center></qt>");
+    QPalette p(infoTitle->palette());
+    p.setColor(infoTitle->backgroundRole(), QColor(0xa8, 0xa8, 0xff));
+    infoTitle->setPalette(p);
+    infoTitle->setAutoFillBackground(true);
+    details = new QLabel();
+
+    infoBoxLayout->addWidget(infoTitle);
+    infoBoxLayout->addWidget(details);
+
+    infoBox->setLayout(infoBoxLayout);
+
+    box->addWidget(infoBox);
 
     /*---init driveinfo details---*/
     displayInfo(NULL);

@@ -29,8 +29,7 @@
 #define QP_DRIVELIST_H
 
 #include <QAction>
-#include <Q3ListView>
-#include <QWidget>
+#include <QTreeWidget>
 #include <QList>
 #include <QMenu>
 #include "qp_devlist.h"
@@ -38,18 +37,18 @@
 class QP_DeviceNode {
 public:
 	QAction *action;
-	Q3ListViewItem *listitem;
+	QTreeWidgetItem *listitem;
 };
 
-class QP_DriveList : public Q3ListView {
+class QP_DriveList : public QTreeWidget {
 	Q_OBJECT
 
 public:
-	QP_DriveList(QWidget *parent=0, const char *name=0, QP_Settings *settings=0);
+	QP_DriveList(QWidget *parent=0, QP_Settings *settings=0);
 	~QP_DriveList();
 	void setPopup(QMenu *); /*---set the popup menu (right click)---*/
 	void buildView();
-	Q3ListViewItem *addDevice(QString, Q3ListViewItem *);
+	QTreeWidgetItem *addDevice(QString, QTreeWidgetItem *);
 	QActionGroup *agDevices();
 	QP_Device *selDevice(); /*---return the selected device---*/
 
@@ -60,13 +59,13 @@ private:
 	QP_Device *_selDevice;
 
 signals:
-	void sigSelectDevice(QP_Device *);
+	void deviceSelected(QP_Device *);
 	void onItem(QString);
 
 public slots:
-	void slotListSelected(Q3ListViewItem *);
+	void slotListSelected(QTreeWidgetItem *);
 	void slotActionSelected(QAction *);
-	void slotPopUp(Q3ListViewItem *, const QPoint &, int);
+	void slotPopUp(QTreeWidgetItem *, const QPoint &, int);
 };
 
 #endif
