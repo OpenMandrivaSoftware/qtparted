@@ -52,7 +52,7 @@ protected:
     QLabel *details;
 
 signals:
-    void sigSelectDevice(QP_Device *);  /*---emitted when user select a hard disk---*/
+    void deviceSelected(QP_Device *);  /*---emitted when user select a hard disk---*/
 
 protected slots:
     void displayInfo(QP_Device *);

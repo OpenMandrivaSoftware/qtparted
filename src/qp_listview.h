@@ -28,8 +28,7 @@
 #ifndef QP_LISTVIEW_H
 #define QP_LISTVIEW_H
 
-#include <qwidget.h>
-#include <Q3ListView>
+#include <QTreeWidget>
 #include "qp_devlist.h"
 #include "qp_partlist.h"
 
@@ -41,9 +40,9 @@
 /*                                                                                ---*/
 /* adaption to qtparted by Vanni Brutto                                           ---*/
 /*                                                                                ---*/
-class QP_ListViewItem : public Q3ListViewItem {
+class QP_ListViewItem : public QTreeWidgetItem {
 public:
-    QP_ListViewItem(Q3ListView *parent,
+    QP_ListViewItem(QTreeWidget *parent,
             const QString &number,
             const QString &diskName,
             const QString &fstype,
@@ -54,7 +53,7 @@ public:
             const QString &endStr,
             const QString &label,
             QP_PartInfo *pinfo);
-    QP_ListViewItem(Q3ListViewItem *parent,
+    QP_ListViewItem(QTreeWidgetItem *parent,
             const QString &number,
             const QString &diskName,
             const QString &fstype,
@@ -84,11 +83,11 @@ public:
 /*                                                                                ---*/
 /* adaption to qtparted by Vanni Brutto                                           ---*/
 /*                                                                                ---*/
-class QP_RealListView : public Q3ListView {
+class QP_RealListView : public QTreeWidget {
 Q_OBJECT
 
 public:
-    QP_RealListView(QWidget *parent=0, const char *name=0);
+    QP_RealListView(QWidget *parent=0);
     ~QP_RealListView();
 
     void setDevice(QP_Device *);                 /*---set the device                                   ---*/
@@ -107,8 +106,8 @@ signals:
 
 
 protected slots:
-    void selectionChanged(Q3ListViewItem *);      /*---connected to get when user change a selected line---*/
-    void rightButtonClicked(Q3ListViewItem *, const QPoint &, int);  /*---the user want to popup a menu ---*/
+    void selectionChanged(QTreeWidgetItem *);      /*---connected to get when user change a selected line---*/
+    void rightButtonClicked(QTreeWidgetItem *, const QPoint &, int);  /*---the user want to popup a menu ---*/
 };
 /*-----------------------------------------------------------------------------------*/
 
@@ -120,12 +119,12 @@ protected slots:
 /* This is a widget derived from QP_PartList that display partitions as lines.    ---*/
 /* Using methods "addPrimary" and "addLogical" you can add new lines easily ;)    ---*/
 /* QP_ListView is only a "wrapper" to the QP_RealListView.                        ---*/
-/*                                                                                ---*/
+
 class QP_ListView : public QP_PartList {
 Q_OBJECT
 
 public:
-    QP_ListView(QWidget *parent=0, const char *name=0, Qt::WFlags f = 0);
+    QP_ListView(QWidget *parent=0, Qt::WFlags f = 0);
     ~QP_ListView();
     void setselPartInfo(QP_PartInfo *);
     void setDevice(QP_Device *);           /*---ovverride the setDevice method         ---*/

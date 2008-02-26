@@ -1,10 +1,8 @@
 /*
 	qtparted - a frontend to libparted for manipulating disk partitions
-	Copyright (C) 2002-2003 Vanni Brutto
-
-	Vanni Brutto <zanac (-at-) libero dot it>
-
+	Copyright (C) 2002-2003 Vanni Brutto <zanac (-at-) libero dot it>
 	Copyright (C) 2005 Bernhard Rosenkraenzer <bero@arklinux.org>
+        Copyright (C) 2007-2008 David Tio <deux@arklinux.org>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -26,8 +24,6 @@
  * This class keep a list with all devices (ie all hard disk) detected by libparted
  */
 
-
-#include <qmessagebox.h>
 #include <parted/parted.h>
 #include <sys/param.h>  // MAXPATHLEN
 #include <sys/stat.h>   // S_ISLNK

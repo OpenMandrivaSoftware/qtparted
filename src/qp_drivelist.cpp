@@ -33,7 +33,7 @@
 
 QP_DriveList::QP_DriveList(QWidget *parent, QP_Settings *settings)
     :QTreeWidget(parent) {
-
+    setSelectionMode(QAbstractItemView::SingleSelection);
     setAllColumnsShowFocus(true);
     setColumnCount(1);
     setHeaderLabel(tr("Device"));
@@ -44,7 +44,7 @@ QP_DriveList::QP_DriveList(QWidget *parent, QP_Settings *settings)
     devlist = new QP_DevList(settings);
 
     connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
-		    this, SLOT(slotListSelected(QTreeWidgetItem *)));
+		    this, SLOT(slotDisksSelected(QTreeWidgetItem *)));
 }
 
 QP_DriveList::~QP_DriveList() { 
@@ -70,7 +70,7 @@ void QP_DriveList::buildView() {
     }
 
     /*---make the group menu---*/
-    _agDevices = new QActionGroup(this);
+    _agDevices = new QActionGroup(this);   
     _agDevices->setExclusive(true);
     connect(_agDevices, SIGNAL(selected(QAction *)), this, SLOT(slotActionSelected(QAction *)));
 
@@ -84,8 +84,9 @@ void QP_DriveList::buildView() {
         QTreeWidgetItem *item = addDevice(st, ideRoot);
 
         /*---add to the group menu---*/	
-	QAction *actDisk = new QAction(QIcon(), st, _agDevices);
-        
+	QAction *actDisk = new QAction(QIcon(tool_disk), st, _agDevices);
+        actDisk->setCheckable(true);
+
         QP_DeviceNode *devicenode = new QP_DeviceNode();
         devicenode->action = actDisk;
         devicenode->listitem = item;
@@ -116,7 +117,7 @@ QP_Device *QP_DriveList::selDevice() {
 }
 
 
-void QP_DriveList::slotListSelected(QTreeWidgetItem *item) {
+void QP_DriveList::slotDisksSelected(QTreeWidgetItem *item) {
     /*---if the item selected is not the root---*/
     if (!item->childCount()) {
         /*---get the device name (ex. /dev/hda)---*/
@@ -152,7 +153,7 @@ void QP_DriveList::slotActionSelected(QAction *action) {
 
         /*---the name match, so select it!---*/
         if (p->listitem->text(0).compare(name) == 0) {
-            //setSelected (p->listitem, true);
+            itemClicked ( p->listitem, 0 );
 
             /*---and of course selecte the "selected device"---*/
             _selDevice = dev;

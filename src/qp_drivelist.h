@@ -63,7 +63,7 @@ signals:
 	void onItem(QString);
 
 public slots:
-	void slotListSelected(QTreeWidgetItem *);
+	void slotDisksSelected(QTreeWidgetItem *);
 	void slotActionSelected(QAction *);
 	void slotPopUp(QTreeWidgetItem *, const QPoint &, int);
 };
