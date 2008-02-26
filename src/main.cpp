@@ -28,10 +28,10 @@
 
 #include <getopt.h>
 #include <QApplication>
-#include <qtranslator.h>
+#include <QTranslator>
 #include <qmessagebox.h>
 #include <QLocale>
-#include <qsplashscreen.h>
+#include <QSplashScreen>
 #include <qtimer.h>
 #include "qp_libparted.h"
 #include "qp_window.h"
@@ -149,11 +149,11 @@ int main(int argc, char *argv[]) {
 
 	mainwindow = new QP_MainWindow(&settings, 0);
 
-	QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"));
-	splash->connect(mainwindow, SIGNAL(sigSplashInfo(const QString &)),
-			SLOT(message(const QString &)));
-	splash->finish(mainwindow);
-	splash->show();
+        QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"));
+        splash->connect(mainwindow, SIGNAL(sigSplashInfo(const QString &)),
+                        SLOT(message(const QString &)));
+        splash->finish(mainwindow);
+        splash->show();
 
 	mainwindow->init();
 

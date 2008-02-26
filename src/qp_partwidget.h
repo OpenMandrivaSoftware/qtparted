@@ -31,12 +31,12 @@
 #ifndef QP_PARTWIDGET_H
 #define QP_PARTWIDGET_H
 
-#include <qwidget.h>
-#include "qtparted.h"
-#include "qp_libparted.h"
-//Added by qt3to4:
 #include <QPaintEvent>
 #include <QMouseEvent>
+#include <QWidget>
+#include "qtparted.h"
+#include "qp_libparted.h"
+
 
 class QP_PartWidget : public QWidget {
 Q_OBJECT

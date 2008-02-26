@@ -86,8 +86,7 @@ void QP_DiskView::setDevice ( QP_Device *dev )
 
     /*---change the device in the chart and list---*/
     listview->setDevice ( dev );
-
-//    listchart->setDevice ( dev );
+    listchart->setDevice ( dev );
 
     /*---selecte the _device string---*/
     _qpdevice = dev;
@@ -182,37 +181,36 @@ void QP_DiskView::refresh_widgets()
     }
 
     /*---redraw QP_PartList widgets---*/
-    //draw();
+    draw();
 }
 
 void QP_DiskView::clear()
 {
     listview->clear();
-//    listchart->clear();
+    listchart->clear();
 }
 
 void QP_DiskView::addPrimary ( QP_PartInfo *partinfo )
 {
     listview->addPrimary ( partinfo );
-//    listchart->addPrimary ( partinfo );
+    listchart->addPrimary ( partinfo );
 }
 
 void QP_DiskView::addLogical ( QP_PartInfo *partinfo )
 {
     listview->addLogical ( partinfo );
-//    listchart->addLogical ( partinfo );
-}
-
-void QP_DiskView::draw()
-{
-    //listview->draw();   //Is this necessary?
-    //listchart->draw(); //Not required
+    listchart->addLogical ( partinfo );
 }
 
 void QP_DiskView::set_mb_hdsize ( float mb_hdsize )
 {
     listview->set_mb_hdsize ( mb_hdsize );
-//    listchart->set_mb_hdsize ( mb_hdsize );
+    listchart->set_mb_hdsize ( mb_hdsize );
+}
+
+void QP_DiskView::draw()
+{
+    listchart->draw();
 }
 
 void QP_DiskView::slotListChartSelectPart ( QP_PartInfo *partinfo )

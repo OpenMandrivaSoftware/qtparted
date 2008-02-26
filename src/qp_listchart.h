@@ -30,13 +30,12 @@
 
 #include <QWidget>
 #include <QList>
-#include "qp_partlist.h"
-#include "qp_partition.h"
-#include "qp_extended.h"
-//Added by qt3to4:
 #include <QPaintEvent>
 #include <QResizeEvent>
 #include <QMouseEvent>
+#include "qp_partlist.h"
+#include "qp_partition.h"
+#include "qp_extended.h"
 
 class QP_ChartItem;
 

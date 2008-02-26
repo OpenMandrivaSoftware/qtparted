@@ -1,9 +1,7 @@
 /*
     qtparted - a frontend to libparted for manipulating disk partitions
-    Copyright (C) 2002-2003 Vanni Brutto
-
-    Vanni Brutto <zanac (-at-) libero dot it>
-
+    Copyright (C) 2002-2003 Vanni Brutto <zanac (-at-) libero dot it>
+    Copyright (C) 2007-2008 David Tio <deux@arklinux.org>
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -95,7 +93,6 @@ void QP_ListChart::clear() {
 
 void QP_ListChart::addPrimary(QP_PartInfo *partinfo) {
     /*---append to the partition list---*/
-    //partlist.append(partinfo); aleste
     QP_ChartItem *item = new QP_ChartItem();
     item->partinfo = partinfo;
     partlist.append(item); //aleste
@@ -138,12 +135,11 @@ void QP_ListChart::addLogical(QP_PartInfo *partinfo) {
     setSignals(partinfo->partwidget);
 }
 
-void QP_ListChart::draw() {
+void QP_ListChart::draw() {    
     /*---in this method partitions are resized to fit the container   ---*/
     /*---only primaries and extended partitions are resized!          ---*/
     /*---Logicals partitions are resized inside draw_extended method! ---*/
 
-    
     /*---return if the partition list is empty... for example at startup ;)---*/
     if (partlist.count() == 0) return;
 
@@ -151,26 +147,23 @@ void QP_ListChart::draw() {
     int totwidth = 0;
 
     /*---the first "for" loop is needed to calculate the totwidth---*/
-    QListIterator <QP_ChartItem *> partit(partlist);
-    QP_ChartItem *p = NULL;
-    while(partit.hasNext())
+
+    foreach(QP_ChartItem* p, partlist)
     {
-	p = partit.next();
         totwidth += p->width = MIN_PARTITION_WIDTH;
         if (totwidth > container->width())
             qFatal("Error calculating size of QP_ListChar! %d\n", container->width());
     }
 
-
     /*---resize the QP_ListChart---*/
     if (totwidth > MIN_HDWIDTH)
         setMinimumWidth(totwidth);
 
-
     /*---this "for" loop is needed to calculate how much partitions can grow---*/
     /*---it loop until partition fit the container                          ---*/
-    p = NULL;
-    partit.toFront();
+    QP_ChartItem* p = NULL;
+    QListIterator <QP_ChartItem*> partit(partlist);
+    
     while (totwidth < container->width()) {
         if (p == NULL)
 	{
@@ -191,17 +184,22 @@ void QP_ListChart::draw() {
             totwidth++;
         }
 
-        p = partit.next();
+        if(partit.hasNext())
+        {
+            p = partit.next();
+        }
+        else
+        {
+            p = NULL;
+            partit.toFront();
+        }
     }
 
     /*---the last "for" loop is needed to resize the partitions with the calculated width---*/
     int lastleft = 0;
     totwidth = 0;
-    p = NULL;
-    partit.toFront();
-    while(partit.hasNext())
-    {
-	p = partit.next();
+    foreach(QP_ChartItem* p, partlist)
+    {    
         QP_PartWidget *partwidget = p->partwidget;
         partwidget->setGeometry(lastleft, 0, p->width, container->height());
         lastleft += p->width;
@@ -234,12 +232,8 @@ void QP_ListChart::draw_extended() {
     int totwidth = 0;
 
     /*---the first "for" loop is needed to calculate the totwidth---*/
-    QP_ChartItem *p = NULL;
-    QListIterator <QP_ChartItem *> logiit(logilist);
-
-    while(logiit.hasNext())
+    foreach( QP_ChartItem* p, logilist )
     {
-	p = logiit.next();
         totwidth += p->width = MIN_PARTITION_WIDTH;
         //if (totwidth > extended->container->width())
         //    qFatal("Error calculating size of QP_ListChar! %d\n", container->width());
@@ -251,8 +245,9 @@ void QP_ListChart::draw_extended() {
 
     /*---this "for" loop is needed to calculate how much partitions can grow---*/
     /*---it loop until partition fit the container                          ---*/
-    p = NULL;
-    logiit.toFront();
+    QP_ChartItem* p = NULL;
+    QListIterator <QP_ChartItem*> logiit(logilist);
+
     while (totwidth < extended->container->width()) {
         if (p == NULL)
 	{
@@ -282,10 +277,8 @@ void QP_ListChart::draw_extended() {
 
     /*---the last "for" loop is needed to resize the partitions with the calculated width---*/
     int lastleft = 0;
-    logiit.toFront();
-    while(logiit.hasNext())
+    foreach( QP_ChartItem* p, logilist )
     {
-	p = logiit.next();
         QP_PartWidget *partwidget = p->partwidget;
         partwidget->setGeometry(lastleft, 0, p->width, extended->container->height());
         lastleft += p->width;

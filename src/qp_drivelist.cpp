@@ -43,8 +43,8 @@ QP_DriveList::QP_DriveList(QWidget *parent, QP_Settings *settings)
 
     devlist = new QP_DevList(settings);
 
-    connect(this, SIGNAL(itemClicked(QTreeWidgetItem *, int)),
-		    this, SLOT(slotDisksSelected(QTreeWidgetItem *)));
+    connect(this, SIGNAL(itemSelectionChanged()), 
+        this, SLOT(slotDisksSelected()));
 }
 
 QP_DriveList::~QP_DriveList() { 
@@ -116,8 +116,8 @@ QP_Device *QP_DriveList::selDevice() {
     return _selDevice;
 }
 
-
-void QP_DriveList::slotDisksSelected(QTreeWidgetItem *item) {
+void QP_DriveList::slotDisksSelected() {
+    QTreeWidgetItem* item = currentItem();
     /*---if the item selected is not the root---*/
     if (!item->childCount()) {
         /*---get the device name (ex. /dev/hda)---*/
@@ -153,7 +153,7 @@ void QP_DriveList::slotActionSelected(QAction *action) {
 
         /*---the name match, so select it!---*/
         if (p->listitem->text(0).compare(name) == 0) {
-            itemClicked ( p->listitem, 0 );
+            setCurrentItem( p->listitem );
 
             /*---and of course selecte the "selected device"---*/
             _selDevice = dev;
