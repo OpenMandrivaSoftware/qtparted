@@ -93,10 +93,10 @@ void QP_dlgResize::init_dialog(QTParted::actType moveresize) {
 
 	if (_moveresize == QTParted::resize) {
 		spinFreeBefore->setEnabled(false);
-		setCaption(tr("Resize partition"));
+		setWindowTitle(tr("Resize partition"));
 	} else {
 		spinNewSize->setEnabled(false);
-		setCaption(tr("Move partition"));
+		setWindowTitle(tr("Move partition"));
 	}
 
 	sizecontainer->setGeometry(2, 2, container->width()-4, container->height()-4);
