@@ -624,7 +624,6 @@ void QP_MainWindow::slotMove()
     //ShowMoveResizeDialog(QTParted::move);
 }
 
-#if 0
 void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
 {
     //FIXME: extended partition can be resized also on the "left"
@@ -714,7 +713,6 @@ void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
     }
 }
 
-#endif
 void QP_MainWindow::InitMenu()
 {
     actProperty->setEnabled ( false );
@@ -748,7 +746,6 @@ void QP_MainWindow::DoneProgressDialog()
 void QP_MainWindow::slotDelete()
 {
     /*---there are not selected partitions!---*/
-#if 0
     if ( !diskview->selPartInfo() ) return;
 
     if ( diskview->selPartInfo()->isVirtual() )
@@ -768,11 +765,8 @@ void QP_MainWindow::slotDelete()
 
     /*---refresh diskview widget!---*/
     refreshDiskView();
-
-#endif
 }
 
-#if 0
 void QP_MainWindow::slotConfig()
 {
     /*---init of the configuration dialog---*/
@@ -800,12 +794,9 @@ void QP_MainWindow::slotConfig()
     }
 }
 
-#endif
-
 void QP_MainWindow::slotProperty()
 {
     /*---there are not selected partitions!---*/
-#if 0
     if ( !diskview->selPartInfo() ) return;
 
     /*---make a label with information about the partition selected---*/
@@ -834,8 +825,6 @@ void QP_MainWindow::slotProperty()
             .arg ( diskview->selPartInfo()->fsspec->name() );
 
     QMessageBox::information ( this, PROG_NAME, label );
-
-#endif
 }
 
 void QP_MainWindow::slotWhatsThis()
@@ -884,7 +873,6 @@ void QP_MainWindow::slotAboutQT()
     QMessageBox::aboutQt ( this );
 }
 
-#if 0
 void QP_MainWindow::slotNavProperty()
 {
     /*---init the dialog and show it!---*/
@@ -916,8 +904,6 @@ void QP_MainWindow::slotNavProperty()
     dlgdevprop->show_dialog();
 }
 
-#endif
-
 void QP_MainWindow::slotNavPartTable()
 {
     QString label = QString ( tr ( "You're going to make a new partition table. Are you sure?\nAll data will be lost!" ) );
@@ -948,7 +934,6 @@ void QP_MainWindow::slotNavPartTable()
 
 void QP_MainWindow::slotSelectPart ( QP_PartInfo *partinfo )
 {
-#if 0
     actProperty->setEnabled ( true );
 
     QP_Device *selDevice = navview->selDevice();
@@ -1024,7 +1009,6 @@ void QP_MainWindow::slotSelectPart ( QP_PartInfo *partinfo )
         }
     }
 
-#endif
 }
 
 void QP_MainWindow::slotDevicePopup ( QPoint pos )
@@ -1065,7 +1049,6 @@ void QP_MainWindow::slotSelectDevice ( QP_Device *dev )
 
 void QP_MainWindow::slotSetActive()
 {
-#if 0
     QString oldActive;
     QString newActive;
     QString noactive;
@@ -1107,7 +1090,6 @@ void QP_MainWindow::slotSetActive()
         refreshDiskView();
     }
 
-#endif
 }
 
 void QP_MainWindow::slotSetHidden()

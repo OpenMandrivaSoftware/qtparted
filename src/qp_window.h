@@ -113,12 +113,12 @@ protected slots:
 	void slotResize();
 	void slotMove();
 	void slotDelete();
-	//void slotConfig();
+	void slotConfig();
 	void slotProperty();
 	void slotWhatsThis();
 	void slotAbout();
 	void slotAboutQT();
-	//void slotNavProperty();
+	void slotNavProperty();
 	void slotNavPartTable();
 	void slotSelectPart(QP_PartInfo *);
 	void slotDevicePopup(QPoint pos);

@@ -30,13 +30,14 @@
 #ifndef QP_DLGDEVPROP_H
 #define QP_DLGDEVPROP_H
 
+#include <QDialog>
 #include "qp_ui_devprop.ui.h"
 
-class QP_dlgDevProperty : public Ui::QP_UIDeviceProperty {
+class QP_dlgDevProperty : public QDialog,public Ui::QP_UIDeviceProperty {
 Q_OBJECT
 
 public:
-    QP_dlgDevProperty(QWidget *parent=0, const char *name=0);
+    QP_dlgDevProperty(QWidget *parent=0);
     ~QP_dlgDevProperty();
     void init_dialog();                     /*---clear combo box and other stuff                     ---*/
     int show_dialog();                      /*---just show the dialog. Call it after init_dialog     ---*/
