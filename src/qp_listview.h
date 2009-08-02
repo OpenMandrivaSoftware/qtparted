@@ -90,24 +90,24 @@ public:
     QP_RealListView(QWidget *parent=0);
     ~QP_RealListView();
 
-    void setDevice(QP_Device *);                 /*---set the device                                   ---*/
-    void addPrimary(QP_PartInfo *, int);         /*---add a Primary or Extended partition              ---*/
-    void addLogical(QP_PartInfo *, int);         /*---add a Logical partition                          ---*/
+    void setDevice(QP_Device *);		/*---set the device                                   ---*/
+    void addPrimary(QP_PartInfo *, int);	/*---add a Primary or Extended partition              ---*/
+    void addLogical(QP_PartInfo *, int);	/*---add a Logical partition                          ---*/
 
 private:
     QP_Device *_device;
 
 protected:
-    QP_ListViewItem *itemextended;               /*---this contain a pointer to the extended partition ---*/
+    QP_ListViewItem *itemextended;		/*---this contain a pointer to the extended partition ---*/
 
 signals:
-    void sigSelectPart(QP_PartInfo *);           /*---emitted when you change the selection            ---*/
-    void sigPopup(QPoint);                       /*---emitted when you want to popup a menu            ---*/
+    void sigSelectPart(QP_PartInfo *);		/*---emitted when you change the selection            ---*/
+    void sigPopup(QPoint);			/*---emitted when you want to popup a menu            ---*/
 
 
 protected slots:
-    void selectionChanged(QTreeWidgetItem *);      /*---connected to get when user change a selected line---*/
-    void rightButtonClicked(QTreeWidgetItem *, const QPoint &, int);  /*---the user want to popup a menu ---*/
+    void selectionChanged(QTreeWidgetItem *);	/*---connected to get when user change a selected line---*/
+    void rightButtonClicked(const QPoint &);	/*---the user want to popup a menu ---*/
 };
 /*-----------------------------------------------------------------------------------*/
 
