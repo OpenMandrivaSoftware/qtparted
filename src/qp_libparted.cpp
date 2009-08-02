@@ -493,7 +493,7 @@ void QP_LibParted::setDevice ( QP_Device *device )
         return ;
     }
 
-    const char *szdevice = device->shortname().toStdString().c_str();
+    const char *szdevice = device->shortname().toLatin1().data();
 
     dev = ped_device_get ( szdevice );
 
