@@ -43,12 +43,7 @@ void QP_ListExternalTools::add(QString name, QString path, QString description) 
 }
 
 QString QP_ListExternalTools::getPath(QString name) {
-    QP_ExternalTool *p;
-    QListIterator <QP_ExternalTool *> toolit(lstTools);
-
-    while(toolit.hasNext())
-    {
-        p = toolit.next();
+    foreach(QP_ExternalTool *p, lstTools) {
         if (p->name().compare(name) == 0) {
             return p->path();
         }
@@ -57,12 +52,7 @@ QString QP_ListExternalTools::getPath(QString name) {
 }
 
 void QP_ListExternalTools::setPath(QString name, QString path) {
-    QP_ExternalTool *p;
-    QListIterator <QP_ExternalTool *> toolit(lstTools);
-
-    while(toolit.hasNext())
-    {
-	p = toolit.next();
+    foreach(QP_ExternalTool *p, lstTools) {
         if (p->name().compare(name) == 0) {
             p->setPath(path);
         }
@@ -70,13 +60,7 @@ void QP_ListExternalTools::setPath(QString name, QString path) {
 }
 
 QString QP_ListExternalTools::getDescription(QString name) {
-    QP_ExternalTool *p;
-
-    QListIterator <QP_ExternalTool *> toolit(lstTools);
-
-    while(toolit.hasNext())
-    {
-        p = toolit.next();
+    foreach(QP_ExternalTool *p, lstTools) {
         if (p->name().compare(name) == 0) {
             return p->description();
         }
@@ -87,12 +71,7 @@ QString QP_ListExternalTools::getDescription(QString name) {
 
 void QP_ListExternalTools::apply() {
     lstToolsOld.clear();
-    QP_ExternalTool *p;
-    QListIterator <QP_ExternalTool *> toolit(lstTools);
-
-    while(toolit.hasNext())
-    {
-        p = toolit.next();
+    foreach(QP_ExternalTool *p, lstTools) {
         QP_ExternalTool *p_new = new QP_ExternalTool(p->name(), p->path(), p->description());
         lstToolsOld.append(p_new);
     }
@@ -100,12 +79,7 @@ void QP_ListExternalTools::apply() {
 
 void QP_ListExternalTools::cancel() {
     lstTools.clear();
-    QP_ExternalTool *p;
-    QListIterator <QP_ExternalTool *> toolit(lstToolsOld);
-
-    while(toolit.hasNext())
-    {
-        p = toolit.next();
+    foreach(QP_ExternalTool *p, lstTools) {
         QP_ExternalTool *p_new = new QP_ExternalTool(p->name(), p->path(), p->description());
         lstTools.append(p_new);
     }
