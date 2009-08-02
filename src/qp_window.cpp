@@ -442,12 +442,12 @@ void QP_MainWindow::setupStatusBar()
 void QP_MainWindow::setupToolBar()
 {
 	/*---Operations toolbar---*/
-	QToolBar *toolUndoCommit = new QToolBar;
+	QToolBar *toolUndoCommit = new QToolBar(this);
 	toolUndoCommit->addAction ( actUndo );
 	toolUndoCommit->addAction ( actCommit );
 
 	/*---Operations toolbar---*/
-	QToolBar *toolOperations = new QToolBar;
+	QToolBar *toolOperations = new QToolBar(this);
 	toolOperations->addAction ( actProperty );
 	toolOperations->addAction ( actCreate );
 	toolOperations->addAction ( actFormat );
@@ -456,7 +456,7 @@ void QP_MainWindow::setupToolBar()
 	toolOperations->addAction ( actDelete );
 
 	/*---What's this toolbar---*/
-	QToolBar *toolWhatThis = new QToolBar;
+	QToolBar *toolWhatThis = new QToolBar(this);
 	toolWhatThis->addAction ( actWhatThis );
 
 	this->addToolBar ( toolUndoCommit );
