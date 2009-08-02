@@ -244,7 +244,7 @@ void QP_RealListView::addLogical ( QP_PartInfo *partinfo, int number )
 						  partinfo );
 
 	/*---open the extended tree---*/
-	//itemextended->setExpanded(true);
+	itemextended->setExpanded(true);
 }
 
 
