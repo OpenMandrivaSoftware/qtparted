@@ -32,17 +32,20 @@ QP_DiskView::QP_DiskView ( QWidget *parent, Qt::WindowFlags f )
     /*---create the listchart, attach it and connect the signals---*/
     
     listchart = new QP_ListChart ( this );
-    //connect ( listchart, SIGNAL ( sigSelectPart ( QP_PartInfo * ) ),
-    //          this, SLOT ( slotListChartSelectPart ( QP_PartInfo * ) ) );
-    //connect ( listchart, SIGNAL ( sigPopup ( QPoint ) ),
-    //          this, SIGNAL ( sigPopup ( QPoint ) ) );
-    //connect ( listchart, SIGNAL ( sigDevicePopup ( QPoint ) ),
-    //          this, SIGNAL ( sigDevicePopup ( QPoint ) ) );
+    connect ( listchart, SIGNAL ( sigSelectPart ( QP_PartInfo * ) ),
+              this, SLOT ( slotListChartSelectPart ( QP_PartInfo * ) ) );
+    connect ( listchart, SIGNAL ( sigPopup ( QPoint ) ),
+              this, SIGNAL ( sigPopup ( QPoint ) ) );
+    connect ( listchart, SIGNAL ( sigDevicePopup ( QPoint ) ),
+              this, SIGNAL ( sigDevicePopup ( QPoint ) ) );
     _layout.addWidget ( listchart );
     
     /*---create the partwidget, attach it and connect the signals---*/
     listview = new QP_ListView ( this );
-
+    connect ( listview, SIGNAL(sigSelectPart(QP_PartInfo *)),
+	      this, SLOT(slotListViewSelectPart(QP_PartInfo *)));
+    connect ( listview, SIGNAL(sigPopup(QPoint)),
+	      this, SLOT(sigPopup(QPoint)));
     _layout.addWidget ( listview );
 
     /*---create the wrapper to parted---*/
@@ -52,16 +55,16 @@ QP_DiskView::QP_DiskView ( QWidget *parent, Qt::WindowFlags f )
     libparted->setFastScan ( false );
 
     /*---connect the signal "update progressbar"---*/
-    //connect(libparted, SIGNAL(sigTimer(int, QString, QString)),
-    //		this, SIGNAL(sigTimer(int, QString, QString)));
+    connect(libparted, SIGNAL(sigTimer(int, QString, QString)),
+    		this, SIGNAL(sigTimer(int, QString, QString)));
 
     /*---connect the signal "update progressbar" during commit!!---*/
-    //connect(libparted, SIGNAL(sigOperations(QString, QString, int, int)),
-    //		this, SIGNAL(sigOperations(QString, QString, int, int)));
+    connect(libparted, SIGNAL(sigOperations(QString, QString, int, int)),
+    		this, SIGNAL(sigOperations(QString, QString, int, int)));
 
     /*---connect the signal to get if the disk changed (used for undo/commit)---*/
-    //connect(libparted, SIGNAL(sigDiskChanged()),
-    //	this, SIGNAL(sigDiskChanged()));
+    connect(libparted, SIGNAL(sigDiskChanged()),
+    	this, SIGNAL(sigDiskChanged()));
 }
 
 QP_DiskView::~QP_DiskView()
