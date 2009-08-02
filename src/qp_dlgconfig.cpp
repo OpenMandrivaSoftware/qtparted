@@ -20,7 +20,6 @@
 */
 #include <qcombobox.h>
 #include <qlineedit.h>
-#include <q3whatsthis.h>
 #include "qp_dlgconfig.moc"
 #include "qp_common.h"
 #include "qp_options.h"
@@ -30,15 +29,9 @@ QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),Ui::QP_UIConfig() {
 
 	/*---clear combo box used for external tools---*/
 	cmbExtTools->clear();
-	QList<QP_ExternalTool*>::iterator it;
-	for (it = lstExternalTools->lstTools.begin(); it != lstExternalTools->lstTools.end(); ++it)
-		cmbExtTools->addItem((*it)->name());
-	/*
-	QP_ExternalTool *et;
-	for (et = (QP_ExternalTool *)lstExternalTools->lstTools.first(); et;
-			et = (QP_ExternalTool *)lstExternalTools->lstTools.next())
-		cmbExtTools->insertItem(et->name());
-	*/
+	foreach(QP_ExternalTool *et, lstExternalTools->lstTools)
+		cmbExtTools->addItem(et->name());
+
 	/*---connect the combo type slot---*/
 	connect(cmbExtTools, SIGNAL(activated(int)),
 			this, SLOT(slotToolChanged(int)));
@@ -72,7 +65,7 @@ void QP_dlgConfig::slotToolChanged(int) {
 	txtPath->setText(path);
 
 	QString tooltip = lstExternalTools->getDescription(cmbExtTools->currentText());
-	Q3WhatsThis::add(txtPath, tooltip);
+	txtPath->setWhatsThis(tooltip);
 }
 
 void QP_dlgConfig::slotPathChanged(const QString &path) {
