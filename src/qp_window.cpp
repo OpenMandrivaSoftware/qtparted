@@ -323,9 +323,7 @@ void QP_MainWindow::createAction()
 void QP_MainWindow::setupMenuBar()
 {
 	/*---File menu---*/
-	QMenu *mnuFile = new QMenu;
-
-	mnuFile = menuBar()->addMenu ( tr ( "&File" ) );
+	QMenu *mnuFile = menuBar()->addMenu ( tr ( "&File" ) );
 	mnuFile->addAction ( actUndo );
 	mnuFile->addAction ( actCommit );
 	//
@@ -334,9 +332,7 @@ void QP_MainWindow::setupMenuBar()
 	mnuFile->addAction ( actQuit );
 
 	/*---Action menu---*/
-	mnuOperations = new QMenu;
-
-	mnuOperations = menuBar()->addMenu ( tr ( "&Operations" ) );
+	QMenu *mnuOperations = menuBar()->addMenu ( tr ( "&Operations" ) );
 	mnuOperations->addAction ( actProperty );
 	mnuOperations->addAction ( actCreate );
 	mnuOperations->addAction ( actFormat );
@@ -360,32 +356,27 @@ void QP_MainWindow::setupMenuBar()
 	setpopupmenu ( mnuOperations );
 
 	/*---Disk menu---*/
-	mnuDisks = new QMenu;
 	mnuDisks = menuBar()->addMenu ( tr ( "&Disks" ) );
 
 	/*---Device menu---*/
-	mnuDevice = new QMenu;
-	mnuDevice->setEnabled ( false );
 	mnuDevice = menuBar()->addMenu ( tr ( "&Device" ) );
+	mnuDevice->setEnabled ( false );
 	mnuDevice->addAction ( actUndo );
 	mnuDevice->addAction ( actCommit );
 
-	/*---Options menu---
-	QMenu *mnuOptions = new QMenu;
-	menuBar()->insertItem(tr("&Options"), mnuOptions);
-	actConfig->addTo(mnuOptions);
-	*/
+	/*---Options menu---*/
+	QMenu *mnuOptions = menuBar()->addMenu(tr("&Options"));
+	mnuOptions->addAction(actConfig);
 
 	/*---Help menu---*/
-	QMenu *mnuHelp = new QMenu;
-	mnuHelp = menuBar()->addMenu ( tr ( "&Help" ) );
+	QMenu *mnuHelp = menuBar()->addMenu ( tr ( "&Help" ) );
 	mnuHelp->addAction ( actWhatThis );
 	mnuHelp->addSeparator();
 	mnuHelp->addAction ( actAbout );
 	mnuHelp->addAction ( actAboutQT );
 
 	/*---disk navigator popup menu---*/
-	_navpopupmenu = new QMenu;
+	_navpopupmenu = new QMenu(this);
 	_navpopupmenu->addAction ( actNavProperty );
 	_navpopupmenu->addAction ( actNavPartTable );
 }
