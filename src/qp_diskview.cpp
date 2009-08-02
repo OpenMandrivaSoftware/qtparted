@@ -40,12 +40,12 @@ QP_DiskView::QP_DiskView ( QWidget *parent, Qt::WindowFlags f )
               this, SIGNAL ( sigDevicePopup ( QPoint ) ) );
     _layout.addWidget ( listchart );
     
-    /*---create the partwidget, attach it and connect the signals---*/
+    /*---create the listview, attach it and connect the signals---*/
     listview = new QP_ListView ( this );
     connect ( listview, SIGNAL(sigSelectPart(QP_PartInfo *)),
 	      this, SLOT(slotListViewSelectPart(QP_PartInfo *)));
     connect ( listview, SIGNAL(sigPopup(QPoint)),
-	      this, SLOT(slotPopup(QPoint)));
+	      this, SIGNAL(sigPopup(QPoint)));
     _layout.addWidget ( listview );
 
     /*---create the wrapper to parted---*/
@@ -213,6 +213,7 @@ void QP_DiskView::set_mb_hdsize ( float mb_hdsize )
 
 void QP_DiskView::draw()
 {
+    listview->draw();
     listchart->draw();
 }
 
