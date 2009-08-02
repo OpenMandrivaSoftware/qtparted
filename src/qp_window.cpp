@@ -351,7 +351,7 @@ void QP_MainWindow::setupMenuBar()
     mnuOperations->addAction ( actSetActive );
 
     actHide = new QAction ( tr ( "Hide" ), this );
-    connect ( actHide, SIGNAL ( triggered() ), this, SLOT ( slotSetHidde() ) );
+    connect ( actHide, SIGNAL ( triggered() ), this, SLOT ( slotSetHidden() ) );
     actHide->setEnabled ( false );
     mnuOperations->addAction ( actHide );
 
