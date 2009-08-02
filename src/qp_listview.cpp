@@ -109,8 +109,8 @@ QP_RealListView::QP_RealListView ( QWidget *parent )
     setHeaderLabels ( hlabel );
 
     /*---get if user want to change selectior or want to popup a menu---*/
-    connect ( this, SIGNAL ( selectionChanged ( QListViewItem * ) ),
-              SLOT ( selectionChanged ( QListViewItem * ) ) );
+    connect ( this, SIGNAL ( itemChanged ( QTreeWidgetItem *, int ) ),
+              SLOT ( selectionChanged ( QTreeWidgetItem * ) ) );
     connect ( this, SIGNAL ( rightButtonClicked ( QListViewItem *, const QPoint &, int ) ),
               SLOT ( rightButtonClicked ( QListViewItem *, const QPoint &, int ) ) );
 }
