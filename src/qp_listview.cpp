@@ -299,15 +299,15 @@ QP_ListView::~QP_ListView()
 void QP_ListView::setselPartInfo ( QP_PartInfo *selpartinfo )
 {
 	/*---call the ancestor to change the selection---*/
-	//QP_PartList::setselPartInfo(selpartinfo);
+	QP_PartList::setselPartInfo(selpartinfo);
 
 	/*---just a wrap to the QP_RealListView---*/
-	//listview->setSelected((QTreeWidgetItem *)selpartinfo->listviewitem, true);
+	listview->setCurrentItem(selpartinfo->listviewitem);
 }
 
 void QP_ListView::setDevice ( QP_Device *device )
 {
-	//QP_PartList::setDevice(device);
+	QP_PartList::setDevice(device);
 	listview->setDevice ( device );
 }
 
@@ -317,7 +317,7 @@ void QP_ListView::clear()
 	number = 0;
 
 	/*---call the ancestor to init the selected partinfo---*/
-	//QP_PartList::setselPartInfo(NULL);
+	QP_PartList::setselPartInfo(NULL);
 
 	/*---just a wrap to the QP_RealListView---*/
 	listview->clear();
