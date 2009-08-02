@@ -165,5 +165,5 @@ void QP_DriveList::slotActionSelected(QAction *action) {
 }
 
 void QP_DriveList::slotPopUp(QPoint const &point) {
-    if (item && _popup) _popup->popup(point);
+    if (_popup) _popup->popup(point);
 }
