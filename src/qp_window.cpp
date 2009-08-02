@@ -111,7 +111,7 @@ QP_MainWindow::QP_MainWindow ( QP_Settings *qpsettings, QWidget *parent ) : QMai
 	/*---add the navigator view (on the left) to the splitter---*/
 	navview = new QP_NavView ( navSplit, qpsettings );
 	/*---i like that navview will not be always resized!---*/
-	//navSplit->setResizeMode(navview, QSplitter::KeepSize);
+	navSplit->setStretchFactor(0, 0);
 	/*---connect the selected signal (when user, for example, select /dev/hda)---*/
 	connect ( navview, SIGNAL ( deviceSelected ( QP_Device * ) ),
 			  this, SLOT ( slotSelectDevice ( QP_Device * ) ) );
@@ -127,14 +127,14 @@ QP_MainWindow::QP_MainWindow ( QP_Settings *qpsettings, QWidget *parent ) : QMai
 	connect ( diskview, SIGNAL ( sigDevicePopup ( QPoint ) ),
 			  this, SLOT ( slotDevicePopup ( QPoint ) ) );
 	/*---connect the sigTimer used for dlgprogress during "update progressbar"---*/
-	//connect(diskview, SIGNAL(sigTimer(int, QString, QString)),
-	//		dlgprogress, SLOT(slotTimer(int, QString, QString)));
+	connect(diskview, SIGNAL(sigTimer(int, QString, QString)),
+		dlgprogress, SLOT(slotTimer(int, QString, QString)));
 	/*---connect the sigTimer used for dlgprogress during "commit operations"---*/
-	//connect(diskview, SIGNAL(sigOperations(QString, QString, int, int)),
-	//		dlgprogress, SLOT(slotOperations(QString, QString, int, int)));
+	connect(diskview, SIGNAL(sigOperations(QString, QString, int, int)),
+		dlgprogress, SLOT(slotOperations(QString, QString, int, int)));
 	/*---connect the sigDiskChanged used for undo/commit---*/
 	connect ( diskview, SIGNAL ( sigDiskChanged() ),
-			  this, SLOT ( slotDiskChanged() ) );
+		  this, SLOT ( slotDiskChanged() ) );
 }
 
 QP_MainWindow::~QP_MainWindow()
@@ -162,13 +162,13 @@ void QP_MainWindow::refreshDiskView()
 	InitProgressDialog();
 
 	/*---refresh diskview widget!---*/
-//	diskview->refresh();
+	diskview->refresh();
 
 	/*---destroy the progress dialog---*/
 //	DoneProgressDialog();
 
-	/*---closethe progress dialog---*/
-	//dlgprogress->hide();
+	/*---close the progress dialog---*/
+	dlgprogress->hide();
 }
 
 void QP_MainWindow::setpopupmenu ( QMenu *popupmenu )

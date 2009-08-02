@@ -26,11 +26,12 @@
 #include "qp_dlgprogress.moc"
 #include "qp_options.h"
 
-QP_dlgProgress::QP_dlgProgress(QWidget *parent)
-	:QDialog(parent),Ui::QP_UIProgress()
+QP_dlgProgress::QP_dlgProgress(QWidget *parent):QDialog(parent),Ui::QP_UIProgress() {
 	setupUi(this);
 
-	lblMessage->setPaletteForegroundColor(Qt::red); //Error Message in RED! :)
+	QPalette pal=lblMessage->palette();
+	pal.setColor(QPalette::WindowText, Qt::red); // Error messages in red
+	lblMessage->setPalette(pal);
 }
 
 QP_dlgProgress::~QP_dlgProgress() {
