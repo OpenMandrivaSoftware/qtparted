@@ -45,7 +45,7 @@ QP_DiskView::QP_DiskView ( QWidget *parent, Qt::WindowFlags f )
     connect ( listview, SIGNAL(sigSelectPart(QP_PartInfo *)),
 	      this, SLOT(slotListViewSelectPart(QP_PartInfo *)));
     connect ( listview, SIGNAL(sigPopup(QPoint)),
-	      this, SLOT(sigPopup(QPoint)));
+	      this, SLOT(slotPopup(QPoint)));
     _layout.addWidget ( listview );
 
     /*---create the wrapper to parted---*/
