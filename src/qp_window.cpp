@@ -111,13 +111,14 @@ QP_MainWindow::QP_MainWindow ( QP_Settings *qpsettings, QWidget *parent ) : QMai
 	/*---add the navigator view (on the left) to the splitter---*/
 	navview = new QP_NavView ( navSplit, qpsettings );
 	/*---i like that navview will not be always resized!---*/
-	navSplit->setStretchFactor(0, 0);
+	navSplit->setStretchFactor(navSplit->indexOf(navview), 0);
 	/*---connect the selected signal (when user, for example, select /dev/hda)---*/
 	connect ( navview, SIGNAL ( deviceSelected ( QP_Device * ) ),
 			  this, SLOT ( slotSelectDevice ( QP_Device * ) ) );
 
 	/*---add the DiskView widget---*/
 	diskview = new QP_DiskView ( navSplit );
+	navSplit->setStretchFactor(navSplit->indexOf(diskview), 1);
 	/*---emitted when you select a partition---*/
 	connect ( diskview, SIGNAL ( sigSelectPart ( QP_PartInfo * ) ),
 			  this, SLOT ( slotSelectPart ( QP_PartInfo * ) ) );
