@@ -601,18 +601,18 @@ void QP_MainWindow::slotFormat()
 
 void QP_MainWindow::slotResize()
 {
-	/*---there are not selected partitions!---*/
-	//if (!diskview->selPartInfo()) return;
+	/*---there are no selected partitions!---*/
+	if (!diskview->selPartInfo()) return;
 
-	//ShowMoveResizeDialog(QTParted::resize);
+	ShowMoveResizeDialog(QTParted::resize);
 }
 
 void QP_MainWindow::slotMove()
 {
-	/*---there are not selected partitions!---*/
-	//if (!diskview->selPartInfo()) return;
+	/*---there are no selected partitions!---*/
+	if (!diskview->selPartInfo()) return;
 
-	//ShowMoveResizeDialog(QTParted::move);
+	ShowMoveResizeDialog(QTParted::move);
 }
 
 void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
@@ -719,8 +719,8 @@ void QP_MainWindow::InitMenu()
 void QP_MainWindow::InitProgressDialog()
 {
 	/*---initialize the progress dialog and show it---*/
-//	dlgprogress->init_dialog();
-//	dlgprogress->show();
+	dlgprogress->init_dialog();
+	dlgprogress->show();
 
 	/*---just update GUI---*/
 	qApp->processEvents();
@@ -731,7 +731,7 @@ void QP_MainWindow::DoneProgressDialog()
 	/*---update GUI and disconnect sigTimer---*/
 	qApp->processEvents();
 
-	//dlgprogress->exec();
+	dlgprogress->exec();
 }
 
 void QP_MainWindow::slotDelete()
@@ -826,19 +826,19 @@ void QP_MainWindow::slotWhatsThis()
 void QP_MainWindow::slotAbout()
 {
 	QString content = QMessageBox::tr ( "<h3>About %1 v%2</h3>"
-										"<p>%3</p>"
-										"<p>QTParted is free software, covered by the GNU General Public License"
-										" and you are welcome to change it and/or distribute copies of it under"
-										" certain conditions</p>"
-										"<p>QTParted are currently maintained by <a href=\"http://www.arklinux.org\">Ark Linux Team</a>. Go to "
-										" <a href=\"%4\">%4</a> for more "
-										"information.</p>" )
+					"<p>%3</p>"
+					"<p>QTParted is free software, covered by the GNU General Public License"
+					" and you are welcome to change it and/or distribute copies of it under"
+					" certain conditions</p>"
+					"<p>QTParted are currently maintained by <a href=\"http://www.arklinux.org\">Ark Linux Team</a>. Go to "
+					" <a href=\"%4\">%4</a> for more "
+					"information.</p>" )
 					  .arg ( QMessageBox::tr ( PROG_NAME ) )
 					  .arg ( QMessageBox::tr ( VERSION ) )
 					  .arg ( QMessageBox::tr ( "Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br />"
-											   "Copyright (C) 2005-2008 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
-											   "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br />"
-											   "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)" ) )
+								   "Copyright (C) 2005-2009 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
+								   "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br />"
+								   "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)" ) )
 					  .arg ( QMessageBox::tr ( HOMEPAGE ) );
 
 	QMessageBox mb ( this );
@@ -934,9 +934,8 @@ void QP_MainWindow::slotSelectPart ( QP_PartInfo *partinfo )
 	 *---or the user made some not commited change and the device is busy---*/
 
 	if ( !selDevice->partitionTable()
-			||  !selDevice->canUpdateGeometry()
-			|| ( diskview->canUndo() && selDevice->isBusy() ) )
-	{
+	  || !selDevice->canUpdateGeometry()
+	  || ( diskview->canUndo() && selDevice->isBusy() ) ) {
 		actSetActive->setEnabled ( false );
 		actSetActive->setChecked ( partinfo->isActive() );
 		actHide->setEnabled ( false );
@@ -1050,7 +1049,7 @@ void QP_MainWindow::slotSetActive()
 	else
 		oldActive = diskview->libparted->partActive()->partname();
 
-	bool active = actSetActive->isChecked();
+	bool const active = actSetActive->isChecked();
 
 	if ( active )
 		newActive = noactive;
