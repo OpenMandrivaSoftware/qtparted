@@ -27,7 +27,8 @@
 #include "qp_dlgformat.moc"
 #include "qp_options.h"
 
-QP_dlgFormat::QP_dlgFormat(QWidget *, const char *) {
+QP_dlgFormat::QP_dlgFormat(QWidget *parent):QDialog(parent),Ui::QP_UIFormat() {
+	setupUi(this);
 }
 
 QP_dlgFormat::~QP_dlgFormat() {
@@ -42,7 +43,7 @@ void QP_dlgFormat::init_dialog() {
 }
 
 void QP_dlgFormat::addFileSystem(QString name) {
-    cmbFilesystem->insertItem(name);
+    cmbFilesystem->addItem(name);
 }
 
 int QP_dlgFormat::show_dialog() {

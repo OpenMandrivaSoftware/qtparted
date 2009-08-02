@@ -34,11 +34,11 @@
 #include "qp_ui_format.ui.h"
 #include "qp_libparted.h"
 
-class QP_dlgFormat : public Ui::QP_UIFormat {
+class QP_dlgFormat : public QDialog, public Ui::QP_UIFormat {
 Q_OBJECT
 
 public:
-    QP_dlgFormat(QWidget *parent=0, const char *name=0);
+    QP_dlgFormat(QWidget *parent=0);
     ~QP_dlgFormat();
     void init_dialog();                     /*---clear combo box and other stuff                     ---*/
     void addFileSystem(QString name);       /*---add a filesystem to the combobox                    ---*/

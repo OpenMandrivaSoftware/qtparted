@@ -68,9 +68,9 @@ QP_DiskView::~QP_DiskView()
 {
 }
 
-//QP_PartInfo *QP_DiskView::selPartInfo() {
-//	return listview->selPartInfo();
-//}
+QP_PartInfo *QP_DiskView::selPartInfo() {
+	return listview->selPartInfo();
+}
 
 void QP_DiskView::setDevice ( QP_Device *dev )
 {
