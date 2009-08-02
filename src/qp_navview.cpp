@@ -57,23 +57,23 @@ QP_NavView::QP_NavView ( QWidget *parent, QP_Settings *settings )
 
     //DRIVEINFO
 
-    QFrame *infoBox = new QFrame;
+    QFrame *infoBox = new QFrame(this);
     infoBox->setFrameStyle ( QFrame::Box | QFrame::Plain );
     QPalette ibp ( infoBox->palette() );
     ibp.setColor ( infoBox->backgroundRole(), Qt::black );
     infoBox->setPalette ( ibp );
     infoBox->setAutoFillBackground ( true );
 
-    QVBoxLayout *infoBoxLayout = new QVBoxLayout;
+    QVBoxLayout *infoBoxLayout = new QVBoxLayout(infoBox);
     infoBoxLayout->setMargin ( 2 );
     infoBoxLayout->setSpacing ( 2 );
 
-    QLabel *infoTitle = new QLabel ( "<qt><center><b>" + tr ( "Drive Info" ) + "</b></center></qt>" );
+    QLabel *infoTitle = new QLabel ( "<qt><center><b>" + tr ( "Drive Info" ) + "</b></center></qt>", infoBox );
     QPalette itp ( infoTitle->palette() );
     itp.setColor ( infoTitle->backgroundRole(), QColor ( 0xa8, 0xa8, 0xff ) );
     infoTitle->setPalette ( itp );
     infoTitle->setAutoFillBackground ( true );
-    details = new QLabel();
+    details = new QLabel(infoBox);
 
     infoBoxLayout->addWidget ( infoTitle );
     infoBoxLayout->addWidget ( details );
