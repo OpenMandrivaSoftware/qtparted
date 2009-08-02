@@ -360,7 +360,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 		rx = QRegExp("^.* (\\d*),(\\d*) percent completed.*$");
 		if (rx.indexIn(linesub) == 0) {
 			QString capIntPercent = rx.cap(1);
-			printf("letto: %s\n", capIntPercent.toLatin1());
+			printf("letto: %s\n", capIntPercent.toLatin1().data());
 			//QString capFloatPercent = rx.cap(2);
 
 			bool rc;
