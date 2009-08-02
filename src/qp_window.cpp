@@ -1034,18 +1034,16 @@ void QP_MainWindow::slotSelectDevice ( QP_Device *dev )
 	/*---enable menu device---*/
 	mnuDevice->setEnabled ( true );
 
-	if ( dev->partitionTable() );
-
-	/*---show a progress dialog for long operation---*/
-	//	InitProgressDialog();
+	if ( dev->partitionTable() )
+		/*---show a progress dialog for long operation---*/
+		InitProgressDialog();
 
 	/*---change the device---*/
 	diskview->setDevice ( dev );
 
-	if ( dev->partitionTable() );
-
-	/*---closethe progress dialog---*/
-	//dlgprogress->hide();
+	if ( dev->partitionTable() )
+		/*---closethe progress dialog---*/
+		dlgprogress->hide();
 }
 
 void QP_MainWindow::slotSetActive()
