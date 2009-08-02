@@ -40,7 +40,8 @@
 #include "qp_diskview.h"
 #include "qp_navview.h"
 #include "qp_settings.h"
-
+#include "qp_dlgcreate.h"
+#include "qp_dlgformat.h"
 
 class QP_MainWindow : public QMainWindow {
 	Q_OBJECT
@@ -73,8 +74,8 @@ protected:
 	QAction *actSetActive;
 	QAction *actHide;
 	QP_DiskView *diskview;
-	//QP_dlgCreate *dlgcreate;	/*---the create dialog		 ---*/
-	//QP_dlgFormat *dlgformat;	/*---the format dialog		 ---*/
+	QP_dlgCreate *dlgcreate;	/*---the create dialog		 ---*/
+	QP_dlgFormat *dlgformat;	/*---the format dialog		 ---*/
 	//QP_dlgResize *dlgresize;	/*---the resize dialog		 ---*/
 	//QP_dlgProgress *dlgprogress;	/*---the progress dialog	   ---*/
 	//QP_dlgConfig *dlgconfig;	/*---the configuration dialog  ---*/
@@ -103,8 +104,8 @@ private:
 	int mnuSetHiddenID;
 
 protected slots:
-	//void slotCreate();
-	//void slotFormat();
+	void slotCreate();
+	void slotFormat();
 	void slotResize();
 	void slotMove();
 	void slotDelete();

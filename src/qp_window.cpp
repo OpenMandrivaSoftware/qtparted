@@ -485,7 +485,6 @@ void QP_MainWindow::loadSettings()
     //diskview->setLayout(settings->layout());
 }
 
-#if 0
 void QP_MainWindow::slotCreate()
 {
 
@@ -500,9 +499,7 @@ void QP_MainWindow::slotCreate()
     dlgcreate->setFileSystem ( diskview->filesystem );
 
     /*---loop into filesystemlist, and add it to combobox if it has create flag---*/
-    QP_FileSystemSpec *p;
-
-    for ( p = ( QP_FileSystemSpec* ) diskview->filesystem->filesystemlist.first(); p; p = ( QP_FileSystemSpec* ) diskview->filesystem->filesystemlist.next() )
+    foreach(QP_FileSystemSpec *p, diskview->filesystem->filesystemlist) {
 
         /*---test if u you can create partition with filesystem			 ---
          *---check also that the size is enough for this kind of filesystem,---
@@ -513,6 +510,7 @@ void QP_MainWindow::slotCreate()
             if ( ! ( navview->selDevice()->isBusy() && p->fswrap() ) )
                 dlgcreate->addFileSystem ( p->name() );
         }
+    }
 
     /*---the "addType" method of dlgcreate add new type to the combobox---*/
 
@@ -585,10 +583,7 @@ void QP_MainWindow::slotFormat()
     PedSector maxsize = diskview->selPartInfo()->end - diskview->selPartInfo()->start;
 
     /*---loop into filesystemlist, and add it to combobox if it has create flag---*/
-    QP_FileSystemSpec *p;
-
-    for ( p = ( QP_FileSystemSpec* ) diskview->filesystem->filesystemlist.first();
-            p; p = ( QP_FileSystemSpec* ) diskview->filesystem->filesystemlist.next() )
+    foreach(QP_FileSystemSpec *p, diskview->filesystem->filesystemlist)
         /*---test if u you can create partition with filesystem			 ---
          *---check also that the size is enough for this kind of filesystem,---
          *---for example fat32 has minimal size of 512Mbyte				 ---*/
@@ -612,8 +607,6 @@ void QP_MainWindow::slotFormat()
         refreshDiskView();
     }
 }
-
-#endif
 
 void QP_MainWindow::slotResize()
 {
