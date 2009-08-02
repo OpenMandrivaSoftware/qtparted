@@ -41,7 +41,7 @@
 
 typedef long long PedSector;
 
-class QP_SpinBox : public QSpinBox {
+class QP_SpinBox : public QDoubleSpinBox {
 	Q_OBJECT
 public:
 	QP_SpinBox(QWidget *parent = 0L);

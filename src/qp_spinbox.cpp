@@ -26,7 +26,7 @@
 #include "qp_options.h"
 
 QP_SpinBox::QP_SpinBox(QWidget *parent)
-	:QSpinBox (parent)
+	:QDoubleSpinBox (parent)
 	,_floatminval(0)
 	,_floatmaxval(0)
 	,_pedminval(0)
@@ -38,10 +38,10 @@ QP_SpinBox::QP_SpinBox(QWidget *parent)
 {
 	/*---format of the displayed string (ie: 999.99)---*/
 	format = "%3.2f";
-	setValue((float)0);
-	//setSteps(10, 10);
-	//val = new QDoubleValidator(_floatminval, _floatmaxval, 2, this);
-	//setValidator (val);
+	QDoubleSpinBox::setValue(0.0);
+	setDecimals(2);
+	setMinimum(_floatminval);
+	setMaximum(_floatmaxval);
 }
 
 
@@ -83,7 +83,7 @@ void QP_SpinBox::setValue(float value) {
 	if (_floatminval <= value && value <= _floatmaxval) {
 		sprintf (buf, format.toLatin1(), value);
 		_floatvalue = value;
-		QSpinBox::setValue(int(value * 100.0));
+		QDoubleSpinBox::setValue(int(value * 100.0));
 	}
 }
 
@@ -148,7 +148,7 @@ void QP_SpinBox::setRange(float minVal, float maxVal) {
 	if (minVal <= maxVal) {
 		_floatminval = minVal;
 		_floatmaxval = maxVal;
-		//QRangeControl::setRange(int(minVal * 100.0), int(maxVal * 100.0));
+		setRange(minVal, maxVal);
 		val->setRange(minVal, maxVal, 2);
 	}
 }
@@ -166,7 +166,7 @@ void QP_SpinBox::setRange(PedSector minVal, PedSector maxVal) {
 	if (_format == 1) { f_minvalue = float(minVal * 1.0 / GBYTE_SECTORS);
 						f_maxvalue = float(maxVal * 1.0 / GBYTE_SECTORS); }
 
-	setRange(f_minvalue, f_maxvalue);
+	QDoubleSpinBox::setRange(f_minvalue * 100.0, f_maxvalue * 100.0);
 }
 
 
@@ -184,14 +184,14 @@ PedSector QP_SpinBox::pedMaxValue() {
 }
 
 void QP_SpinBox::stepUp() {
-	QSpinBox::stepUp();
+	QDoubleSpinBox::stepUp();
 
 	int diff = int(_floatmaxval * 100.0) - int(_floatvalue * 100.0);
 	if (diff <= 1) _pedvalue = _pedmaxval;
 }
 
 void QP_SpinBox::stepDown() {
-	QSpinBox::stepDown();
+	QDoubleSpinBox::stepDown();
 
 	int diff = int(_floatvalue * 100.0) - int(_floatminval * 100.0);
 	if (diff <= 1) _pedvalue = _pedminval;
@@ -199,12 +199,12 @@ void QP_SpinBox::stepDown() {
 
 void QP_SpinBox::setMaxValue(float maxvalue) {
 	_floatmaxval = maxvalue;
-	//QSpinBox::setMaxValue(int(maxvalue * 100.0));
+	setMaximum(maxvalue * 100.0);
 }
 
 void QP_SpinBox::setMinValue(float minvalue) {
 	_floatminval = minvalue;
-	//QSpinBox::setMinValue(int(minvalue * 100.0));
+	setMinimum(minvalue * 100.0);
 }
 
 void QP_SpinBox::valueChange() {
