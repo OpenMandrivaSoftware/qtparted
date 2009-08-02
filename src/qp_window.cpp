@@ -383,16 +383,16 @@ void QP_MainWindow::setupMenuBar()
 
 void QP_MainWindow::setupStatusBar()
 {
-	QWidget *hbox = new QWidget;
-	QHBoxLayout *hboxlayout = new QHBoxLayout;
+	QWidget *hbox = new QWidget(this);
+	QHBoxLayout *hboxlayout = new QHBoxLayout(hbox);
 	hboxlayout->setMargin ( 5 );
 	hboxlayout->setSpacing ( 6 );
 
 	/*---make a label, size it, set the text... and attach it to the hbox---*/
-	QLabel *lbl1 = new QLabel;
+	QLabel *lbl1 = new QLabel(hbox);
 	lbl1->setSizePolicy ( QSizePolicy ( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 	lbl1->setAlignment ( Qt::AlignLeft );
-	QFont boldfont;
+	QFont boldfont=lbl1->font();
 	boldfont.setWeight ( QFont::Bold );
 	lbl1->setFont ( boldfont );
 	lbl1->setMinimumHeight ( lbl1->sizeHint().height() );
@@ -401,30 +401,29 @@ void QP_MainWindow::setupStatusBar()
 	hboxlayout->addWidget ( lbl1 );
 
 	/*---add a separator in the statusbar---*/
-	QFrame *frame = new QFrame;
+	QFrame *frame = new QFrame(hbox);
 	frame->setFrameShadow ( QFrame::Sunken );
 	frame->setFrameShape ( QFrame::VLine );
 	hboxlayout->addWidget ( frame );
 
 	/*---make a label, size it, set the text... and attach it to the hbox---*/
-	QLabel *lbl2 = new QLabel;
+	QLabel *lbl2 = new QLabel(hbox);
 	lbl2->setSizePolicy ( QSizePolicy ( QSizePolicy::Fixed, QSizePolicy::Fixed ) );
 	lbl2->setAlignment ( Qt::AlignLeft );
 	boldfont.setWeight ( QFont::Bold );
 	lbl2->setFont ( boldfont );
 	lbl2->setMinimumHeight ( lbl2->sizeHint().height() );
-	lbl2->setText ( "(C) 2002-2003 by Zanac / (C) 2005-2008 Ark Linux" );
+	lbl2->setText ( "(C) 2002-2003 by Zanac / (C) 2005-2009 Ark Linux" );
 	lbl2->setToolTip ( "Message area" );
 	hboxlayout->addWidget ( lbl2 );
 
-	frame = new QFrame;
+	frame = new QFrame(hbox);
 	frame->setFrameShadow ( QFrame::Sunken );
 	frame->setFrameShape ( QFrame::VLine );
 	hboxlayout->addWidget ( frame );
 
-	QLabel *lblmsg = new QLabel;
+	QLabel *lblmsg = new QLabel(hbox);
 	lblmsg->setAlignment ( Qt::AlignLeft );
-	boldfont.setWeight ( QFont::Bold );
 	lblmsg->setFont ( boldfont );
 	lblmsg->setMinimumHeight ( lblmsg->sizeHint().height() );
 	lblmsg->setText ( QString::null );
