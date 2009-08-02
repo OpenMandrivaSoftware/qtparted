@@ -34,7 +34,7 @@
 #define STR_LOGICAL  "Logical Partition"
 
 
-QP_dlgCreate::QP_dlgCreate(QWidget *w, const char *):QDialog(w),Ui_QP_UICreate() {
+QP_dlgCreate::QP_dlgCreate(QWidget *w):QDialog(w),Ui_QP_UICreate() {
 	setupUi(this);
 
 	/*---connect the combo type slot---*/

@@ -39,7 +39,7 @@ class QP_dlgCreate : public QDialog, public Ui_QP_UICreate {
 	Q_OBJECT
 
 public:
-	QP_dlgCreate(QWidget *parent=0, const char *name=0);
+	QP_dlgCreate(QWidget *parent=0);
 	~QP_dlgCreate();
 	void init_dialog();			/*---clear combo box and other stuff					 ---*/
 	void setFileSystem(QP_FileSystem *);	/*---filesystem list									 ---*/
