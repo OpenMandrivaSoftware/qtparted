@@ -30,10 +30,11 @@
 #ifndef QP_DLGCONFIG_H
 #define QP_DLGCONFIG_H
 
+#include <QDialog>
 #include "qtparted.h"
 #include "qp_ui_config.ui.h"
 
-class QP_dlgConfig : public Ui::QP_UIConfig {
+class QP_dlgConfig : public QDialog, public Ui::QP_UIConfig {
 	Q_OBJECT
 public:
 	QP_dlgConfig(QWidget *parent=0);

@@ -30,16 +30,17 @@
 #ifndef QP_DLGRESIZE_H
 #define QP_DLGRESIZE_H
 
+#include <QDialog>
 #include "qtparted.h"
 #include "qp_sizepart.h"
 #include "qp_ui_resize.ui.h"
 #include "qp_libparted.h"
 
-class QP_dlgResize : public Ui::QP_UIResize {
+class QP_dlgResize : public QDialog, public Ui::QP_UIResize {
 	Q_OBJECT
 
 public:
-	QP_dlgResize(QWidget *parent=0, const char *name=0);
+	QP_dlgResize(QWidget *parent=0);
 	~QP_dlgResize();
     void init_dialog(QTParted::actType moveresize);      /*---clear combo box and other stuff                     ---*/
     int show_dialog();                                   /*---just show the dialog. Call it after init_dialog     ---*/

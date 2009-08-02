@@ -42,6 +42,10 @@
 #include "qp_settings.h"
 #include "qp_dlgcreate.h"
 #include "qp_dlgformat.h"
+#include "qp_dlgconfig.h"
+#include "qp_dlgresize.h"
+#include "qp_dlgprogress.h"
+#include "qp_dlgdevprop.h"
 
 class QP_MainWindow : public QMainWindow {
 	Q_OBJECT
@@ -76,10 +80,10 @@ protected:
 	QP_DiskView *diskview;
 	QP_dlgCreate *dlgcreate;	/*---the create dialog		 ---*/
 	QP_dlgFormat *dlgformat;	/*---the format dialog		 ---*/
-	//QP_dlgResize *dlgresize;	/*---the resize dialog		 ---*/
-	//QP_dlgProgress *dlgprogress;	/*---the progress dialog	   ---*/
-	//QP_dlgConfig *dlgconfig;	/*---the configuration dialog  ---*/
-	//QP_dlgDevProperty *dlgdevprop;	/*---the device property dialog---*/
+	QP_dlgResize *dlgresize;	/*---the resize dialog		 ---*/
+	QP_dlgProgress *dlgprogress;	/*---the progress dialog	   ---*/
+	QP_dlgConfig *dlgconfig;	/*---the configuration dialog  ---*/
+	QP_dlgDevProperty *dlgdevprop;	/*---the device property dialog---*/
 	QP_NavView *navview;		/*---the disk navigation widget---*/
 	QP_Settings *settings;
 
