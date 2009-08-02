@@ -21,6 +21,7 @@
 
 #include "qp_settings.moc"
 #include "qp_common.h"
+#include <cstdio>
 
 QP_Settings::QP_Settings():settings(QSettings::SystemScope, PROG_NAME, PROG_NAME) {
     _layout = settings.value("/qtparted/layout", 0).toInt();

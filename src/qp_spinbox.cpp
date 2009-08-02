@@ -19,7 +19,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-#include <stdlib.h>
+#include <cstdlib>
+#include <cstdio>
 
 #include "qp_spinbox.moc"
 #include "qp_options.h"

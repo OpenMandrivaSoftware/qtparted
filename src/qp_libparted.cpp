@@ -2127,12 +2127,12 @@ bool QP_LibParted::_partition_warn_busy ( PedPartition* part )
                                    path ) != PED_EXCEPTION_IGNORE ) goto error_free_path;
     }
 
-    ped_free ( path );
+    free ( path );
 
     return true;
 
 error_free_path:
-    ped_free ( path );
+    free ( path );
 
 //error:
     return false;
