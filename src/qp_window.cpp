@@ -1094,22 +1094,22 @@ void QP_MainWindow::slotSetActive()
 void QP_MainWindow::slotSetHidden()
 {
 	/*------*/
-	//diskview->selPartInfo()->setHidden(!diskview->selPartInfo()->isHidden());
+	diskview->selPartInfo()->setHidden(!diskview->selPartInfo()->isHidden());
 
 	/*---refresh diskview widget!---*/
-	//refreshDiskView();
+	refreshDiskView();
 }
 
 void QP_MainWindow::slotUndo()
 {
-	//diskview->undo();
+	diskview->undo();
 }
 
 void QP_MainWindow::slotCommit()
 {
-	QString label = QString ( tr ( "You're commiting all changes. Warning, you can lost data!\n"
-								   "Make sure also that you're not commiting a busy device...\n"
-								   "In other word PLEASE UMOUNT ALL PARTITIONS before commiting changes!" ) );
+	QString label = QString ( tr ( "You're committing all changes. Warning, you can lose data!\n"
+			"Also, make sure that you aren't committing to a busy device...\n"
+			"In other words, PLEASE UMOUNT ALL PARTITIONS before committing changes!" ) );
 
 	QMessageBox mb ( PROG_NAME,
 					 label,
@@ -1128,7 +1128,7 @@ void QP_MainWindow::slotCommit()
 	/*---show a progress dialog for long operation---*/
 	InitProgressDialog();
 
-	//diskview->commit();
+	diskview->commit();
 
 	/*---destroy the progress dialog---*/
 	DoneProgressDialog();
@@ -1136,11 +1136,11 @@ void QP_MainWindow::slotCommit()
 
 void QP_MainWindow::slotDiskChanged()
 {
-	//if (diskview->canUndo()) {
-	//	actUndo->setEnabled(true);
-	//	actCommit->setEnabled(true);
-	//} else {
-//		actUndo->setEnabled(false);
-//		actCommit->setEnabled(false);
-//	}
+	if (diskview->canUndo()) {
+		actUndo->setEnabled(true);
+		actCommit->setEnabled(true);
+	} else {
+		actUndo->setEnabled(false);
+		actCommit->setEnabled(false);
+	}
 }
