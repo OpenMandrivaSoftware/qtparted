@@ -618,14 +618,7 @@ void QP_ActionList::get_partinfo ( QP_PartInfo *partinfo, PedPartition *part )
     showDebug ( "%s", "actionlist::get_partinfo\n" );
 
     /*---loop for every action saved---*/
-    QP_ActListItem *pl;
-
-    for ( int idx = 0; idx < actlist.size(); idx++ )
-    {
-        //for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
-        /*---if you saved a mkpart (Create) and the geometry match... man: we have a virtual!---*/
-        pl = actlist.at ( idx );
-
+    foreach(QP_ActListItem *pl, actlist) {
         if ( ( pl->_action == QTParted::create )
                 || ( pl->_action == QTParted::resize )
                 || ( pl->_action == QTParted::move )
@@ -705,12 +698,7 @@ void QP_ActionList::commit()
 
     int iTotAct = actlist.count() + 1;
 
-    QP_ActListItem *pl;
-
-    for ( int idx = 0; idx < actlist.size(); idx++ )
-    {
-        //for (pl = (QP_ActListItem *)actlist.first(); pl; pl = (QP_ActListItem *)actlist.next()) {
-        pl = actlist.at ( idx );
+    foreach(QP_ActListItem *pl, actlist) {
         showDebug ( "%s", "actionlist::commit, loop for commit\n" );
 
         //---mkpart commit---
