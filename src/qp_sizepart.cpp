@@ -24,6 +24,7 @@
 #include <qcursor.h>
 #include <qstyle.h>
 #include <qpixmap.h>
+#include <QStyleOption>
 
 #include "qp_sizepart.moc"
 #include "qp_options.h"
@@ -297,9 +298,8 @@ void QP_SizePartition::paintEvent(QPaintEvent *) {
     
 
     /*---draw a small border around the widget---*/
-    /*QStyle::SFlags flags = QStyle::Style_Default;
-	flags |= QStyle::Style_Enabled;
-	flags |= QStyle::Style_HasFocus;
-    style().drawPrimitive(QStyle::PE_FocusRect, &paint, rect(), colorGroup(), flags);
-    */
+    QStyleOption opt;
+    opt.initFrom(this);
+    opt.state = QStyle::State_Active|QStyle::State_Enabled|QStyle::State_HasFocus;
+    style()->drawPrimitive(QStyle::PE_FrameFocusRect, &opt, &paint, this);
 }
