@@ -510,13 +510,13 @@ void QP_LibParted::setDevice ( QP_Device *device )
     actlist = new QP_ActionList ( this );
 
     /*---and connect the right signal to able the use of commit/undo ;)---*/
-    //connect(actlist, SIGNAL(sigDiskChanged()),
-    //		this, SIGNAL(sigDiskChanged()));
-    //connect(actlist, SIGNAL(sigOperations(QString, QString, int, int)),
-    //		this, SIGNAL(sigOperations(QString, QString, int, int)));
+    connect(actlist, SIGNAL(sigDiskChanged()),
+    		this, SIGNAL(sigDiskChanged()));
+    connect(actlist, SIGNAL(sigOperations(QString, QString, int, int)),
+    		this, SIGNAL(sigOperations(QString, QString, int, int)));
 
     /*---update the commit/undo buttons---*/
-    //emit sigDiskChanged();
+    emit sigDiskChanged();
 }
 
 
