@@ -3,7 +3,7 @@
     Copyright (C) 2002-2003 Vanni Brutto
     Vanni Brutto <zanac (-at-) libero dot it>
 
-    Copyright (C) 2005-2006 Bernhard Rosenkraenzer
+    Copyright (C) 2005-2010 Bernhard Rosenkraenzer
     bero (-at-) arklinux dot org
 
     This program is free software; you can redistribute it and/or modify

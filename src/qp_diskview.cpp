@@ -1,7 +1,7 @@
 /*
    qtparted - a frontend to libparted for manipulating disk partitions
    Copyright (C) 2002-2003 Vanni Brutto <zanac (-at-) libero dot it>
-   Copyright (C) 2007 Bernhard Rosenkraenzer <bero (-at-) arklinux dot org>
+   Copyright (C) 2007-2010 Bernhard Rosenkraenzer <bero (-at-) arklinux dot org>
    Copyright (C) 2007-2008 David Tio <deux (-at-) arklinux dot org>
 
    This program is free software; you can redistribute it and/or modify

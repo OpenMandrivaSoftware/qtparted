@@ -3,7 +3,7 @@
                              -------------------
     begin                : Wed Sep  4 19:21:54 UTC 2002
     copyright            : (C) 2002 by Francois Dupoux
-                           (C) 2005 by Bernhard Rosenkraenzer
+                           (C) 2005-2010 by Bernhard Rosenkraenzer
     email                : fdupoux@partimage.org
                            bero@arklinux.org
  ***************************************************************************/
