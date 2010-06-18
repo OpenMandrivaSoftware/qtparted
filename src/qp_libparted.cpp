@@ -656,14 +656,25 @@ bool QP_LibParted::checkForParted()
     int major, minor, micro;
     const char *version;
 
-    if ( ! ( version = ped_get_version () ) || ( sscanf ( version, "%d.%d.%d", &major, &minor, &micro ) != 3 ) )
+    if ( ! ( version = ped_get_version () ) ) //|| ( sscanf ( version, "%d.%d.%d", &major, &minor, &micro ) != 3 ) )
     {
-        printf ( "Cannot get parted version\n" );
-        QString label = QString ( QObject::tr ( "Cannot get parted version." ) );
-        QMessageBox::information ( NULL, PROG_NAME, label );
-        showDebug ( "%s", "Cannot get parted version\n" );
+	printf ( "Cannot get parted version\n" );
+	QString label = QString ( QObject::tr ( "Cannot get parted version." ) );
+	QMessageBox::information ( 0, PROG_NAME, label );
+	showDebug ( "%s", "Cannot get parted version\n" );
 
         return false;
+    }
+
+    if(sscanf(version, "%d.%d.%d", &major, &minor, &micro) != 3) {
+	micro = 0;
+	if(sscanf(version, "%d.%d", &major, &minor) != 2) {
+		minor = 0;
+		if(sscanf(version, "%d", &major) != 1) {
+			QMessageBox::information(0, PROG_NAME, tr("Can't identify parted version; claims to be %1").arg(version));
+			return false;
+		}
+	}
     }
 
     if ( ( major > PARTED_REQUESTED_MAJOR ) ||
