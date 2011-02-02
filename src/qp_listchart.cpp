@@ -52,7 +52,7 @@ QP_ListChart::~QP_ListChart() {
 void QP_ListChart::setselPartInfo(QP_PartInfo *selpartinfo) {
     /*---if a partition was selected remove the selection to it---*/
     /*---please note that in ::clear() selPartInfo is "nulled!"---*/
-    if (selPartInfo()) {
+    if (selPartInfo() && selPartInfo()->partwidget) {
         /*---redraw the (un)selected partition---*/
         QP_PartWidget *selwidget = selPartInfo()->partwidget;
         selwidget->setSelected(false);
