@@ -121,8 +121,8 @@ protected slots:
 	void slotNavProperty();
 	void slotNavPartTable();
 	void slotSelectPart(QP_PartInfo *);
-	void slotDevicePopup(QPoint pos);
-	void slotPopup(QPoint pos);
+	void slotDevicePopup();
+	void slotPopup();
 	void slotSelectDevice(QP_Device *);
 	void slotSetActive();
 	void slotSetHidden();

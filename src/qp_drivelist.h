@@ -65,7 +65,7 @@ signals:
 public slots:
         void slotDisksSelected();
 	void slotActionSelected(QAction *);
-	void slotPopUp(QPoint const &p);
+	void slotPopUp();
 };
 
 #endif

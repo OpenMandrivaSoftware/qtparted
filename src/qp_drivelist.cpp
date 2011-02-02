@@ -47,7 +47,7 @@ QP_DriveList::QP_DriveList(QWidget *parent, QP_Settings *settings)
         this, SLOT(slotDisksSelected()));
 
     setContextMenuPolicy(Qt::CustomContextMenu);
-    connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(slotPopUp(QPoint const &)));
+    connect(this, SIGNAL(customContextMenuRequested(QPoint const &)), this, SLOT(slotPopUp()));
 }
 
 QP_DriveList::~QP_DriveList() { 
@@ -164,6 +164,6 @@ void QP_DriveList::slotActionSelected(QAction *action) {
     }
 }
 
-void QP_DriveList::slotPopUp(QPoint const &point) {
-    if (_popup) _popup->popup(point);
+void QP_DriveList::slotPopUp() {
+    if (_popup) _popup->popup(QCursor::pos());
 }

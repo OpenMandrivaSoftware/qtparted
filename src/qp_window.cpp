@@ -2,6 +2,7 @@
 	qtparted - a frontend to libparted for manipulating disk partitions
 	Copyright (C) 2002-2003 Vanni Brutto <zanac (-at-) libero dot it>
 	Copyright (C) 2007-2008 David Tio <deux@arklinux.org>
+	Copyright (C) 2007-2011 Bernhard Rosenkraenzer <bero@arklinux.org>
 
 	This program is free software; you can redistribute it and/or modify
 	it under the terms of the GNU General Public License as published by
@@ -18,6 +19,7 @@
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 #include <QApplication>
+#include <QCursor>
 #include <QSplitter>
 #include <QLabel>
 #include <QMenuBar>
@@ -124,9 +126,9 @@ QP_MainWindow::QP_MainWindow ( QP_Settings *qpsettings, QWidget *parent ) : QMai
 			  this, SLOT ( slotSelectPart ( QP_PartInfo * ) ) );
 	/*---emit when the user want to popup the context menu---*/
 	connect ( diskview, SIGNAL ( sigPopup ( QPoint ) ),
-			  this, SLOT ( slotPopup ( QPoint ) ) );
+			  this, SLOT ( slotPopup ( ) ) );
 	connect ( diskview, SIGNAL ( sigDevicePopup ( QPoint ) ),
-			  this, SLOT ( slotDevicePopup ( QPoint ) ) );
+			  this, SLOT ( slotDevicePopup ( ) ) );
 	/*---connect the sigTimer used for dlgprogress during "update progressbar"---*/
 	connect(diskview, SIGNAL(sigTimer(int, QString, QString)),
 		dlgprogress, SLOT(slotTimer(int, QString, QString)));
@@ -1001,18 +1003,18 @@ void QP_MainWindow::slotSelectPart ( QP_PartInfo *partinfo )
 
 }
 
-void QP_MainWindow::slotDevicePopup ( QPoint pos )
+void QP_MainWindow::slotDevicePopup ()
 {
-	_navpopupmenu->popup ( pos );
+	_navpopupmenu->popup ( QCursor::pos() );
 }
 
-void QP_MainWindow::slotPopup ( QPoint pos )
+void QP_MainWindow::slotPopup ()
 {
 	//TODO: check, can i remove _navpopupmenu->popup?
 	if ( !navview->selDevice()->partitionTable() )
-		_navpopupmenu->popup ( pos );
+		_navpopupmenu->popup ( QCursor::pos() );
 	else
-		popupmenu()->popup ( pos );
+		popupmenu()->popup ( QCursor::pos() );
 }
 
 void QP_MainWindow::slotSelectDevice ( QP_Device *dev )
