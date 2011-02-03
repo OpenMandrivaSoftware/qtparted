@@ -31,7 +31,7 @@
 #define QP_DLGPROGRESS_H
 
 #include <QDialog>
-#include "qp_ui_progress.ui.h"
+#include "ui_qp_ui_progress.h"
 //Added by qt3to4:
 #include <QCloseEvent>
 

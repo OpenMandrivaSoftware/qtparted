@@ -23,12 +23,11 @@
 #include <qmessagebox.h>
 #include <stdlib.h>
 #include <qapplication.h>
-#include "qp_libparted.moc"
+#include "qp_libparted.h"
 #include "qp_filesystem.h"
 #include "qp_fswrap.h"
 #include "qp_actlist.h"
 #include "qp_common.h"
-#include "qp_options.h"
 #include "qp_debug.h"
 
 #define TMP_MOUNTPOINT "/tmp/mntqp"
@@ -660,7 +659,7 @@ bool QP_LibParted::checkForParted()
     {
 	printf ( "Cannot get parted version\n" );
 	QString label = QString ( QObject::tr ( "Cannot get parted version." ) );
-	QMessageBox::information ( 0, PROG_NAME, label );
+	QMessageBox::information ( 0, "QtParted", label );
 	showDebug ( "%s", "Cannot get parted version\n" );
 
         return false;
@@ -671,7 +670,7 @@ bool QP_LibParted::checkForParted()
 	if(sscanf(version, "%d.%d", &major, &minor) != 2) {
 		minor = 0;
 		if(sscanf(version, "%d", &major) != 1) {
-			QMessageBox::information(0, PROG_NAME, tr("Can't identify parted version; claims to be %1").arg(version));
+			QMessageBox::information(0, "QtParted", tr("Can't identify parted version; claims to be %1").arg(version));
 			return false;
 		}
 	}
@@ -698,7 +697,7 @@ bool QP_LibParted::checkForParted()
                         .arg ( major ) .arg ( minor ) .arg ( micro )
                         .arg ( PARTED_REQUESTED_MAJOR ) .arg ( PARTED_REQUESTED_MINOR ) .arg ( PARTED_REQUESTED_MICRO );
         showDebug ( "%s", label.toStdString().c_str() );
-        QMessageBox::information ( NULL, PROG_NAME, label );
+        QMessageBox::information ( NULL, "QtParted", label );
         return false;
     }
 }

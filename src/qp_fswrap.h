@@ -28,28 +28,27 @@
 #define QP_FSWRAP_H
 
 #include <config.h>
-
+#include <stdint.h>
 #include <qstring.h>
 #include <qstringlist.h>
 #include <stdarg.h>
 #include <qobject.h>
 #include "qp_libparted.h"
-#include "qptypes.h"
 
-#define swab16(x) ((u16)( (((u16)(x) & (u16)0x00ffU) << 8) | (((u16)(x) & (u16)0xff00U) >> 8) ))
+#define swab16(x) ((uint16_t)( (((uint16_t)(x) & (uint16_t)0x00ffU) << 8) | (((uint16_t)(x) & (uint16_t)0xff00U) >> 8) ))
 
-#define swab32(x) ((u32)( (((u32)(x) & (u32)0x000000ffUL) << 24) | \
-                          (((u32)(x) & (u32)0x0000ff00UL) <<  8) | \
-                          (((u32)(x) & (u32)0x00ff0000UL) >>  8) | \
-                          (((u32)(x) & (u32)0xff000000UL) >> 24) ))
-#define swab64(x) ((u64)(  (u64)(((u64)(x) & (u64)0x00000000000000ffULL) << 56) | \
-                           (u64)(((u64)(x) & (u64)0x000000000000ff00ULL) << 40) | \
-                           (u64)(((u64)(x) & (u64)0x0000000000ff0000ULL) << 24) | \
-                           (u64)(((u64)(x) & (u64)0x00000000ff000000ULL) <<  8) | \
-                           (u64)(((u64)(x) & (u64)0x000000ff00000000ULL) >>  8) | \
-                           (u64)(((u64)(x) & (u64)0x0000ff0000000000ULL) >> 24) | \
-                           (u64)(((u64)(x) & (u64)0x00ff000000000000ULL) >> 40) | \
-                           (u64)(((u64)(x) & (u64)0xff00000000000000ULL) >> 56) )) 
+#define swab32(x) ((uint32_t)( (((uint32_t)(x) & (uint32_t)0x000000ffUL) << 24) | \
+                          (((uint32_t)(x) & (uint32_t)0x0000ff00UL) <<  8) | \
+                          (((uint32_t)(x) & (uint32_t)0x00ff0000UL) >>  8) | \
+                          (((uint32_t)(x) & (uint32_t)0xff000000UL) >> 24) ))
+#define swab64(x) ((uint64_t)(  (uint64_t)(((uint64_t)(x) & (uint64_t)0x00000000000000ffULL) << 56) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0x000000000000ff00ULL) << 40) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0x0000000000ff0000ULL) << 24) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0x00000000ff000000ULL) <<  8) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0x000000ff00000000ULL) >>  8) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0x0000ff0000000000ULL) >> 24) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0x00ff000000000000ULL) >> 40) | \
+                           (uint64_t)(((uint64_t)(x) & (uint64_t)0xff00000000000000ULL) >> 56) )) 
 
 // ------------- CPU TO XXX ---------------
 #ifdef ENDIAN_BIG // BIG ENDIAN
@@ -101,23 +100,23 @@
     ((sizeof(a) == 2) ? Be16ToCpu(a) : \
     (a))))
 
-#define NTFS_GETU8(p)      (*(u8*)(p))
-#define NTFS_GETU16(p)     ((u16)Le16ToCpu(*(u16*)(p)))
-#define NTFS_GETU24(p)     ((u32)NTFS_GETU16(p) | ((u32)NTFS_GETU8(((char*)(p))+2)<<16))
-#define NTFS_GETU32(p)     ((u32)Le32ToCpu(*(u32*)(p)))
-#define NTFS_GETU40(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU8(((char*)(p))+4))<<32))
-#define NTFS_GETU48(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU16(((char*)(p))+4))<<32))
-#define NTFS_GETU56(p)     ((u64)NTFS_GETU32(p)|(((u64)NTFS_GETU24(((char*)(p))+4))<<32))
-#define NTFS_GETU64(p)     ((u64)Le64ToCpu(*(u64*)(p)))
+#define NTFS_GETU8(p)      (*(uint8_t*)(p))
+#define NTFS_GETU16(p)     ((uint16_t)Le16ToCpu(*(uint16_t*)(p)))
+#define NTFS_GETU24(p)     ((uint32_t)NTFS_GETU16(p) | ((uint32_t)NTFS_GETU8(((char*)(p))+2)<<16))
+#define NTFS_GETU32(p)     ((uint32_t)Le32ToCpu(*(uint32_t*)(p)))
+#define NTFS_GETU40(p)     ((uint64_t)NTFS_GETU32(p)|(((uint64_t)NTFS_GETU8(((char*)(p))+4))<<32))
+#define NTFS_GETU48(p)     ((uint64_t)NTFS_GETU32(p)|(((uint64_t)NTFS_GETU16(((char*)(p))+4))<<32))
+#define NTFS_GETU56(p)     ((uint64_t)NTFS_GETU32(p)|(((uint64_t)NTFS_GETU24(((char*)(p))+4))<<32))
+#define NTFS_GETU64(p)     ((uint64_t)Le64ToCpu(*(uint64_t*)(p)))
 
-#define NTFS_GETS8(p)        ((*(s8*)(p)))
-#define NTFS_GETS16(p)       ((s16)Le16ToCpu(*(s16*)(p)))
-#define NTFS_GETS24(p)       (NTFS_GETU24(p) < 0x800000 ? (s32)NTFS_GETU24(p) : (s32)(NTFS_GETU24(p) - 0x1000000))
-#define NTFS_GETS32(p)       ((s32)Le32ToCpu(*(s32*)(p)))
-#define NTFS_GETS40(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS8(((char*)(p))+4)) << 32))
-#define NTFS_GETS48(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS16(((char*)(p))+4)) << 32))
-#define NTFS_GETS56(p)       (((s64)NTFS_GETU32(p)) | (((s64)NTFS_GETS24(((char*)(p))+4)) << 32))
-#define NTFS_GETS64(p)	     ((s64)NTFS_GETU64(p))
+#define NTFS_GETS8(p)        ((*(int8_t*)(p)))
+#define NTFS_GETS16(p)       ((int16_t)Le16ToCpu(*(int16_t*)(p)))
+#define NTFS_GETS24(p)       (NTFS_GETU24(p) < 0x800000 ? (int32_t)NTFS_GETU24(p) : (int32_t)(NTFS_GETU24(p) - 0x1000000))
+#define NTFS_GETS32(p)       ((int32_t)Le32ToCpu(*(int32_t*)(p)))
+#define NTFS_GETS40(p)       (((int64_t)NTFS_GETU32(p)) | (((int64_t)NTFS_GETS8(((char*)(p))+4)) << 32))
+#define NTFS_GETS48(p)       (((int64_t)NTFS_GETU32(p)) | (((int64_t)NTFS_GETS16(((char*)(p))+4)) << 32))
+#define NTFS_GETS56(p)       (((int64_t)NTFS_GETU32(p)) | (((int64_t)NTFS_GETS24(((char*)(p))+4)) << 32))
+#define NTFS_GETS64(p)	     ((int64_t)NTFS_GETU64(p))
 
 class QP_FSNtfs;
 

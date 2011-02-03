@@ -24,9 +24,8 @@
 #include <qradiobutton.h>
 #include <qlabel.h>
 #include "qp_combospin.h"
-#include "qp_dlgcreate.moc"
+#include "qp_dlgcreate.h"
 #include "qp_filesystem.h"
-#include "qp_options.h"
 
 /*---label used in the combo box---*/
 #define STR_PRIMARY  "Primary Partition"

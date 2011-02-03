@@ -33,7 +33,6 @@
 #include <qmessagebox.h>
 #include "statistics.h"
 #include "qp_filesystem.h"
-#include "qp_options.h"
 #include "qp_common.h"
 
 #define TMP_MOUNTPOINT "/tmp/mntqp"
@@ -121,7 +120,7 @@ unsigned long getFsUsedKiloBytes(QP_PartInfo *partinfo) {
 			QString label = QObject::tr("Cannot umount partition device: %1."
 			                "Please do it by hand first to commit the changes!")
 			                .arg(partinfo->partname());
-			QMessageBox::information(NULL, PROG_NAME, label);
+			QMessageBox::information(NULL, "QtParted", label);
 		}
 	}
 

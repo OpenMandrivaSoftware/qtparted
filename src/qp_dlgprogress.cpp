@@ -23,8 +23,7 @@
 #include <qprogressbar.h>
 #include <qlabel.h>
 #include <qpushbutton.h>
-#include "qp_dlgprogress.moc"
-#include "qp_options.h"
+#include "qp_dlgprogress.h"
 
 QP_dlgProgress::QP_dlgProgress(QWidget *parent):QDialog(parent),Ui::QP_UIProgress() {
 	setupUi(this);

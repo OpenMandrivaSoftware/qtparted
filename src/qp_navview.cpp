@@ -20,8 +20,7 @@
 
 #include <QLayout>
 #include <QPalette>
-#include "qp_navview.moc"
-#include "qp_options.h"
+#include "qp_navview.h"
 
 QP_NavView::QP_NavView ( QWidget *parent, QP_Settings *settings )
         : QWidget ( parent )

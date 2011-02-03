@@ -26,15 +26,15 @@
 #include <unistd.h>
 #include <stdarg.h>
 #include <errno.h>
+#include <stdint.h>
 #include <sys/mount.h>
 #include <qapplication.h>
 
 #include <config.h>
 
-#include "qp_fswrap.moc"
+#include "qp_fswrap.h"
 #include "qp_actlist.h"
 #include "qp_common.h"
-#include "qp_options.h"
 #include "qp_debug.h"
 
 #define NOTFOUND tr("command not found")
@@ -143,7 +143,7 @@ bool QP_FSWrap::qpMount(QString device)
 	qpUMount(device);
 
 	/*---mount the partition---*/
-	QString cmdline = lstExternalTools->getPath(MOUNT) + " " + device + " " + TMP_MOUNTPOINT;
+	QString cmdline = lstExternalTools->getPath("mount") + " " + device + " " + TMP_MOUNTPOINT;
 
 	if (!fs_open(cmdline, true)) {
 		_message = QString(NOTFOUND);
@@ -188,7 +188,7 @@ QP_FSNtfs::QP_FSNtfs()
 	wrap_min_size = false;
 
 	/*---check if the wrapper is installed---*/
-	QString cmdline = "which " + lstExternalTools->getPath(MKNTFS);
+	QString cmdline = "which " + lstExternalTools->getPath("mkntfs");
 	fs_open(cmdline);
 	char *cline;
 	while ((cline = fs_getline()))
@@ -196,7 +196,7 @@ QP_FSNtfs::QP_FSNtfs()
 	fs_close();
 
 	/*---check if the wrapper is installed---*/
-	cmdline = "which " + lstExternalTools->getPath(NTFSRESIZE);
+	cmdline = "which " + lstExternalTools->getPath("ntfsresize");
 	fs_open(cmdline);
 
 
@@ -315,7 +315,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 	PedSector size = (PedSector) ((newsize - 1) * 512);
 
 	/*---read-only test---*/
-	QString cmdline = lstExternalTools->getPath(NTFSRESIZE) + " " +
+	QString cmdline = lstExternalTools->getPath("ntfsresize") + " " +
 	                  "-n -ff -s " + QString::number(size) + " " + dev;
 
 	if (!fs_open(cmdline)) {
@@ -393,7 +393,7 @@ bool QP_FSNtfs::ntfsresize(bool write, QString dev, PedSector newsize)
 
 
 	/*---ok, the readonly test seems ok... now we resize it!---*/
-	cmdline = lstExternalTools->getPath(NTFSRESIZE) + " -ff -s " + QString::number(size) + " " + dev;
+	cmdline = lstExternalTools->getPath("ntfsresize") + " -ff -s " + QString::number(size) + " " + dev;
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
 		return false;
@@ -469,7 +469,7 @@ bool QP_FSNtfs::mkpartfs(QString dev, QString label)
 		cmdline = " -f -s 512 " + dev;
 	else
 		cmdline = " -f -s 512 -L " + label + " " + dev;
-	cmdline = lstExternalTools->getPath(MKNTFS) + cmdline;
+	cmdline = lstExternalTools->getPath("mkntfs") + cmdline;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -507,7 +507,7 @@ PedSector QP_FSNtfs::min_size(QString dev)
 	_message = QString::null;
 
 	/*---prepare the command line---*/
-	QString cmdline = lstExternalTools->getPath(NTFSRESIZE) + " -f -i " + dev;
+	QString cmdline = lstExternalTools->getPath("ntfsresize") + " -f -i " + dev;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -557,7 +557,7 @@ QP_FSJfs::QP_FSJfs()
 	wrap_min_size = false;
 
 	/*---check if the wrapper is installed---*/
-	QString cmdline = "which " + lstExternalTools->getPath(MKFS_JFS);
+	QString cmdline = "which " + lstExternalTools->getPath("mkfs.jfs");
 	fs_open(cmdline);
 
 	char *cline;
@@ -651,7 +651,7 @@ bool QP_FSJfs::jfsresize(bool write, QP_PartInfo * partinfo, PedSector)
 
 
 	/*---do the resize!---*/
-	cmdline = lstExternalTools->getPath(MOUNT) + " -o remount,resize= " + TMP_MOUNTPOINT;
+	cmdline = lstExternalTools->getPath("mount") + " -o remount,resize= " + TMP_MOUNTPOINT;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -694,7 +694,7 @@ bool QP_FSJfs::mkpartfs(QString dev, QString label)
 		cmdline = " -q " + dev;
 	else
 		cmdline = " -q -L " + label + " " + dev;
-	cmdline = lstExternalTools->getPath(MKFS_JFS) + cmdline;
+	cmdline = lstExternalTools->getPath("mkfs.jfs") + cmdline;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -746,7 +746,7 @@ QP_FSExt3::QP_FSExt3()
 	wrap_create = false;
 
 	/*---check if the wrapper is installed---*/
-	QString cmdline = "which " + lstExternalTools->getPath(MKFS_EXT3);
+	QString cmdline = "which " + lstExternalTools->getPath("mkfs.ext3");
 	fs_open(cmdline);
 
 	char *cline;
@@ -766,7 +766,7 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 	/*---prepare the command line---*/
 	if (!label.isEmpty())
 		cmdline = " -L " + label;
-	cmdline = lstExternalTools->getPath(MKFS_EXT3) + cmdline + " " + dev;
+	cmdline = lstExternalTools->getPath("mkfs.ext3") + cmdline + " " + dev;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -853,7 +853,7 @@ QP_FSXfs::QP_FSXfs()
 	wrap_create = false;
 
 	/*---check if the wrapper is installed---*/
-	QString cmdline = "which " + lstExternalTools->getPath(MKFS_XFS);
+	QString cmdline = "which " + lstExternalTools->getPath("mkfs.xfs");
 	fs_open(cmdline);
 
 	char *cline;
@@ -863,7 +863,7 @@ QP_FSXfs::QP_FSXfs()
 
 
 	/*---check if the wrapper is installed---*/
-	cmdline = "which " + lstExternalTools->getPath(XFS_GROWFS);
+	cmdline = "which " + lstExternalTools->getPath("xfs_growfs");
 	fs_open(cmdline);
 
 	while ((cline = fs_getline()))
@@ -883,7 +883,7 @@ bool QP_FSXfs::mkpartfs(QString dev, QString label)
 		cmdline = " -f " + dev;
 	else
 		cmdline = " -f -L " + label + " " + dev;
-	cmdline = lstExternalTools->getPath(MKFS_XFS) + cmdline;
+	cmdline = lstExternalTools->getPath("mkfs.xfs") + cmdline;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -992,7 +992,7 @@ bool QP_FSXfs::xfsresize(bool write, QP_PartInfo * partinfo, PedSector)
 		return false;
 
 	/*---do the resize!---*/
-	cmdline = lstExternalTools->getPath(XFS_GROWFS) + " " + TMP_MOUNTPOINT;
+	cmdline = lstExternalTools->getPath("xfs_growfs") + " " + TMP_MOUNTPOINT;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -1101,21 +1101,21 @@ QString QP_FSReiserFS::_get_label(PedPartition *)
 
 QString QP_FSNtfs::_get_label(PedPartition * part)
 {
-	u8 bootsect[16384];
+	uint8_t bootsect[16384];
 	char label[32];
 	memset(label, 0, sizeof(label));
-	BYTE cFileRecord[8192 + 1];	// 1024 should be enough (dwFileRecordSize)
+	uint8_t cFileRecord[8192 + 1];	// 1024 should be enough (dwFileRecordSize)
 
-	QWORD qwOffset;
-	WORD nOffsetSequenceAttribute;
-	BYTE *cData;
-	DWORD dwAttribType;
-	DWORD dwAttribLen;
+	uint64_t qwOffset;
+	uint16_t nOffsetSequenceAttribute;
+	uint8_t *cData;
+	uint32_t dwAttribType;
+	uint32_t dwAttribLen;
 	bool bAttribResident;
-	BYTE *cDataResident;
-	WORD nAttrSize;
-	u32 dwFileRecordSize;
-	QWORD i;
+	uint8_t *cDataResident;
+	uint16_t nAttrSize;
+	uint32_t dwFileRecordSize;
+	uint64_t i;
 
 	if (!QP_FSWrap::read_sector(part, 0, 32, (char *) bootsect))
 		return QString::null;
@@ -1126,11 +1126,11 @@ QString QP_FSNtfs::_get_label(PedPartition * part)
 		return QString::null;
 	}
 
-	u16 nBytesPerSector = NTFS_GETU16(bootsect + 0xB);
-	u8 cSectorsPerCluster = NTFS_GETU8(bootsect + 0xD);
-	u64 qwTotalSectorsCount = NTFS_GETU64(bootsect + 0x28);
-	u64 qwLCNOfMftDataAttrib = NTFS_GETU64(bootsect + 0x30);
-	s8 cClustersPerMftRecord = NTFS_GETS8(bootsect + 0x40);
+	uint16_t nBytesPerSector = NTFS_GETU16(bootsect + 0xB);
+	uint8_t cSectorsPerCluster = NTFS_GETU8(bootsect + 0xD);
+	uint64_t qwTotalSectorsCount = NTFS_GETU64(bootsect + 0x28);
+	uint64_t qwLCNOfMftDataAttrib = NTFS_GETU64(bootsect + 0x30);
+	int8_t cClustersPerMftRecord = NTFS_GETS8(bootsect + 0x40);
 
 	// check informations validity
 	if (nBytesPerSector % 512 != 0) {
@@ -1138,7 +1138,7 @@ QString QP_FSNtfs::_get_label(PedPartition * part)
 		return QString::null;
 	}
 	// Calculate clusters and misc informations
-	u32 dwClusterSize = (DWORD) nBytesPerSector * cSectorsPerCluster;
+	uint32_t dwClusterSize = (uint32_t) nBytesPerSector * cSectorsPerCluster;
 
 
 	if (cClustersPerMftRecord > 0)
@@ -1148,11 +1148,11 @@ QString QP_FSNtfs::_get_label(PedPartition * part)
 
 	// 1. read $Volume record
 	qwOffset =
-	    ((QWORD) qwLCNOfMftDataAttrib * dwClusterSize) +
-	    ((QWORD) (3 * dwFileRecordSize));
+	    ((uint64_t) qwLCNOfMftDataAttrib * dwClusterSize) +
+	    ((uint64_t) (3 * dwFileRecordSize));
 
-	u32 dwOffsetToRead = (u32) (qwOffset / ((u64) 512));
-	u32 dwSectorCountToRead = (u32) dwFileRecordSize / 512;
+	uint32_t dwOffsetToRead = (uint32_t) (qwOffset / ((uint64_t) 512));
+	uint32_t dwSectorCountToRead = (uint32_t) dwFileRecordSize / 512;
 
 	if (!QP_FSWrap::
 	    read_sector(part, dwOffsetToRead, dwSectorCountToRead,
@@ -1180,7 +1180,7 @@ QString QP_FSNtfs::_get_label(PedPartition * part)
 			nAttrSize = NTFS_GETU16(cData + 0x10);
 			cDataResident = cData + NTFS_GETU16(cData + 0x14);
 
-			for (i = 0; i < (DWORD) (nAttrSize / 2); i++)
+			for (i = 0; i < (uint32_t) (nAttrSize / 2); i++)
 				label[i] = cDataResident[2 * i];
 		}
 		/*if(dwAttribType == 0x70) // "volume_information"
@@ -1190,13 +1190,13 @@ QString QP_FSNtfs::_get_label(PedPartition * part)
 		   {      
 		   nAttrSize = NTFS_GETU16(cData+0x10);
 		   cDataResident = cData+NTFS_GETU16(cData+0x14);
-		   nNtfsVersion = (((BYTE) cDataResident[8]) << 8) | ((BYTE) cDataResident[9]);
+		   nNtfsVersion = (((uint8_t) cDataResident[8]) << 8) | ((uint8_t) cDataResident[9]);
 		   printf("readVolumeLabel(): version is %d.%d\n", cDataResident[8], cDataResident[9]);
 		   }
 		   } */
 
 		cData += dwAttribLen;
-	} while (dwAttribType != (DWORD) - 1);	// attribute list ends with type -1
+	} while (dwAttribType != (uint32_t) - 1);	// attribute list ends with type -1
 
 	return QString(label);
 }

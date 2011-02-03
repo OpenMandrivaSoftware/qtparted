@@ -31,7 +31,7 @@
 #define QP_DLGFORMAT_H
 
 #include "qtparted.h"
-#include "qp_ui_format.ui.h"
+#include "ui_qp_ui_format.h"
 #include "qp_libparted.h"
 
 class QP_dlgFormat : public QDialog, public Ui::QP_UIFormat {

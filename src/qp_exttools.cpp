@@ -22,8 +22,6 @@
 #include <stdio.h>
 
 #include "qp_exttools.h"
-#include "qp_options.h"
-
 
 QP_ListExternalTools::QP_ListExternalTools() {
     /*---prevent from memory leak: when list are cleared destroy exttool object!---*/

@@ -22,8 +22,7 @@
 #include <qapplication.h>
 #include <qmessagebox.h>
 #include "qp_filesystem.h"
-#include "qp_actlist.moc"
-#include "qp_options.h"
+#include "qp_actlist.h"
 #include "qp_debug.h"
 #include "statistics.h"
 
@@ -93,7 +92,7 @@ QP_ActionList::QP_ActionList ( QP_LibParted *libparted ) : _libparted ( libparte
         showDebug ( "%s", "actionlist::actionlist, ped_disk_new ko\n" );
 
         QString label = QString ( tr ( "Critical error during ped_disk_new!" ) );
-        QMessageBox::information ( NULL, PROG_NAME, label );
+        QMessageBox::information ( NULL, "QtParted", label );
 
         return ;
     }
@@ -111,7 +110,7 @@ QP_ActionList::QP_ActionList ( QP_LibParted *libparted ) : _libparted ( libparte
         disk = NULL;
 
         QString label = QString ( tr ( "Critical error during ped_disk_duplicate!" ) );
-        QMessageBox::information ( NULL, PROG_NAME, label );
+        QMessageBox::information ( NULL, "QtParted", label );
 
         return ;
     }

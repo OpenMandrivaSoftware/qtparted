@@ -24,7 +24,6 @@
 #include "qp_filesystem.h"
 #include "qtparted.h"
 #include "qp_fswrap.h"
-#include "qp_options.h"
 
 #include "xpm/part_dos.xpm"
 #include "xpm/part_windows.xpm"

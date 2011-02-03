@@ -32,7 +32,7 @@
 
 #include <QDialog>
 #include "qtparted.h"
-#include "qp_ui_config.ui.h"
+#include "ui_qp_ui_config.h"
 
 class QP_dlgConfig : public QDialog, public Ui::QP_UIConfig {
 	Q_OBJECT

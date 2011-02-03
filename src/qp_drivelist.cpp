@@ -24,11 +24,10 @@
 #include <QMenu>
 #include <sys/param.h>  // MAXPATHLEN
 
-#include "qp_drivelist.moc"
+#include "qp_drivelist.h"
 #include "qp_devlist.h"
 #include "qp_libparted.h"
 #include "qp_common.h"
-#include "qp_options.h"
 #include "xpm/tool_disk.xpm"
 
 QP_DriveList::QP_DriveList(QWidget *parent, QP_Settings *settings)

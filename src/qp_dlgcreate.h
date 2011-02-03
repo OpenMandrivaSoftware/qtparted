@@ -32,7 +32,7 @@
 
 #include <QDialog>
 #include "qtparted.h"
-#include "qp_ui_create.ui.h"
+#include "ui_qp_ui_create.h"
 #include "qp_libparted.h"
 
 class QP_dlgCreate : public QDialog, public Ui_QP_UICreate {

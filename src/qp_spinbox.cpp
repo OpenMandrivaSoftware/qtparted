@@ -22,8 +22,7 @@
 #include <cstdlib>
 #include <cstdio>
 
-#include "qp_spinbox.moc"
-#include "qp_options.h"
+#include "qp_spinbox.h"
 
 QP_SpinBox::QP_SpinBox(QWidget *parent)
 	:QDoubleSpinBox (parent)

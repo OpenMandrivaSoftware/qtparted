@@ -30,7 +30,6 @@
 #include <unistd.h>	 // readlink
 #include <dirent.h>
 #include "qp_devlist.h"
-#include "qp_options.h"
 #include "qp_common.h"
 
 
@@ -164,7 +163,7 @@ void QP_Device::commit() {
 }
 
 /*---this function convert a longname device to a shortname device
- *   the code was bring from partimage software made by François Dupoux---*/
+ *   the code was bring from partimage software made by Fran?ois Dupoux---*/
 int QP_Device::convertDevfsNameToShortName(const char *szDevfs, char *szShort, int nMaxShort) {
 	DIR *fdDir;
 	struct dirent *dire;

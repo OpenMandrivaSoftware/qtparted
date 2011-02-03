@@ -31,9 +31,8 @@
 #include <QWhatsThis>
 #include <QMessageBox>
 #include "qp_common.h"
-#include "qp_window.moc"
+#include "qp_window.h"
 #include "qp_filesystem.h"
-#include "qp_options.h"
 #include "qp_fswrap.h"
 
 #include "xpm/tool_disk.xpm"
@@ -53,7 +52,7 @@
 
 QP_MainWindow::QP_MainWindow ( QP_Settings *qpsettings, QWidget *parent ) : QMainWindow ( parent )
 {
-	setWindowTitle ( QString ( "%1 v%2" ).arg ( PACKAGE ).arg ( VERSION ) );
+	setWindowTitle ( QString ( "QtParted v%1" ).arg ( VERSION ) );
 
 	/*---load the setting from disk---*/
 	settings = qpsettings;
@@ -564,7 +563,7 @@ void QP_MainWindow::slotFormat()
 	if ( diskview->selPartInfo()->isVirtual() )
 	{
 		QString label = QString ( tr ( "This is a virtual partition. You cannot alter it: use undo instead." ) );
-		QMessageBox::information ( this, PROG_NAME, label );
+		QMessageBox::information ( this, "QtParted", label );
 
 		return ;
 	}
@@ -626,7 +625,7 @@ void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
 	if ( partinfo->isVirtual() )
 	{
 		QString label = QString ( tr ( "This is a virtual partition. You cannot alter it: use undo instead." ) );
-		QMessageBox::information ( this, PROG_NAME, label );
+		QMessageBox::information ( this, "QtParted", label );
 
 		return ;
 	}
@@ -637,7 +636,7 @@ void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
 		QString label = QString ( tr ( "An internal error happened during partition scan.\n"
 									   "This means that you cannot resize or move this "
 									   "partition." ) );
-		QMessageBox::information ( this, PROG_NAME, label );
+		QMessageBox::information ( this, "QtParted", label );
 
 		return ;
 	}
@@ -698,7 +697,7 @@ void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
 		if ( !rc )
 		{
 			QString label = QString ( diskview->libparted->message() );
-			QMessageBox::information ( this, PROG_NAME, label );
+			QMessageBox::information ( this, "QtParted", label );
 		}
 
 		/*---refresh diskview widget!---*/
@@ -744,7 +743,7 @@ void QP_MainWindow::slotDelete()
 	if ( diskview->selPartInfo()->isVirtual() )
 	{
 		QString label = QString ( tr ( "This is a virtual partition. You cannot alter it: use undo instead." ) );
-		QMessageBox::information ( this, PROG_NAME, label );
+		QMessageBox::information ( this, "QtParted", label );
 
 		return ;
 	}
@@ -752,7 +751,7 @@ void QP_MainWindow::slotDelete()
 	/*---call the libparted wrapper to remove the selected partition---*/
 	if ( !diskview->libparted->rm ( diskview->selPartInfo()->num ) )
 	{
-		QMessageBox::information ( this, PROG_NAME, diskview->libparted->message() );
+		QMessageBox::information ( this, "QtParted", diskview->libparted->message() );
 		return ;
 	}
 
@@ -817,7 +816,7 @@ void QP_MainWindow::slotProperty()
 			.arg ( diskview->selPartInfo()->mb_t_end() )
 			.arg ( diskview->selPartInfo()->fsspec->name() );
 
-	QMessageBox::information ( this, PROG_NAME, label );
+	QMessageBox::information ( this, "QtParted", label );
 }
 
 void QP_MainWindow::slotWhatsThis()
@@ -835,17 +834,17 @@ void QP_MainWindow::slotAbout()
 					"<p>QTParted are currently maintained by <a href=\"http://www.arklinux.org\">Ark Linux Team</a>. Go to "
 					" <a href=\"%4\">%4</a> for more "
 					"information.</p>" )
-					  .arg ( QMessageBox::tr ( PROG_NAME ) )
+					  .arg ( QMessageBox::tr ( "QtParted" ) )
 					  .arg ( QMessageBox::tr ( VERSION ) )
 					  .arg ( QMessageBox::tr ( "Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br />"
 								   "Copyright (C) 2005-2011 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
 								   "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br />"
 								   "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)" ) )
-					  .arg ( QMessageBox::tr ( HOMEPAGE ) );
+					  .arg ( QMessageBox::tr ( "http://qtparted.sf.net/" ) );
 
 	QMessageBox mb ( this );
 
-	mb.setWindowTitle ( QMessageBox::tr ( "About %1 v%2" ).arg ( PROG_NAME ).arg ( VERSION ) );
+	mb.setWindowTitle ( QMessageBox::tr ( "About %1 v%2" ).arg ( "QtParted" ).arg ( VERSION ) );
 	mb.setText ( content );
 
 	QImage logo ( qtparted_xpm );
@@ -900,7 +899,7 @@ void QP_MainWindow::slotNavProperty()
 void QP_MainWindow::slotNavPartTable()
 {
 	QString label = QString ( tr ( "You're going to make a new partition table. Are you sure?\nAll data will be lost!" ) );
-	QMessageBox mb ( PROG_NAME,
+	QMessageBox mb ( "QtParted",
 					 label,
 					 QMessageBox::Information,
 					 QMessageBox::Yes,
@@ -920,7 +919,7 @@ void QP_MainWindow::slotNavPartTable()
 		else
 		{
 			QString label = QString ( tr ( "It was not possible to make a new partition table." ) );
-			QMessageBox::information ( this, PROG_NAME, label );
+			QMessageBox::information ( this, "QtParted", label );
 		}
 	}
 }
@@ -1064,7 +1063,7 @@ void QP_MainWindow::slotSetActive()
 			.arg ( oldActive )
 			.arg ( newActive );
 
-	QMessageBox mb ( PROG_NAME,
+	QMessageBox mb ( "QtParted",
 					 label,
 					 QMessageBox::Information,
 					 QMessageBox::Yes,
@@ -1102,7 +1101,7 @@ void QP_MainWindow::slotCommit()
 			"Also, make sure that you aren't committing to a busy device...\n"
 			"In other words, PLEASE UMOUNT ALL PARTITIONS before committing changes!" ) );
 
-	QMessageBox mb ( PROG_NAME,
+	QMessageBox mb ( "QtParted",
 					 label,
 					 QMessageBox::Information,
 					 QMessageBox::Yes,

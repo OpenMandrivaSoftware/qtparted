@@ -25,9 +25,8 @@
 #include <QStyleOption>
 #include <QPixmap>
 
-#include "qp_partwidget.moc"
+#include "qp_partwidget.h"
 #include "qp_filesystem.h"
-#include "qp_options.h"
 
 QP_PartWidget::QP_PartWidget(QP_PartInfo *pinfo, QWidget *parent, Qt::WFlags f)
 	:QWidget(parent, f) {

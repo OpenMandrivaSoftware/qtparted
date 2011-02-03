@@ -20,8 +20,7 @@
 #include <qpainter.h>
 
 #include "qp_libparted.h"
-#include "qp_listchart.moc"
-#include "qp_options.h"
+#include "qp_listchart.h"
 
 #define MIN_HDWIDTH		 190
 #define MIN_HDHEIGHT		 70

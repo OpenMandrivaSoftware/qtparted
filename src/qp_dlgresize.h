@@ -33,7 +33,7 @@
 #include <QDialog>
 #include "qtparted.h"
 #include "qp_sizepart.h"
-#include "qp_ui_resize.ui.h"
+#include "ui_qp_ui_resize.h"
 #include "qp_libparted.h"
 
 class QP_dlgResize : public QDialog, public Ui::QP_UIResize {

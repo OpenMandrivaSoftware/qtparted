@@ -20,9 +20,8 @@
 */
 #include <qcombobox.h>
 #include <qlineedit.h>
-#include "qp_dlgconfig.moc"
+#include "qp_dlgconfig.h"
 #include "qp_common.h"
-#include "qp_options.h"
 
 QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),Ui::QP_UIConfig() {
 	setupUi(this);

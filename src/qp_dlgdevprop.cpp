@@ -21,8 +21,7 @@
 
 #include <qlabel.h>
 #include <qstring.h>
-#include "qp_dlgdevprop.moc"
-#include "qp_options.h"
+#include "qp_dlgdevprop.h"
 
 QP_dlgDevProperty::QP_dlgDevProperty(QWidget *parent):QDialog(parent),Ui::QP_UIDeviceProperty() {
 	setupUi(this);

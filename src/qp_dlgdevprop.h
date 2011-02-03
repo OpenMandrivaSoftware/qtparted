@@ -31,7 +31,7 @@
 #define QP_DLGDEVPROP_H
 
 #include <QDialog>
-#include "qp_ui_devprop.ui.h"
+#include "ui_qp_ui_devprop.h"
 
 class QP_dlgDevProperty : public QDialog,public Ui::QP_UIDeviceProperty {
 Q_OBJECT

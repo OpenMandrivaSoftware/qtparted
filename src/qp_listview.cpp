@@ -18,9 +18,8 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include "qp_listview.moc"
+#include "qp_listview.h"
 #include "qp_filesystem.h"
-#include "qp_options.h"
 #include <QResizeEvent>
 #include <config.h>
 
@@ -56,9 +55,7 @@ QP_ListViewItem::QP_ListViewItem ( QTreeWidget *parent,
 	setText ( 5, usedStr );
 	setText ( 6, startStr );
 	setText ( 7, endStr );
-#ifdef LABELS_SUPPORT
 	setText ( 8, label );
-#endif
 }
 
 QP_ListViewItem::QP_ListViewItem ( QTreeWidgetItem *parent,
@@ -87,9 +84,7 @@ QP_ListViewItem::QP_ListViewItem ( QTreeWidgetItem *parent,
 	setText ( 5, usedStr );
 	setText ( 6, startStr );
 	setText ( 7, endStr );
-#ifdef LABELS_SUPPORT
 	setText ( 8, label );
-#endif
 }
 
 /*----------QP_RealListView----------------------------------------------------------*/
@@ -102,10 +97,7 @@ QP_RealListView::QP_RealListView ( QWidget *parent )
 	itemextended = NULL;
 
 	QStringList hlabel;
-	hlabel << tr ( "Number" ) << tr ( "Partition" ) << tr ( "Type" ) << tr ( "Status" ) << tr ( "Size" ) << tr ( "Used Space" ) << tr ( "Start" ) << tr ( "End" );
-#ifdef LABELS_SUPPORT
-	hlabel << tr ( "Label" ); // number 8
-#endif // LABELS_SUPPORT
+	hlabel << tr ( "Number" ) << tr ( "Partition" ) << tr ( "Type" ) << tr ( "Status" ) << tr ( "Size" ) << tr ( "Used Space" ) << tr ( "Start" ) << tr ( "End" ) << tr ( "Label" ); // number 8
 
 	setHeaderLabels ( hlabel );
 
