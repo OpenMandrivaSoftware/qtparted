@@ -248,7 +248,7 @@ void QP_ListChart::draw_extended() {
 	QListIterator <QP_ChartItem*> logiit(logilist);
 
 	while (totwidth < extended->container->width()) {
-		if (!p == NULL)
+		if (!p)
 		{
 			if(logiit.hasNext())
 				p = logiit.next();
