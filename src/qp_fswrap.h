@@ -28,6 +28,7 @@
 #define QP_FSWRAP_H
 
 #include <config.h>
+#include <endian.h>
 #include <stdint.h>
 #include <qstring.h>
 #include <qstringlist.h>
@@ -51,7 +52,7 @@
                            (uint64_t)(((uint64_t)(x) & (uint64_t)0xff00000000000000ULL) >> 56) )) 
 
 // ------------- CPU TO XXX ---------------
-#ifdef ENDIAN_BIG // BIG ENDIAN
+#if __BYTE_ORDER == __BIG_ENDIAN  // BIG ENDIAN
 #  define CpuToLe16(a) (swab16(a))
 #  define CpuToBe16(a) (a)
 #  define CpuToLe32(a) (swab32(a)) 
