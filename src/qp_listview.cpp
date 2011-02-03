@@ -259,7 +259,7 @@ void QP_RealListView::selectionChanged ( QTreeWidgetItem *i )
 void QP_RealListView::rightButtonClicked ( const QPoint &point )
 {
 	/*---emit the sigPopup signal---*/
-	emit sigPopup ( point );
+	emit sigPopup();
 }
 
 /*-----------------------------------------------------------------------------------*/
@@ -287,8 +287,8 @@ QP_ListView::QP_ListView ( QWidget *parent, Qt::WFlags f )
 	/*---connect sigPopup and sigSelectPart with the signals of the RealListView---*/
 	connect ( listview, SIGNAL ( sigSelectPart ( QP_PartInfo * ) ),
 			  this, SIGNAL ( sigSelectPart ( QP_PartInfo * ) ) );
-	connect ( listview, SIGNAL ( sigPopup ( QPoint ) ),
-			  this, SIGNAL ( sigPopup ( QPoint ) ) );
+	connect ( listview, SIGNAL ( sigPopup() ),
+			  this, SIGNAL ( sigPopup() ) );
 }
 
 QP_ListView::~QP_ListView()

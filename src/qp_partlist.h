@@ -58,8 +58,8 @@ protected:
 
 signals:
 	void sigSelectPart(QP_PartInfo *);	/*---emitted when you change the selection  ---*/
-	void sigDevicePopup(QPoint);		/*---emitted when you want to popup (device)---*/
-	void sigPopup(QPoint);			/*---emitted when you want to pop (partition)--*/
+	void sigDevicePopup();			/*---emitted when you want to popup (device)---*/
+	void sigPopup();			/*---emitted when you want to pop (partition)--*/
 };
 
 #endif

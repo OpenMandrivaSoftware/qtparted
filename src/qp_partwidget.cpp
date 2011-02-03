@@ -51,7 +51,7 @@ bool QP_PartWidget::Selected() {
 void QP_PartWidget::mousePressEvent(QMouseEvent *e) {
 	emit sigSelectPart(partinfo);
 
-	if (e->button() == Qt::RightButton) emit sigPopup(mapToGlobal(e->pos()));
+	if (e->button() == Qt::RightButton) emit sigPopup();
 	
 	setFocus(); //If the widget that has focus it is draw with a border around
 }

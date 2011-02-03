@@ -66,8 +66,8 @@ private:
 
 signals:
 	void sigSelectPart(QP_PartInfo *);			 /*---emitted when you change the selection	 ---*/
-	void sigPopup(QPoint);						 /*---emitted when you want to popup a menu	 ---*/
-	void sigDevicePopup(QPoint);				   /*---emitted when you want to pop deivce menu  ---*/
+	void sigPopup();						 /*---emitted when you want to popup a menu	 ---*/
+	void sigDevicePopup();					   /*---emitted when you want to pop deivce menu  ---*/
 	void sigTimer(int, QString, QString);		  /*---emitted to update a progress bar		  ---*/
 	void sigOperations(QString, QString, int, int);/*---emitted when doing commit				 ---*/
 	void sigDiskChanged();						 /*---emitted to state of the disk changed	  ---*/

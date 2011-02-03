@@ -125,10 +125,10 @@ QP_MainWindow::QP_MainWindow ( QP_Settings *qpsettings, QWidget *parent ) : QMai
 	connect ( diskview, SIGNAL ( sigSelectPart ( QP_PartInfo * ) ),
 			  this, SLOT ( slotSelectPart ( QP_PartInfo * ) ) );
 	/*---emit when the user want to popup the context menu---*/
-	connect ( diskview, SIGNAL ( sigPopup ( QPoint ) ),
-			  this, SLOT ( slotPopup ( ) ) );
-	connect ( diskview, SIGNAL ( sigDevicePopup ( QPoint ) ),
-			  this, SLOT ( slotDevicePopup ( ) ) );
+	connect ( diskview, SIGNAL ( sigPopup() ),
+			  this, SLOT ( slotPopup() ) );
+	connect ( diskview, SIGNAL ( sigDevicePopup() ),
+			  this, SLOT ( slotDevicePopup() ) );
 	/*---connect the sigTimer used for dlgprogress during "update progressbar"---*/
 	connect(diskview, SIGNAL(sigTimer(int, QString, QString)),
 		dlgprogress, SLOT(slotTimer(int, QString, QString)));
@@ -415,7 +415,7 @@ void QP_MainWindow::setupStatusBar()
 	boldfont.setWeight ( QFont::Bold );
 	lbl2->setFont ( boldfont );
 	lbl2->setMinimumHeight ( lbl2->sizeHint().height() );
-	lbl2->setText ( "(C) 2002-2003 by Zanac / (C) 2005-2010 Ark Linux" );
+	lbl2->setText ( "(C) 2002-2003 by Zanac / (C) 2005-2011 Ark Linux" );
 	lbl2->setToolTip ( "Message area" );
 	hboxlayout->addWidget ( lbl2 );
 
@@ -838,7 +838,7 @@ void QP_MainWindow::slotAbout()
 					  .arg ( QMessageBox::tr ( PROG_NAME ) )
 					  .arg ( QMessageBox::tr ( VERSION ) )
 					  .arg ( QMessageBox::tr ( "Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br />"
-								   "Copyright (C) 2005-2010 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
+								   "Copyright (C) 2005-2011 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
 								   "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br />"
 								   "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)" ) )
 					  .arg ( QMessageBox::tr ( HOMEPAGE ) );

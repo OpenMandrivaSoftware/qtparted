@@ -34,9 +34,8 @@
 
 /*-----------------------------------------------------------------------------------*/
 /*---the qpfslist is used for select a color for a filesystem                     ---*/
-/*---very important: leave free and unknow to the last lines!                     ---*/
+/*---very important: leave free and unknown to the last lines!                     ---*/
 /*---                                                                             ---*/
-#define MAXFS 11
 
 class QP_FSType {
 public:
@@ -52,19 +51,24 @@ public:
    - 0 mean "unknown/unlimited"
 */
 
-static QP_FSType qpfslist[MAXFS] = {
+static const QP_FSType qpfslist[] = {
     {"fat16", Qt::green, &part_dos_xpm, 10*MEGABYTE_SECTORS, 2048*MEGABYTE_SECTORS}, // ok
     {"fat32", Qt::darkGreen, &part_windows_xpm, 512*MEGABYTE_SECTORS, 0},
     {"ntfs", Qt::red, &part_windows_xpm, 2*MEGABYTE_SECTORS, 0}, // TODO: check 2MB are enough
     {"linux-swap",  Qt::blue, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
+    {"linux-swap(v0)",  Qt::blue, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
+    {"linux-swap(v1)",  Qt::blue, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
     {"ext2", Qt::magenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
     {"ext3", Qt::darkMagenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
+    {"ext4", Qt::darkMagenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
+    {"btrfs", Qt::darkMagenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
     {"reiserfs", QColor(0, 100, 255), &part_linux_xpm, 34*MEGABYTE_SECTORS, 0}, // max is "17,6 TeraBytes"
     {"jfs", Qt::darkYellow, &part_linux_xpm, 16*MEGABYTE_SECTORS, 0}, // ok
     {"xfs", QColor(0, 255, 100), &part_linux_xpm, 5*MEGABYTE_SECTORS, 0}, // ok
     {"free", Qt::gray, &part_free_xpm, 0, 0},
-    {"unknow", Qt::white, &part_free_xpm, 0, 0}
+    {"unknown", Qt::white, &part_free_xpm, 0, 0}
 };
+#define MAXFS (sizeof(qpfslist)/sizeof(QP_FSType))
 /*-----------------------------------------------------------------------------------*/
 
 
