@@ -1,6 +1,0 @@
-all:
-	@libtoolize --copy --force
-	@autoheader
-	@aclocal
-	@automake -ac
-	@autoconf

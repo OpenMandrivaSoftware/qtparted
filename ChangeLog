@@ -1,8 +1,11 @@
 ChangeLog for QtParted:
 -----------------------
-* 0.4.x (not yet released)
+* 0.5.0
+  - Switch to Qt 4.x
+
+* 0.4.x (never released, if you really need it grab it from SVN)
   - More code cleanups
-  - Support parted 1.7.x
+  - Support parted >= 1.7.x
 
 * 0.4.5 (2005-08-12)
   - Fix up "&" signs being displayed in the menus w/ Qt 3.3.4
@@ -12,7 +15,7 @@ ChangeLog for QtParted:
 
 * 0.4.4 (2004-04-25)
   - Added hidden flags for FAT/NTFS filesystem
-  - Added support for read label (François Dupoux)
+  - Added support for read label (Fran?ois Dupoux)
   - Added Catalan translation (Dani Hernandez)
 
 * 0.4.3 (2004-03-13)
