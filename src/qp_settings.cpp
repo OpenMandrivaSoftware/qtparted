@@ -35,6 +35,7 @@ static QString findApp(QString const &name) {
 		if(QFile::exists(guess))
 			return guess;
 	}
+	return QString::null;
 }
 
 QP_Settings::QP_Settings():settings(QSettings::SystemScope, "QtParted", "QtParted") {
