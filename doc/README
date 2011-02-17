@@ -1,11 +1,11 @@
 QTParted
 ---------
 Homepage:...http://qtparted.sourceforge.net/
-Date:.......23/08/2003
+Date:.......23/08/2003  Updated..... 17/02/2011
 
-Author:
-  Vanni Brutto
-  zanac4ever@virgilio.it
+Author:                        Updated:
+  Vanni Brutto                 Bernhard Rosenkraenzer
+  zanac4ever@virgilio.it       bero@arklinux.ch
 
 
   For installation or compiling instructions, see the INSTALL file.
@@ -28,12 +28,12 @@ Description
   Of course you use this software AT YOUR OWN RISK!
 
   Plans for future version
-   - filesystem conversion, for example fat16->ntfs, ext2->reiserfs
-   - reiserfs4
-   - copy partition (not so trivial) :(
+   - btrfs support
    - badblocks check
    - Add jfs resize support
    - Code clean up of the SpinBox widget
+   - Get rid of Q3 compat class usage
+   - copy partition (not so trivial) :(
    - Bugfixes :-)
 
 
@@ -64,16 +64,10 @@ How you can help
   -----------
   Patches are welcome. Get to work!
 
-  Packaging
-  ---------
-  Want to make an RPM or something?
-  Needed also a mantainer of DEB package (i'm very lame in these things :))
-
   Financial
   ---------
-  You can send a paypal gift if you'd like, to zanac4ever(-at-)virgilio.it
+  You can send a paypal gift if you'd like, to bero(-at-)arklinux.org
 
 
 Have fun,
--Vanni
-
+-Vanni and Bero

@@ -1,11 +1,11 @@
 Installation
 ------------
 
-Since you're looking at a file in the source package, we assume you want to compile
-from sources -- if you just want to use qtparted, your OS may have a binary ready to
-go. (e.g. on Ark Linux, install the qtparted-data package and the qtparted package if
-you wish to use qtparted on X11, or the qtparted-nox package if you wish to use
-qtparted on a framebuffer console)
+Since you're looking at a file in the source package, we assume you want to
+compile from sources -- if you just want to use qtparted, your OS may have
+a binary ready to go. (e.g. on Ark Linux, install the qtparted-data package
+and the qtparted package if you wish to use qtparted on X11, or the
+qtparted-nox package if you wish to use qtparted on a framebuffer console)
 
 
 Compiling
@@ -14,15 +14,18 @@ Compiling
 Requirements:
   - Qt 4.5.0
   - libparted >= 1.6.6
-  - Header files for Qt, libparted, and the things they depend on
+  - Header files for Qt 4.x, libparted, and the things they depend on
   - A fairly modern C++ compiler (gcc 4.5.2 is tested)
   - cmake
 
-If you're on Ark Linux, install the following packages:
+If you're e.g. on Ark Linux, install the following packages to fill the needs:
   qt-core-devel
   qt-gui-devel
   qt-compat-devel
   parted-devel
+  gcc-c++
+  libstdc++-devel
+  cmake
 
 To build QTParted, do ($ indicates commands run as user, # commands run as root):
 

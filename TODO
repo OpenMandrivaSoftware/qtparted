@@ -1,34 +1,3 @@
-Note that this TODO is not a real TODO :)
-
-I just write in this file some note (in italian!) of thing that i must solve :)
-
-Condider this file just like a virtual postit for me! In the future i'll remove
-this notes (and buy some true postit notes ;)) and i'll use this file for its true
-purpose!
-
--------------------------------------------------------------------------------
-* t_start = inizio vero, ossia tenendo conto dello spazio libero
-  start = inizio vero e proprio della partizione
-  (forse è meglio trovare un nome migliore... t_start e start fa schifo!)
-  Nota: nel resize dialog ho usato al posto di t_start e t_end GrowStart and
-  GrowEnd. Sinceramente mi sembra migliore questa accoppiata. Resta quindi da
-  aggiornare tutto il restante codice!
-
-* Migliorare la gestione dei wrapper, vedere per esempio come funziona il resize
-  di una partizione jfs, quindi analizzare la scrittura di un wrapper per la
-  creazione di filesystem!
-
-* cambiare implementazione di extended->container in QP_ListChart.
-  E' veramente orribile che venga usato il widget container della classe
-  extended all'interno della classe ListChart!
-
-* in qp_listview.cpp (reallistview) controllare a cosa serve "dos-style".
-  Probabilmente ho copiato quelle 3/4 righe di codice da parted... le ho
-  commentate... ed ora non ricordo più a cosa servono! :) :)
-
-* riscrivere un po' meglio qt_libparted :(
-  Molto codice di questa classe è stato preso da parted.c, bisognerebbe
-  fare un confronto e vedere cosa è stato preso in modo corretto e cosa no!
-  Poi andrebbe aggiunto pure qualche commento ovviamente! :)
-
-* commentare meglio qtparted
+- Add btrfs support
+- Use mkfs.* tools instead of parted for filesystem creation
+- Remove remaining usage of Q3* compat classes

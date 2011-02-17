@@ -3,35 +3,16 @@ FAQ for DEVELOPERS
 
 [01]. How to compile sources ?
 ------------------------------
-You first have to check QTPARTED is well defined
-and points to the Qt directory. (x11 or embedded version).
-
-- If you use "./configure" then QtParted will be linked 
-  against Qt-x11. 
-- If you use "./configure --enable-embedded" then QtParted 
-  will be linked against Qt-embedded. (FrameBuffer without XFree86).
-
-Then, you have to check you have the required file systems tools:
-- libntfs for NTFS
-- progsreiserfs for ReiserFS
-- xfsprogs for XFS
-- jfsutils for JFS
-- e2fsprogs for Ext2fs and Ext3fs
-If you don't have, you can disable their support with an option
-of the configure script (look at ./configure --help).
-
-*) For developers, using the CVS sources:
-   make -f Makefile.dist
-   ./configure && make && make install
-*) For final users, using the tarball sources:
-   ./configure && make && make install
+*) Run cmake . && make && make install
+   Or, if you wish to customize settings,
+   Run ccmake . && make && make install
 
 [02]. How to make a new release ?
 ---------------------------------
 1) Update several text files, located at the root of the sources:
    - ChangeLog: update the changes of the new release
    - qtparted.lsm: just change the version
-   - configure.ac: just change the version
+   - CMakeLists.txt: just change the version
 2) Get the last CVS version:
    cvs co <cvs-module-name>
    Don't keep your current CVS local version
