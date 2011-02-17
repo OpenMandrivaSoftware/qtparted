@@ -21,7 +21,6 @@
 #include "qp_listview.h"
 #include "qp_filesystem.h"
 #include <QResizeEvent>
-#include <config.h>
 
 #define MIN_HDWIDTH 190
 
