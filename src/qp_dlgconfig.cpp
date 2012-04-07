@@ -42,51 +42,42 @@ QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),_layout(this) {
 	_lblExtTools = new QLabel(tr("&External tools"), this);
 	_layout.addWidget(_lblExtTools);
 
-	_cmbExtTools = new QComboBox(this);
-	_layout.addWidget(_cmbExtTools);
-	_lblExtTools->setBuddy(_cmbExtTools);
+	_extTools = new QTableWidget(lstExternalTools->count(), 3, this);
+	_layout.addWidget(_extTools);
+	_lblExtTools->setBuddy(_extTools);
 
-	_lblPath = new QLabel("&Full executable path", this);
-	_layout.addWidget(_lblPath);
-
-	_txtPath = new QLineEdit(this);
-	_lblPath->setBuddy(_txtPath);
-	_layout.addWidget(_txtPath);
+	/*---clear combo box used for external tools---*/
+	int row=0;
+	for(QP_ListExternalTools::ConstIterator it = lstExternalTools->begin(); it != lstExternalTools->end(); ++it) {
+		QTableWidgetItem *w = new QTableWidgetItem(it.value()->name());
+		w->setFlags(0); // Get rid of Qt::ItemIsEditable
+		_extTools->setItem(row, 0, w);
+		_extTools->setItem(row, 1, new QTableWidgetItem(it.value()->path()));
+		w = new QTableWidgetItem(it.value()->description());
+		w->setFlags(Qt::NoItemFlags); // Get rid of Qt::ItemIsEditable
+		_extTools->setItem(row, 2, w);
+		row++;
+	}
 
 	_buttonLayout = new QHBoxLayout();
 	_btnOk = new QPushButton(tr("&OK"), this);
 	_buttonLayout->addWidget(_btnOk);
-	connect(_btnOk, SIGNAL(clicked()), this, SLOT(accept()));
+	connect(_btnOk, SIGNAL(clicked()), this, SLOT(ok()));
 
 	_btnCancel = new QPushButton(tr("&Cancel"), this);
 	_buttonLayout->addWidget(_btnCancel);
 	connect(_btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
 
 	_layout.addLayout(_buttonLayout);
-	
-	/*---clear combo box used for external tools---*/
-	_cmbExtTools->clear();
-	for(QP_ListExternalTools::ConstIterator it = lstExternalTools->begin(); it != lstExternalTools->end(); ++it)
-		_cmbExtTools->addItem(it.value()->name());
-
-	/*---connect the combo type slot---*/
-	connect(_cmbExtTools, SIGNAL(activated(int)),
-			this, SLOT(slotToolChanged(int)));
-
-	/*---connect the path text changed slot---*/
-	connect(_txtPath, SIGNAL(textChanged(const QString &)),
-			this, SLOT(slotPathChanged(const QString &)));
 }
 
 QP_dlgConfig::~QP_dlgConfig() {
 }
 
-void QP_dlgConfig::init_dialog() {
-	slotToolChanged(0);
-}
-
-int QP_dlgConfig::show_dialog() {
-	return exec();
+void QP_dlgConfig::ok() {
+	for(int i=0; i<_extTools->rowCount(); i++)
+		lstExternalTools->setPath(_extTools->item(i, 0)->text(), _extTools->item(i, 1)->text());
+	accept();
 }
 
 int QP_dlgConfig::layout() {
@@ -95,16 +86,4 @@ int QP_dlgConfig::layout() {
 
 void QP_dlgConfig::setLayout(int layout) {
 	_cmbLayout->setCurrentIndex(layout);
-}
-
-void QP_dlgConfig::slotToolChanged(int) {
-	QString path = lstExternalTools->getPath(_cmbExtTools->currentText());
-	_txtPath->setText(path);
-
-	QString tooltip = lstExternalTools->getDescription(_cmbExtTools->currentText());
-	_txtPath->setWhatsThis(tooltip);
-}
-
-void QP_dlgConfig::slotPathChanged(const QString &path) {
-	lstExternalTools->setPath(_cmbExtTools->currentText(), path);
 }

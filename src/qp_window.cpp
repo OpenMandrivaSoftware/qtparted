@@ -761,16 +761,13 @@ void QP_MainWindow::slotDelete()
 
 void QP_MainWindow::slotConfig()
 {
-	/*---init of the configuration dialog---*/
-	dlgconfig->init_dialog();
-
 	/*---get the layout---*/
 	int layout = settings->layout();
 
 	/*---set the current layout---*/
 	dlgconfig->setLayout ( layout );
 
-	int code = dlgconfig->show_dialog();
+	int code = dlgconfig->exec();
 
 	if ( code == QDialog::Accepted )
 	{

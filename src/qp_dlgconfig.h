@@ -36,6 +36,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QPushButton>
+#include <QTableWidget>
 #include <QHBoxLayout>
 #include "qtparted.h"
 
@@ -44,23 +45,18 @@ class QP_dlgConfig : public QDialog {
 public:
 	QP_dlgConfig(QWidget *parent=0);
 	~QP_dlgConfig();
-	void init_dialog();	/*---init the dialog box   ---*/
-	int show_dialog();	 /*---just show the dialog. ---*/
 	int layout();		  /*---get the layout		---*/
 	void setLayout(int);   /*---set the layout		---*/
 
 protected slots:
-	void slotToolChanged(int);			 /*---the user changed the tool in combobox  ---*/
-	void slotPathChanged(const QString &); /*---the user changed the path			  ---*/
+	void ok();
 
 protected:
 	QVBoxLayout	_layout;
 	QLabel *	_lblLayout;
 	QComboBox *	_cmbLayout;
 	QLabel *	_lblExtTools;
-	QComboBox *	_cmbExtTools;
-	QLabel *	_lblPath;
-	QLineEdit *	_txtPath;
+	QTableWidget *	_extTools;
 	QHBoxLayout *	_buttonLayout;
 	QPushButton *	_btnOk;
 	QPushButton *	_btnCancel;
