@@ -191,14 +191,8 @@ bool QP_FSWrap::qpUMount(QString device)
 
 
 /*---NTFS WRAPPER-----------------------------------------------------------------*/
-QP_FSNtfs::QP_FSNtfs()
+QP_FSNtfs::QP_FSNtfs():QP_FSWrap()
 {
-	wrap_resize = false;
-	wrap_move = false;
-	wrap_copy = false;
-	wrap_create = false;
-	wrap_min_size = false;
-
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkntfs");
 	fs_open(cmdline);
@@ -558,7 +552,7 @@ QString QP_FSNtfs::fsname()
 }*/
 
 /*---SWAP WRAPPER----------------------------------------------------------------*/
-QP_FSswap::QP_FSswap()
+QP_FSswap::QP_FSswap():QP_FSWrap()
 {
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkswap");
@@ -603,13 +597,9 @@ bool QP_FSswap::mkpartfs(QString dev, QString label) {
 }
 
 /*---JFS WRAPPER-----------------------------------------------------------------*/
-QP_FSJfs::QP_FSJfs()
+QP_FSJfs::QP_FSJfs():QP_FSWrap()
 {
 	wrap_resize = RS_ENLARGE;
-	wrap_move = false;
-	wrap_copy = false;
-	wrap_create = false;
-	wrap_min_size = false;
 
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkfs.jfs");
@@ -619,7 +609,6 @@ QP_FSJfs::QP_FSJfs()
 	while ((cline = fs_getline()))
 		wrap_create = true;
 	fs_close();
-
 }
 
 bool QP_FSJfs::resize(QP_LibParted * _libparted, bool write,
@@ -792,14 +781,8 @@ QString QP_FSJfs::_get_label(PedPartition * part)
 }
 
 /*---EXT2 WRAPPER----------------------------------------------------------------*/
-QP_FSExt2::QP_FSExt2():_fsType("ext2"),_extraArgs(QString::null)
+QP_FSExt2::QP_FSExt2():QP_FSWrap(),_fsType("ext2"),_extraArgs(QString::null)
 {
-	wrap_min_size = false;
-	wrap_resize = false;
-	wrap_move = false;
-	wrap_copy = false;
-	wrap_create = false;
-
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkfs." + _fsType);
 	fs_open(cmdline);
@@ -923,14 +906,8 @@ QP_FSExt4::QP_FSExt4():QP_FSExt3()
 }
 
 /*---BTRFS WRAPPER----------------------------------------------------------------*/
-QP_FSBtrFS::QP_FSBtrFS()
+QP_FSBtrFS::QP_FSBtrFS():QP_FSWrap()
 {
-	wrap_min_size = false;
-	wrap_resize = false;
-	wrap_move = false;
-	wrap_copy = false;
-	wrap_create = false;
-
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkfs.btrfs");
 	fs_open(cmdline);
@@ -1030,14 +1007,8 @@ QString QP_FSBtrFS::_get_label(PedPartition * p)
 }
 
 /*---XFS WRAPPER-----------------------------------------------------------------*/
-QP_FSXfs::QP_FSXfs()
+QP_FSXfs::QP_FSXfs():QP_FSWrap()
 {
-	wrap_min_size = false;
-	wrap_resize = false;
-	wrap_move = false;
-	wrap_copy = false;
-	wrap_create = false;
-
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkfs.xfs");
 	fs_open(cmdline);
