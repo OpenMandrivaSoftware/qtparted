@@ -481,8 +481,12 @@ bool QP_ActionList::get_partfilesystem_info ( PedPartition *part, QP_PartInfo *p
         return true;
     }
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     /*---is the filesystem supported by parted?---*/
     PedFileSystem *fs = ped_file_system_open ( &part->geom );
+#else
+    void *fs = 0;
+#endif
 
     if ( !fs )
     {
@@ -502,6 +506,7 @@ bool QP_ActionList::get_partfilesystem_info ( PedPartition *part, QP_PartInfo *p
     }
 
     /*---get the minimum filesystem size---*/
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     PedConstraint *resize_constraint = ped_file_system_get_resize_constraint ( fs );
 
     if ( resize_constraint )
@@ -511,6 +516,7 @@ bool QP_ActionList::get_partfilesystem_info ( PedPartition *part, QP_PartInfo *p
     }
 
     ped_file_system_close ( fs );
+#endif
 
     return true;
 }

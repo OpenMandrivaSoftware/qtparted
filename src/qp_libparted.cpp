@@ -706,6 +706,7 @@ void QP_LibParted::get_filesystem ( QP_FileSystem *filesystem )
 {
     showDebug ( "%s", "libparted::get_filesystem\n" );
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     /*---scan all filesystem supported by parted---*/
     PedFileSystemType* walk = NULL;
 
@@ -721,6 +722,19 @@ void QP_LibParted::get_filesystem ( QP_FileSystem *filesystem )
                                     walk->ops->copy );
 
     }
+#else
+    QStringList filesystems = QStringList() << "ext2" << "ext3" << "ext4" << "btrfs" << "jfs" << "xfs" << "reiserfs";
+    foreach(QString fs, filesystems) {
+        QP_FSWrap *fsw = QP_FSWrap::fswrap(fs);
+	if(fsw) {
+            filesystem->addFileSystem(fs,
+                                      fsw->wrap_create,
+				      fsw->wrap_resize,
+				      fsw->wrap_move,
+				      fsw->wrap_copy);
+        }
+    }
+#endif
 
     /*---loop into fswraplist, and add it to sigTimer ('cause wrapper handle by itself)---*/
     QP_FSWrap *p;
@@ -1060,6 +1074,7 @@ int QP_LibParted::mkfs ( QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QStri
             goto error;
         }
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
         fs = ped_file_system_create ( &part->geom, fs_type, timer );
 
         if ( !fs )
@@ -1069,6 +1084,9 @@ int QP_LibParted::mkfs ( QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QStri
         }
 
         ped_file_system_close ( fs );
+#else
+	// We rely on the wrapper being there --> next if block
+#endif
 
         if ( disk_commit ( actlist->disk() ) == 0 )
         {
@@ -1084,11 +1102,13 @@ int QP_LibParted::mkfs ( QP_PartInfo *partinfo, QP_FileSystemSpec *fsspec, QStri
         showDebug ( "%s", "libparted::mkfs, (wrapper and want to commit)\n" );
         /*---Destroys all file system signatures---*/
 
+#if 0
         if ( !ped_file_system_clobber ( &part->geom ) )
         {
             showDebug ( "%s", "libparted::mkfs, ped_file_system_clobber ko\n" );
             goto error;
         }
+#endif
 
         bool rc = fsspec->fswrap()->mkpartfs ( partinfo->partname(), label );
 
@@ -1235,11 +1255,13 @@ int QP_LibParted::mkpart ( QTParted::partType type, PedSector start, PedSector e
     if ( _write )
     {
         /*---Destroys all file system signatures---*/
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
         if ( !ped_file_system_clobber ( &part->geom ) )
         {
             showDebug ( "%s", "libparted::mkpart, ped_file_system_clobber ko\n" );
             goto error;
         }
+#endif
 
         if ( disk_commit ( actlist->disk() ) == 0 )
         {
@@ -1365,7 +1387,11 @@ int QP_LibParted::mkpartfs ( QTParted::partType type,
         goto error;
     }
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     constraint = ped_file_system_get_create_constraint ( fs_type, dev );
+#else
+    constraint = ped_constraint_any ( dev );
+#endif
 
     part = ped_partition_new ( actlist->disk(), part_type, fs_type, ( int ) start, ( int ) end );
 
@@ -1398,6 +1424,7 @@ int QP_LibParted::mkpartfs ( QTParted::partType type,
 
     if ( _write )
     {
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
         showDebug ( "%s", "libparted::mkpartfs, want to commit\n" );
         fs = ped_file_system_create ( &part->geom, fs_type, timer );
 
@@ -1408,6 +1435,9 @@ int QP_LibParted::mkpartfs ( QTParted::partType type,
         }
 
         ped_file_system_close ( fs );
+#else
+	showDebug ( "%s", "Tried to create filesystem without wrapper. This shouldn't happen.\n" );
+#endif
     }
     else
     {
@@ -1568,8 +1598,10 @@ bool QP_LibParted::move ( QP_PartInfo *partinfo, PedSector start, PedSector end 
     PedPartition *part;
     PedGeometry old_geom;
     PedGeometry new_geom;
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     PedFileSystem *fs;
     PedFileSystem *fs_copy;
+#endif
     PedConstraint *constraint;
 
     /*---libparted doesn't implement move of extended partition---*/
@@ -1607,6 +1639,7 @@ bool QP_LibParted::move ( QP_PartInfo *partinfo, PedSector start, PedSector end 
 
     old_geom = part->geom;
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     /* open fs, and get copy constraint */
     fs = ped_file_system_open ( &old_geom );
 
@@ -1618,6 +1651,9 @@ bool QP_LibParted::move ( QP_PartInfo *partinfo, PedSector start, PedSector end 
 
 
     constraint = ped_file_system_get_copy_constraint ( fs, dev );
+#else
+    constraint = ped_constraint_any ( dev );
+#endif
 
     /* set / test on "disk" */
 
@@ -1657,6 +1693,7 @@ bool QP_LibParted::move ( QP_PartInfo *partinfo, PedSector start, PedSector end 
     /* do the move */
     if ( _write )
     {
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
         showDebug ( "%s", "libparted::move, want to commit\n" );
         fs_copy = ped_file_system_copy ( fs, &part->geom, timer );
 
@@ -1667,9 +1704,14 @@ bool QP_LibParted::move ( QP_PartInfo *partinfo, PedSector start, PedSector end 
         }
 
         ped_file_system_close ( fs_copy );
+#else
+	showDebug ( "%s", "Move wrapper not used, this shouldn't happen\n" );
+#endif
     }
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     ped_file_system_close ( fs );
+#endif
 
     if ( _write )
     {
@@ -1698,7 +1740,9 @@ error_destroy_constraint:
     ped_constraint_destroy ( constraint );
 
 error_close_fs:
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     ped_file_system_close ( fs );
+#endif
 
 error:
     return false;
@@ -1710,7 +1754,9 @@ bool QP_LibParted::_test_move ( QP_PartInfo *partinfo, PedSector start, PedSecto
     PedPartition *part;
     PedGeometry old_geom;
     PedGeometry new_geom;
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     PedFileSystem *fs;
+#endif
     //PedFileSystem *fs_copy;
     PedConstraint *constraint;
     PedDisk *disk;
@@ -1743,6 +1789,7 @@ bool QP_LibParted::_test_move ( QP_PartInfo *partinfo, PedSector start, PedSecto
 
     old_geom = part->geom;
 
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     /* open fs, and get copy constraint */
     fs = ped_file_system_open ( &old_geom );
 
@@ -1754,6 +1801,9 @@ bool QP_LibParted::_test_move ( QP_PartInfo *partinfo, PedSector start, PedSecto
 
 
     constraint = ped_file_system_get_copy_constraint ( fs, dev );
+#else
+    constraint = ped_constraint_any ( dev );
+#endif
 
     /* set / test on "disk" */
 
@@ -1790,7 +1840,9 @@ error_destroy_constraint:
     ped_constraint_destroy ( constraint );
 
 error_close_fs:
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
     ped_file_system_close ( fs );
+#endif
 
 error:
     ped_disk_destroy ( disk );
@@ -1878,6 +1930,7 @@ bool QP_LibParted::resize ( QP_PartInfo *partinfo, PedSector start, PedSector en
     }
     else
     {
+#ifdef USE_PARTED2_FS_SUPPORT // Filesystem support was removed from parted 3.x
         showDebug ( "%s", "libparted::resize, not extended\n" );
         /*---n.b. the filesystem will be resized only during commit!---*/
         fs = ped_file_system_open ( &part->geom );
@@ -1924,6 +1977,9 @@ bool QP_LibParted::resize ( QP_PartInfo *partinfo, PedSector start, PedSector en
 
         /*---close the filesystem---*/
         ped_file_system_close ( fs );
+#else
+	showDebug ( "%s", "Tried to resize without wrapper, this shouldn't happen\n" );
+#endif
     }
 
     if ( _write )
