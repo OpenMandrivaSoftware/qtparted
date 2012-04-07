@@ -209,6 +209,13 @@ QP_FileSystemSpec *QP_FileSystem::nameToFSSpec(QString name) {
         if (p->name().compare(name) == 0)
             return p;
     }
+    // Parted has some aliases for swap:
+    // linux-swap
+    // linux-swap(v0)
+    // linux-swap(v1)
+    // ...
+    if(name.contains("swap") && name!="swap")
+	    return nameToFSSpec("swap");
     return unknown();
 }
 
