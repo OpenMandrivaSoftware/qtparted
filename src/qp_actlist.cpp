@@ -200,7 +200,7 @@ void QP_ActionList::update_listpartitions()
             partinfo->min_size = found->min_size;
             partinfo->_label = found->_label;
             partinfo->_free = found->_free;
-            partinfo->_unknow = found->_unknow;
+            partinfo->_unknown = found->_unknown;
             partinfo->_libparted = found->_libparted;
             partinfo->_active = found->_active;
             partinfo->_canBeActive = found->_canBeActive;
@@ -219,7 +219,7 @@ void QP_ActionList::update_listpartitions()
             partinfo->min_size = -1;
             partinfo->_label = QString::null;
             partinfo->_free = _libparted->filesystem->free();
-            partinfo->_unknow = _libparted->filesystem->unknow();
+            partinfo->_unknown = _libparted->filesystem->unknown();
             partinfo->_libparted = _libparted;
             partinfo->_active = false;
             partinfo->_canBeActive = false;
@@ -342,7 +342,7 @@ void QP_ActionList::scan_partitions()
 
         partinfo->_free = _libparted->filesystem->free();
 
-        partinfo->_unknow = _libparted->filesystem->unknow();
+        partinfo->_unknown = _libparted->filesystem->unknown();
 
         partinfo->_libparted = _libparted;
 

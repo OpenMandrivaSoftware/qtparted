@@ -142,9 +142,9 @@ bool QP_PartInfo::isFree()
     return ( fsspec == _free );
 }
 
-bool QP_PartInfo::isUnknow()
+bool QP_PartInfo::isUnknown()
 {
-    return ( fsspec == _unknow );
+    return ( fsspec == _unknown );
 }
 
 bool QP_PartInfo::isActive()
@@ -546,13 +546,13 @@ void QP_LibParted::scan_partitions()
         partinfo->min_size = -1;
         partinfo->_label = "table";
         partinfo->_free = filesystem->free();
-        partinfo->_unknow = filesystem->unknow();
+        partinfo->_unknown = filesystem->unknown();
         partinfo->_libparted = this;
         partinfo->_active = false;
         partinfo->_canBeActive = false;
         partinfo->_canBeHidden = false;
         partinfo->_virtual = true;
-        partinfo->fsspec = filesystem->unknow();
+        partinfo->fsspec = filesystem->unknown();
         partinfo->type = QTParted::primary;
         partinfo->t_start = -1;
         partinfo->t_end = -1;

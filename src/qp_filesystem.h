@@ -91,14 +91,14 @@ public:
             bool resize, bool move, bool copy);
     QP_FileSystemSpec *nameToFSSpec(QString name); /*---name2 QP_FileSystemSpec   ---*/
     QP_FileSystemSpec *free(); /*---virtual property used for "free" partition    ---*/
-    QP_FileSystemSpec *unknow(); /*---as above but for "unknow" partition         ---*/
+    QP_FileSystemSpec *unknown(); /*---as above but for "unknown" partition         ---*/
 
     QList<QP_FileSystemSpec*> filesystemlist;
     QList<QP_FSWrap*> fswraplist;
 
 private:
     QP_FileSystemSpec *_free;
-    QP_FileSystemSpec *_unknow;
+    QP_FileSystemSpec *_unknown;
 };
 /*-----------------------------------------------------------------------------------*/
 

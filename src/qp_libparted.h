@@ -76,7 +76,7 @@ public:
 	QString shortname();
 	QString longname();
 	bool isFree();								 /*---return true if the filesystem is free space  ---*/
-	bool isUnknow();								/*---return true if the filesystem is unknow space---*/
+	bool isUnknown();								/*---return true if the filesystem is unknown space---*/
 	bool isActive();								/*---return true if the partition is active		---*/
 	bool isHidden();								/*---return true if the partition is hidden		---*/
 	bool canBeActive();							/*---return true if the partition can be actived  ---*/
@@ -100,7 +100,7 @@ private:
 	QString _label;
 	QP_Device *_device;							/*---pointer to the device								---*/
 	QP_FileSystemSpec *_free;					/*---internal pointer to the "free" flag			---*/
-	QP_FileSystemSpec *_unknow;				/*---internal pointer to the "unknow" flag		 ---*/
+	QP_FileSystemSpec *_unknown;				/*---internal pointer to the "unknown" flag		 ---*/
 	bool _active;									/*---flag active											---*/
 	bool _hidden;									/*---flag hidden											---*/
 	bool _canBeActive;							/*---flag can be active									---*/

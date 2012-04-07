@@ -163,9 +163,9 @@ QP_FileSystem::QP_FileSystem() {
     _free = new QP_FileSystemSpec("free", false, false, false, false, false, NULL);
     filesystemlist.append(_free);
     
-    /*---make a "unknow" filesystem---*/
-    _unknow = new QP_FileSystemSpec("unknow", false, false, false, false, false, NULL);
-    filesystemlist.append(_unknow);
+    /*---make an "unknown" filesystem---*/
+    _unknown = new QP_FileSystemSpec("unknown", false, false, false, false, false, NULL);
+    filesystemlist.append(_unknown);
 }
 
 QP_FileSystem::~QP_FileSystem() {
@@ -209,14 +209,14 @@ QP_FileSystemSpec *QP_FileSystem::nameToFSSpec(QString name) {
         if (p->name().compare(name) == 0)
             return p;
     }
-    return unknow();
+    return unknown();
 }
 
 QP_FileSystemSpec *QP_FileSystem::free() {
     return _free;
 }
 
-QP_FileSystemSpec *QP_FileSystem::unknow() {
-    return _unknow;
+QP_FileSystemSpec *QP_FileSystem::unknown() {
+    return _unknown;
 }
 /*-----------------------------------------------------------------------------------*/
