@@ -27,9 +27,12 @@
 #define MEGABYTE (1024 * 1024)
 #define MEGABYTE_SECTORS (MEGABYTE / 512)
 
-#define RS_NONE 0
-#define RS_SHRINK 1
-#define RS_ENLARGE 2
+enum Resize {
+	None = 0,
+	Shrink = 1,
+	Enlarge = 2,
+	Both = Shrink|Enlarge,
+};
 
 class Q_DECL_EXPORT QTParted {
 public:

@@ -207,7 +207,7 @@ QP_FSNtfs::QP_FSNtfs():QP_FSWrap()
 
 
 	while ((cline = fs_getline())) {
-		wrap_resize = RS_SHRINK | RS_ENLARGE;
+		wrap_resize = Both;
 		wrap_min_size = true;
 	}
 	fs_close();
@@ -597,10 +597,8 @@ bool QP_FSswap::mkpartfs(QString dev, QString label) {
 }
 
 /*---JFS WRAPPER-----------------------------------------------------------------*/
-QP_FSJfs::QP_FSJfs():QP_FSWrap()
+QP_FSJfs::QP_FSJfs():QP_FSWrap(Enlarge)
 {
-	wrap_resize = RS_ENLARGE;
-
 	/*---check if the wrapper is installed---*/
 	QString cmdline = "which " + lstExternalTools->getPath("mkfs.jfs");
 	fs_open(cmdline);
@@ -1024,7 +1022,7 @@ QP_FSXfs::QP_FSXfs():QP_FSWrap()
 	fs_open(cmdline);
 
 	while ((cline = fs_getline()))
-		wrap_resize = RS_ENLARGE;
+		wrap_resize = Enlarge;
 	fs_close();
 }
 

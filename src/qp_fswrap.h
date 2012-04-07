@@ -123,7 +123,7 @@ class QP_FSNtfs;
 class QP_FSWrap : public QObject {
 	Q_OBJECT
 public:
-	QP_FSWrap(bool resize=false, bool move=false, bool copy=false, bool create=false, bool minSize=false):wrap_resize(resize),wrap_move(move),wrap_copy(copy),wrap_create(create),wrap_min_size(minSize) {}
+	QP_FSWrap(Resize resize=None, bool move=false, bool copy=false, bool create=false, bool minSize=false):wrap_resize(resize),wrap_move(move),wrap_copy(copy),wrap_create(create),wrap_min_size(minSize) {}
 
 	/*---resize(libparted, readonly?, device, sectors_start, sectors_end), resize the partition---*/
 	virtual bool resize(QP_LibParted *, bool, QP_PartInfo *, PedSector, PedSector) {return false;}
@@ -152,7 +152,7 @@ public:
 	/*---read a sector---*/
 	static bool read_sector(PedPartition *, PedSector, PedSector, char *buffer);
 
-	bool wrap_resize;
+	Resize wrap_resize;
 	bool wrap_move;
 	bool wrap_copy;
 	bool wrap_create;

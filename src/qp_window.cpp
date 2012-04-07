@@ -656,7 +656,7 @@ void QP_MainWindow::ShowMoveResizeDialog ( QTParted::actType moveresize )
 		MinPart = partinfo->fsspec->minFsSize();
 
 	if ( partinfo->fsspec->fswrap()
-			&&  partinfo->fsspec->fswrap()->wrap_resize == RS_ENLARGE ) //the filesystem can only be enlarged.
+			&&  partinfo->fsspec->fswrap()->wrap_resize == Enlarge ) //the filesystem can only be enlarged.
 		MinPart = EndPart - StartPart;
 
 	PedSector MaxPart = partinfo->fsspec->maxFsSize();
