@@ -83,6 +83,8 @@ QP_FSWrap *QP_FSWrap::fswrap(QString name)
 		fswrap = new QP_FSNtfs();
 	else if (name.compare("jfs") == 0)
 		fswrap = new QP_FSJfs();
+	else if (name.compare("ext2") == 0)
+		fswrap = new QP_FSExt2();
 	else if (name.compare("ext3") == 0)
 		fswrap = new QP_FSExt3();
 	else if (name.compare("ext4") == 0)
