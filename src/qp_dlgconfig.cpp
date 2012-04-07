@@ -56,9 +56,11 @@ QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),_layout(this) {
 	_buttonLayout = new QHBoxLayout();
 	_btnOk = new QPushButton(tr("&OK"), this);
 	_buttonLayout->addWidget(_btnOk);
+	connect(_btnOk, SIGNAL(clicked()), this, SLOT(accept()));
 
 	_btnCancel = new QPushButton(tr("&Cancel"), this);
 	_buttonLayout->addWidget(_btnCancel);
+	connect(_btnCancel, SIGNAL(clicked()), this, SLOT(reject()));
 
 	_layout.addLayout(_buttonLayout);
 	
