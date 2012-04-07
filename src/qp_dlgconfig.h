@@ -31,10 +31,15 @@
 #define QP_DLGCONFIG_H
 
 #include <QDialog>
+#include <QVBoxLayout>
+#include <QLabel>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QHBoxLayout>
 #include "qtparted.h"
-#include "ui_qp_ui_config.h"
 
-class QP_dlgConfig : public QDialog, public Ui::QP_UIConfig {
+class QP_dlgConfig : public QDialog {
 	Q_OBJECT
 public:
 	QP_dlgConfig(QWidget *parent=0);
@@ -47,6 +52,17 @@ public:
 protected slots:
 	void slotToolChanged(int);			 /*---the user changed the tool in combobox  ---*/
 	void slotPathChanged(const QString &); /*---the user changed the path			  ---*/
-};
 
+protected:
+	QVBoxLayout	_layout;
+	QLabel *	_lblLayout;
+	QComboBox *	_cmbLayout;
+	QLabel *	_lblExtTools;
+	QComboBox *	_cmbExtTools;
+	QLabel *	_lblPath;
+	QLineEdit *	_txtPath;
+	QHBoxLayout *	_buttonLayout;
+	QPushButton *	_btnOk;
+	QPushButton *	_btnCancel;
+};
 #endif

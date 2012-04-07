@@ -23,20 +23,56 @@
 #include "qp_dlgconfig.h"
 #include "qp_common.h"
 
-QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),Ui::QP_UIConfig() {
-	setupUi(this);
+QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),_layout(this) {
+	setWindowTitle(tr("Configuration"));
 
+	_lblLayout = new QLabel(tr("QTParted &layout"), this);
+	_layout.addWidget(_lblLayout);
+
+	_cmbLayout = new QComboBox(this);
+	_lblLayout->setBuddy(_cmbLayout);
+	_cmbLayout->clear();
+	_cmbLayout->insertItems(0, QStringList()
+		<< tr("Chart and ListBox")
+		<< tr("Only Chart")
+		<< tr("Only ListBox")
+	);
+	_layout.addWidget(_cmbLayout);
+
+	_lblExtTools = new QLabel(tr("&External tools"), this);
+	_layout.addWidget(_lblExtTools);
+
+	_cmbExtTools = new QComboBox(this);
+	_layout.addWidget(_cmbExtTools);
+	_lblExtTools->setBuddy(_cmbExtTools);
+
+	_lblPath = new QLabel("&Full executable path", this);
+	_layout.addWidget(_lblPath);
+
+	_txtPath = new QLineEdit(this);
+	_lblPath->setBuddy(_txtPath);
+	_layout.addWidget(_txtPath);
+
+	_buttonLayout = new QHBoxLayout();
+	_btnOk = new QPushButton(tr("&OK"), this);
+	_buttonLayout->addWidget(_btnOk);
+
+	_btnCancel = new QPushButton(tr("&Cancel"), this);
+	_buttonLayout->addWidget(_btnCancel);
+
+	_layout.addLayout(_buttonLayout);
+	
 	/*---clear combo box used for external tools---*/
-	cmbExtTools->clear();
+	_cmbExtTools->clear();
 	for(QP_ListExternalTools::ConstIterator it = lstExternalTools->begin(); it != lstExternalTools->end(); ++it)
-		cmbExtTools->addItem(it.value()->name());
+		_cmbExtTools->addItem(it.value()->name());
 
 	/*---connect the combo type slot---*/
-	connect(cmbExtTools, SIGNAL(activated(int)),
+	connect(_cmbExtTools, SIGNAL(activated(int)),
 			this, SLOT(slotToolChanged(int)));
 
 	/*---connect the path text changed slot---*/
-	connect(txtPath, SIGNAL(textChanged(const QString &)),
+	connect(_txtPath, SIGNAL(textChanged(const QString &)),
 			this, SLOT(slotPathChanged(const QString &)));
 }
 
@@ -52,21 +88,21 @@ int QP_dlgConfig::show_dialog() {
 }
 
 int QP_dlgConfig::layout() {
-	return cmbLayout->currentIndex();
+	return _cmbLayout->currentIndex();
 }
 
 void QP_dlgConfig::setLayout(int layout) {
-	cmbLayout->setCurrentIndex(layout);
+	_cmbLayout->setCurrentIndex(layout);
 }
 
 void QP_dlgConfig::slotToolChanged(int) {
-	QString path = lstExternalTools->getPath(cmbExtTools->currentText());
-	txtPath->setText(path);
+	QString path = lstExternalTools->getPath(_cmbExtTools->currentText());
+	_txtPath->setText(path);
 
-	QString tooltip = lstExternalTools->getDescription(cmbExtTools->currentText());
-	txtPath->setWhatsThis(tooltip);
+	QString tooltip = lstExternalTools->getDescription(_cmbExtTools->currentText());
+	_txtPath->setWhatsThis(tooltip);
 }
 
 void QP_dlgConfig::slotPathChanged(const QString &path) {
-	lstExternalTools->setPath(cmbExtTools->currentText(), path);
+	lstExternalTools->setPath(_cmbExtTools->currentText(), path);
 }

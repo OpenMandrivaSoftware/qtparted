@@ -59,8 +59,7 @@ set(PRIVATE_HEADERS qtparted.h
 	qp_spinbox.h
 	statistics.h)
 
-set(UIS qp_ui_config.ui
-	qp_ui_create.ui
+set(UIS	qp_ui_create.ui
 	qp_ui_devprop.ui
 	qp_ui_format.ui
 	qp_ui_progress.ui
