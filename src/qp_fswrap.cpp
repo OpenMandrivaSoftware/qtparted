@@ -72,7 +72,7 @@ char *QP_FSWrap::fs_getline()
 
 int QP_FSWrap::fs_close()
 {
-	return fclose(fp);
+	return pclose(fp);
 }
 
 QP_FSWrap *QP_FSWrap::fswrap(QString name)
