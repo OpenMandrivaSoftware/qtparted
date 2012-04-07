@@ -777,12 +777,10 @@ void QP_MainWindow::slotConfig()
 		int layout = dlgconfig->layout();
 		settings->setLayout ( layout );
 		diskview->setLayout ( layout );
-
-		lstExternalTools->apply();
 	}
 	else
 	{
-		lstExternalTools->cancel();
+		// FIXME undo needs to be implemented
 	}
 }
 

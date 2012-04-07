@@ -35,9 +35,6 @@ QP_ListExternalTools::~QP_ListExternalTools() {
 void QP_ListExternalTools::add(QString name, QString path, QString description) {
     QP_ExternalTool *exttool = new QP_ExternalTool(name, path, description);
     lstTools.append(exttool);
-
-    QP_ExternalTool *exttool2 = new QP_ExternalTool(name, path, description);
-    lstToolsOld.append(exttool2);
 }
 
 QString QP_ListExternalTools::getPath(QString name) {
@@ -66,20 +63,3 @@ QString QP_ListExternalTools::getDescription(QString name) {
 
     return QString::null;
 }
-
-void QP_ListExternalTools::apply() {
-    lstToolsOld.clear();
-    foreach(QP_ExternalTool *p, lstTools) {
-        QP_ExternalTool *p_new = new QP_ExternalTool(p->name(), p->path(), p->description());
-        lstToolsOld.append(p_new);
-    }
-}
-
-void QP_ListExternalTools::cancel() {
-    lstTools.clear();
-    foreach(QP_ExternalTool *p, lstTools) {
-        QP_ExternalTool *p_new = new QP_ExternalTool(p->name(), p->path(), p->description());
-        lstTools.append(p_new);
-    }
-}
-

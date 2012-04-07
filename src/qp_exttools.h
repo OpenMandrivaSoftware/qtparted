@@ -60,13 +60,7 @@ public:
     QString getPath(QString);
     void setPath(QString, QString);
     QString getDescription(QString);
-    void apply();
-    void cancel();
     QList<QP_ExternalTool*> lstTools;
-
-protected:
-    QList<QP_ExternalTool*> lstToolsOld;
-
 };
 
 #endif
