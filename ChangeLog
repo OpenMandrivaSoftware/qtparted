@@ -1,6 +1,13 @@
 ChangeLog for QtParted:
 -----------------------
-* 0.5.0
+* 0.6.0 (2012-04-07)
+  - Support Parted >= 3.0
+  - ext2, ext3, ext4, xfs, jfs, btrfs, FAT FS creation support
+    without relying on parted filesystem code
+  - Some (but still nowhere near enough) code cleanups
+  - Improved UI for editing external tools
+
+* 0.5.0 (2011-02-17)
   - Switch to Qt 4.x
 
 * 0.4.x (never released, if you really need it grab it from SVN)
