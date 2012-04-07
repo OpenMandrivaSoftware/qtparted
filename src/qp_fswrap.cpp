@@ -742,8 +742,8 @@ QString QP_FSJfs::_get_label(PedPartition * part)
 	return QString(label);
 }
 
-/*---EXT3 WRAPPER----------------------------------------------------------------*/
-QP_FSExt3::QP_FSExt3():_fsType("ext3"),_extraArgs(QString::null)
+/*---EXT2 WRAPPER----------------------------------------------------------------*/
+QP_FSExt2::QP_FSExt2():_fsType("ext2"),_extraArgs(QString::null)
 {
 	wrap_min_size = false;
 	wrap_resize = false;
@@ -759,10 +759,25 @@ QP_FSExt3::QP_FSExt3():_fsType("ext3"),_extraArgs(QString::null)
 	while ((cline = fs_getline()))
 		wrap_create = true;
 	fs_close();
-
 }
 
-bool QP_FSExt3::mkpartfs(QString dev, QString label)
+QString QP_FSExt2::_get_label(PedPartition * part)
+{
+	char bootsect[2048];	// sector number 2 (offset 1024)
+	char label[16];
+
+	if (!QP_FSWrap::read_sector(part, 2, 4, bootsect))
+		return QString::null;
+
+	memset(label, 0, sizeof(label));
+	strncpy(label, bootsect + 120, 16);
+
+	//printf("returned buffer ext2/3: [%s]\n", label);
+
+	return QString(label);
+}
+
+bool QP_FSExt2::mkpartfs(QString dev, QString label)
 {
 	QString cmdline;
 
@@ -772,7 +787,7 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 	/*---prepare the command line---*/
 	if (!label.isEmpty())
 		cmdline = " -L " + label;
-	cmdline = lstExternalTools->getPath("mkfs." + _fsType) + " -t " + _fsType + " " + cmdline + " " + _extraArgs + " " + dev;
+	cmdline = lstExternalTools->getPath("mkfs." + _fsType) + " -t " + _fsType + " -m 1 " + cmdline + " " + _extraArgs + " " + dev;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -838,22 +853,24 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 	return success;
 }
 
-QString QP_FSExt3::fsname()
+QString QP_FSExt2::fsname()
 {
 	return _fsType;
 }
 
-QString QP_FSExt3::_get_label(PedPartition * p)
+/*---EXT3 WRAPPER----------------------------------------------------------------*/
+QP_FSExt3::QP_FSExt3():QP_FSExt2()
 {
-	return QP_FSExt2::_get_label(p);
-	//return QString::null;
+	_fsType = "ext3";
+	_extraArgs = " -j ";
 }
+
 
 /*---EXT4 WRAPPER----------------------------------------------------------------*/
 QP_FSExt4::QP_FSExt4():QP_FSExt3()
 {
 	_fsType = "ext4";
-	_extraArgs = " -j -m 1 -O dir_index,extent,flex_bg,resize_inode,sparse_super,uninit_bg ";
+	_extraArgs += " -j -O dir_index,extent,flex_bg,resize_inode,sparse_super,uninit_bg ";
 }
 
 /*---BTRFS WRAPPER----------------------------------------------------------------*/
@@ -1192,24 +1209,6 @@ QString QP_FSFat32::_get_label(PedPartition * part)
 	delete[] buffer;
 	return QString(label);
 }
-
-/*---EXT2 WRAPPER----------------------------------------------------------------*/
-QString QP_FSExt2::_get_label(PedPartition * part)
-{
-	char bootsect[2048];	// sector number 2 (offset 1024)
-	char label[16];
-
-	if (!QP_FSWrap::read_sector(part, 2, 4, bootsect))
-		return QString::null;
-
-	memset(label, 0, sizeof(label));
-	strncpy(label, bootsect + 120, 16);
-
-	//printf("returned buffer ext2/3: [%s]\n", label);
-
-	return QString(label);
-}
-
 
 /*---REISERFS WRAPPER------------------------------------------------------------*/
 QString QP_FSReiserFS::_get_label(PedPartition *)

@@ -204,11 +204,11 @@ private:
     bool jfsresize(bool, QP_PartInfo *, PedSector newsize); //this is the true jfsresize wrapper
 };
 
-class QP_FSExt3 : public QP_FSWrap {
+class QP_FSExt2 : public QP_FSWrap {
 Q_OBJECT
 
 public:
-    QP_FSExt3();
+    QP_FSExt2();
     bool mkpartfs(QString dev, QString label);
     QString fsname();
     static QString _get_label(PedPartition *);
@@ -217,14 +217,17 @@ protected:
     QString _extraArgs;
 };
 
+class QP_FSExt3 : public QP_FSExt2 {
+Q_OBJECT
+public:
+    QP_FSExt3();
+};
+
 class QP_FSExt4 : public QP_FSExt3 {
 Q_OBJECT
 
 public:
     QP_FSExt4();
-    bool mkpartfs(QString dev, QString label);
-    QString fsname();
-    static QString _get_label(PedPartition *);
 };
 
 class QP_FSBtrFS : public QP_FSWrap {
@@ -259,13 +262,6 @@ public:
 };
 
 class QP_FSFat32 : public QP_FSWrap {
-Q_OBJECT
-
-public:
-    static QString _get_label(PedPartition *);
-};
-
-class QP_FSExt2 : public QP_FSWrap {
 Q_OBJECT
 
 public:
