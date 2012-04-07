@@ -87,6 +87,8 @@ QP_FSWrap *QP_FSWrap::fswrap(QString name)
 		fswrap = new QP_FSExt3();
 	else if (name.compare("ext4") == 0)
 		fswrap = new QP_FSExt4();
+	else if (name.compare("ext3") == 0)
+		fswrap = new QP_FSBtrFS();
 	else if (name.compare("xfs") == 0)
 		fswrap = new QP_FSXfs();
 	else
@@ -105,6 +107,8 @@ QString QP_FSWrap::get_label(PedPartition * part, QString name)
 		return QP_FSExt3::_get_label(part);
 	else if (name.compare("ext4") == 0)
 		return QP_FSExt4::_get_label(part);
+	else if (name.compare("btrfs") == 0)
+		return QP_FSBtrFS::_get_label(part);
 	else if (name.compare("xfs") == 0)
 		return QP_FSXfs::_get_label(part);
 	else if (name.compare("fat16") == 0)
@@ -948,6 +952,113 @@ QString QP_FSExt4::fsname()
 }
 
 QString QP_FSExt4::_get_label(PedPartition * p)
+{
+	return QP_FSExt2::_get_label(p);
+	//return QString::null;
+}
+
+/*---BTRFS WRAPPER----------------------------------------------------------------*/
+QP_FSBtrFS::QP_FSExt4()
+{
+	wrap_min_size = false;
+	wrap_resize = false;
+	wrap_move = false;
+	wrap_copy = false;
+	wrap_create = false;
+
+	/*---check if the wrapper is installed---*/
+	QString cmdline = "which " + lstExternalTools->getPath("mkfs.btrfs");
+	fs_open(cmdline);
+
+	char *cline;
+	while ((cline = fs_getline()))
+		wrap_create = true;
+	fs_close();
+
+}
+
+bool QP_FSBtrFS::mkpartfs(QString dev, QString label)
+{
+	QString cmdline;
+
+	/*---init of the error message---*/
+	_message = QString::null;
+
+	/*---prepare the command line---*/
+	if (!label.isEmpty())
+		cmdline = " -L " + label;
+	cmdline = lstExternalTools->getPath("mkfs.btrfs") + cmdline + " " + dev;
+
+	if (!fs_open(cmdline)) {
+		_message = QString(NOTFOUND);
+		return false;
+	}
+
+
+	bool writenode = false;
+	bool success = false;
+	char *cline;
+	while ((cline = fs_getline())) {
+		QString line = QString(cline);
+
+		QRegExp rx;
+		rx = QRegExp("^Writing inode tables");
+		if (rx.indexIn(line) == 0) {
+			writenode = true;
+		}
+
+		rx = QRegExp("^Creating journal");
+		if (rx.indexIn(line) == 0) {
+			writenode = false;
+			emit sigTimer(90,
+				      QString(tr
+					      ("Writing superblocks and filesystem.")),
+				      QString::null);
+		}
+
+		if (writenode) {
+			QString linesub = line;
+
+#ifdef QT30COMPATIBILITY
+			linesub.replace(QRegExp("\b"), " ");
+#else
+			linesub.replace(QChar('\b'), " ");
+#endif
+			rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
+			if (rx.indexIn(linesub) == 0) {
+				QString capActual = rx.cap(1);
+				QString capTotal = rx.cap(2);
+
+				bool rc;
+				int iActual = capActual.toInt(&rc);
+				int iTotal = capTotal.toInt(&rc);
+
+				int iPerc = iActual * 80 / iTotal;	//The percentual is calculated in 80% ;)
+				emit sigTimer(iPerc,
+					      QString(tr
+						      ("Writing inode tables.")),
+					      QString::null);
+			}
+		}
+
+		rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
+		if (rx.indexIn(line) == 0)
+			success = true;
+	}
+	fs_close();
+
+	if (!success)
+		_message = QString(tr("There was a problem with mkfs.btrfs."));
+
+	return success;
+}
+
+QString QP_FSBtrFS::fsname()
+{
+	return QString("btrfs");
+}
+
+QString QP_FSBtrFS::_get_label(PedPartition * p)
 {
 	return QP_FSExt2::_get_label(p);
 	//return QString::null;
