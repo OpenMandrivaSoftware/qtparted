@@ -118,8 +118,6 @@
 #define NTFS_GETS56(p)	   (((int64_t)NTFS_GETU32(p)) | (((int64_t)NTFS_GETS24(((char*)(p))+4)) << 32))
 #define NTFS_GETS64(p)		 ((int64_t)NTFS_GETU64(p))
 
-class QP_FSNtfs;
-
 class QP_FSWrap : public QObject {
 	Q_OBJECT
 public:
