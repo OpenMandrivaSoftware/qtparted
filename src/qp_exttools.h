@@ -28,7 +28,7 @@
 #ifndef QP_EXTTOOLS_H
 #define QP_EXTTOOLS_H
 
-#include <QList>
+#include <QHash>
 #include <QString>
 
 class QP_ExternalTool {
@@ -52,15 +52,14 @@ private:
     QString _name;
 };
 
-class QP_ListExternalTools {
+class QP_ListExternalTools:public QHash<QString,QP_ExternalTool*> {
 public:
     QP_ListExternalTools();
     ~QP_ListExternalTools();
-    void add(QString, QString, QString);
+    void add(QString name, QString path, QString description);
     QString getPath(QString);
     void setPath(QString, QString);
     QString getDescription(QString);
-    QList<QP_ExternalTool*> lstTools;
 };
 
 #endif

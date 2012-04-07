@@ -28,8 +28,8 @@ QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),Ui::QP_UIConfig() {
 
 	/*---clear combo box used for external tools---*/
 	cmbExtTools->clear();
-	foreach(QP_ExternalTool *et, lstExternalTools->lstTools)
-		cmbExtTools->addItem(et->name());
+	for(QP_ListExternalTools::ConstIterator it = lstExternalTools->begin(); it != lstExternalTools->end(); ++it)
+		cmbExtTools->addItem(it.value()->name());
 
 	/*---connect the combo type slot---*/
 	connect(cmbExtTools, SIGNAL(activated(int)),
