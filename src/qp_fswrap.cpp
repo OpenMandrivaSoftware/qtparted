@@ -592,7 +592,7 @@ bool QP_FSswap::mkpartfs(QString dev, QString label) {
 	while ((cline = fs_getline())) {
 		QString line = QString(cline);
 	}
-	fs_close();
+	success = (fs_close() == 0);
 
 	if (!success)
 		_message = tr("There was a problem with mkswap.");
@@ -938,7 +938,6 @@ bool QP_FSBtrFS::mkpartfs(QString dev, QString label)
 		return false;
 	}
 
-
 	bool writenode = false;
 	bool success = false;
 	char *cline;
@@ -1230,8 +1229,7 @@ bool QP_FSFat::mkpartfs(QString dev, QString label)
 	char *cline;
 	while ((cline = fs_getline()))
 		QString line=QString(cline);
-	fs_close();
-	return true;
+	return (fs_close() == 0);
 }
 
 QString QP_FSFat::_get_label(PedPartition * part)
