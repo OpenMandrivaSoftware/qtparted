@@ -18,8 +18,7 @@
 	along with this program; if not, write to the Free Software
 	Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
-#include <qcombobox.h>
-#include <qlineedit.h>
+#include <QHeaderView>
 #include "qp_dlgconfig.h"
 #include "qp_common.h"
 
@@ -43,6 +42,8 @@ QP_dlgConfig::QP_dlgConfig(QWidget *p):QDialog(p),_layout(this) {
 	_layout.addWidget(_lblExtTools);
 
 	_extTools = new QTableWidget(lstExternalTools->count(), 3, this);
+	_extTools->verticalHeader()->hide();
+	_extTools->setHorizontalHeaderLabels(QStringList() << tr("Tool") << tr("Full path") << tr("Description"));
 	_layout.addWidget(_extTools);
 	_lblExtTools->setBuddy(_extTools);
 
