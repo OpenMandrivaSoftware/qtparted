@@ -214,6 +214,9 @@ QP_FileSystemSpec *QP_FileSystem::nameToFSSpec(QString name) {
 	// ...
 	if(name.contains("swap") && name!="swap")
 		return nameToFSSpec("swap");
+	// Some versions of parted also have aliases for fat
+	if(name.contains("fat") && name!="fat")
+		return nameToFSSpec("fat");
 	return unknown();
 }
 

@@ -256,16 +256,26 @@ private:
 	bool xfsresize(bool, QP_PartInfo *, PedSector newsize); //this is the true xfsresize wrapper
 };
 
-class QP_FSFat16 : public QP_FSWrap {
+class QP_FSFat : public QP_FSWrap {
 	Q_OBJECT
 public:
+	QP_FSFat(QString bitflag=QString::null);
+	bool mkpartfs(QString dev, QString label);
 	static QString _get_label(PedPartition *);
+protected:
+	QString	_bitflag;
 };
 
-class QP_FSFat32 : public QP_FSWrap {
+class QP_FSFat16 : public QP_FSFat {
 	Q_OBJECT
 public:
-	static QString _get_label(PedPartition *);
+	QP_FSFat16():QP_FSFat(" -F 16 ") {}
+};
+
+class QP_FSFat32 : public QP_FSFat {
+	Q_OBJECT
+public:
+	QP_FSFat32():QP_FSFat(" -F 32 ") {}
 };
 
 class QP_FSReiserFS : public QP_FSWrap {

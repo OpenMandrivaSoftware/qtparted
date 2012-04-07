@@ -95,6 +95,12 @@ QP_FSWrap *QP_FSWrap::fswrap(QString name)
 		fswrap = new QP_FSXfs();
 	else if (name.compare("swap") == 0)
 		fswrap = new QP_FSswap();
+	else if (name == "fat" || name == "vfat")
+		fswrap = new QP_FSFat();
+	else if (name == "fat16")
+		fswrap = new QP_FSFat16();
+	else if (name == "fat32")
+		fswrap = new QP_FSFat32();
 	else
 		fswrap = 0;
 
@@ -107,6 +113,8 @@ QString QP_FSWrap::get_label(PedPartition * part, QString name)
 		return QP_FSNtfs::_get_label(part);
 	else if (name.compare("jfs") == 0)
 		return QP_FSJfs::_get_label(part);
+	else if (name.compare("ext2") == 0)
+		return QP_FSExt2::_get_label(part);
 	else if (name.compare("ext3") == 0)
 		return QP_FSExt3::_get_label(part);
 	else if (name.compare("ext4") == 0)
@@ -115,12 +123,8 @@ QString QP_FSWrap::get_label(PedPartition * part, QString name)
 		return QP_FSBtrFS::_get_label(part);
 	else if (name.compare("xfs") == 0)
 		return QP_FSXfs::_get_label(part);
-	else if (name.compare("fat16") == 0)
-		return QP_FSFat16::_get_label(part);
-	else if (name.compare("fat32") == 0)
-		return QP_FSFat32::_get_label(part);
-	else if (name.compare("ext2") == 0)
-		return QP_FSExt2::_get_label(part);
+	else if (name == "fat" || name == "fat16" || name == "fat32" || name == "vfat")
+		return QP_FSFat::_get_label(part);
 	else if (name.compare("reiserfs") == 0)
 		return QP_FSReiserFS::_get_label(part);
 	else if (name.compare("swap") == 0)
@@ -1199,15 +1203,38 @@ QString QP_FSXfs::_get_label(PedPartition * part)
 	return QString(label);
 }
 
-/*---FAT16 WRAPPER---------------------------------------------------------------*/
-QString QP_FSFat16::_get_label(PedPartition *)
-{
-	return QString::null;
+/*---FAT WRAPPER---------------------------------------------------------------*/
+QP_FSFat::QP_FSFat(QString bitflag):QP_FSWrap(),_bitflag(bitflag) {
+	/*---check if the wrapper is installed---*/
+	QString cmdline = "which " + lstExternalTools->getPath("mkdosfs");
+	fs_open(cmdline);
+
+	char *cline;
+	while ((cline = fs_getline()))
+		wrap_create = true;
+	fs_close();
 }
 
+bool QP_FSFat::mkpartfs(QString dev, QString label)
+{
+	QString cmdline;
+	_message = QString::null;
+	if (!label.isEmpty())
+		cmdline += " -n " + label;
+	cmdline += _bitflag;
+	cmdline = lstExternalTools->getPath("mkdosfs") + cmdline + " " + dev;
+	if (!fs_open(cmdline)) {
+		_message = QString(NOTFOUND);
+		return false;
+	}
+	char *cline;
+	while ((cline = fs_getline()))
+		QString line=QString(cline);
+	fs_close();
+	return true;
+}
 
-/*---FAT32 WRAPPER---------------------------------------------------------------*/
-QString QP_FSFat32::_get_label(PedPartition * part)
+QString QP_FSFat::_get_label(PedPartition * part)
 {
 #ifdef PED_SECTOR_SIZE // PED_SECTOR_SIZE is gone in parted 1.7.x
 	char *buffer=new char[PED_SECTOR_SIZE];
