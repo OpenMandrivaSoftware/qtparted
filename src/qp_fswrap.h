@@ -175,6 +175,15 @@ signals:
     void sigTimer(int, QString, QString);
 };
 
+class QP_FSswap : public QP_FSWrap {
+Q_OBJECT
+public:
+    QP_FSswap();
+    bool mkpartfs(QString dev, QString label);
+    QString fsname() { return QString("swap"); }
+    static QString _get_label(PedPartition *) { return QString::null; /* FIXME */ }
+};
+
 class QP_FSNtfs : public QP_FSWrap {
 Q_OBJECT
 

@@ -723,7 +723,7 @@ void QP_LibParted::get_filesystem ( QP_FileSystem *filesystem )
 
     }
 #else
-    QStringList filesystems = QStringList() << "ext2" << "ext3" << "ext4" << "btrfs" << "jfs" << "xfs" << "reiserfs";
+    QStringList filesystems = QStringList() << "ext2" << "ext3" << "ext4" << "btrfs" << "jfs" << "xfs" << "reiserfs" << "swap";
     foreach(QString fs, filesystems) {
         QP_FSWrap *fsw = QP_FSWrap::fswrap(fs);
 	if(fsw) {

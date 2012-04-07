@@ -91,6 +91,8 @@ QP_FSWrap *QP_FSWrap::fswrap(QString name)
 		fswrap = new QP_FSBtrFS();
 	else if (name.compare("xfs") == 0)
 		fswrap = new QP_FSXfs();
+	else if (name.compare("swap") == 0)
+		fswrap = new QP_FSswap();
 	else
 		fswrap = 0;
 
@@ -119,6 +121,8 @@ QString QP_FSWrap::get_label(PedPartition * part, QString name)
 		return QP_FSExt2::_get_label(part);
 	else if (name.compare("reiserfs") == 0)
 		return QP_FSReiserFS::_get_label(part);
+	else if (name.compare("swap") == 0)
+		return QP_FSswap::_get_label(part);
 	else
 		return QString::null;
 }
@@ -551,7 +555,50 @@ QString QP_FSNtfs::fsname()
 	return QString::null;
 }*/
 
+/*---SWAP WRAPPER----------------------------------------------------------------*/
+QP_FSswap::QP_FSswap()
+{
+	/*---check if the wrapper is installed---*/
+	QString cmdline = "which " + lstExternalTools->getPath("mkswap");
+	fs_open(cmdline);
 
+	char *cline;
+	while ((cline = fs_getline()))
+		wrap_create = true;
+	fs_close();
+}
+
+bool QP_FSswap::mkpartfs(QString dev, QString label) {
+	QString cmdline;
+
+	/*---init of the error message---*/
+	_message = QString::null;
+
+	/*---prepare the command line---*/
+	if (!label.isEmpty())
+		cmdline = " -L " + label;
+	cmdline += " -v1 ";
+	cmdline = lstExternalTools->getPath("mkswap") + cmdline + " " + dev;
+
+	if (!fs_open(cmdline)) {
+		_message = QString(NOTFOUND);
+		return false;
+	}
+
+
+	bool writenode = false;
+	bool success = false;
+	char *cline;
+	while ((cline = fs_getline())) {
+		QString line = QString(cline);
+	}
+	fs_close();
+
+	if (!success)
+		_message = tr("There was a problem with mkswap.");
+
+	return success;
+}
 
 /*---JFS WRAPPER-----------------------------------------------------------------*/
 QP_FSJfs::QP_FSJfs()
