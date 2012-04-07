@@ -214,6 +214,16 @@ public:
     static QString _get_label(PedPartition *);
 };
 
+class QP_FSExt4 : public QP_FSWrap {
+Q_OBJECT
+
+public:
+    QP_FSExt4();
+    bool mkpartfs(QString dev, QString label);
+    QString fsname();
+    static QString _get_label(PedPartition *);
+};
+
 class QP_FSXfs : public QP_FSWrap {
 Q_OBJECT
 
