@@ -212,9 +212,12 @@ public:
     bool mkpartfs(QString dev, QString label);
     QString fsname();
     static QString _get_label(PedPartition *);
+protected:
+    QString _fsType;
+    QString _extraArgs;
 };
 
-class QP_FSExt4 : public QP_FSWrap {
+class QP_FSExt4 : public QP_FSExt3 {
 Q_OBJECT
 
 public:

@@ -743,7 +743,7 @@ QString QP_FSJfs::_get_label(PedPartition * part)
 }
 
 /*---EXT3 WRAPPER----------------------------------------------------------------*/
-QP_FSExt3::QP_FSExt3()
+QP_FSExt3::QP_FSExt3():_fsType("ext3"),_extraArgs(QString::null)
 {
 	wrap_min_size = false;
 	wrap_resize = false;
@@ -752,7 +752,7 @@ QP_FSExt3::QP_FSExt3()
 	wrap_create = false;
 
 	/*---check if the wrapper is installed---*/
-	QString cmdline = "which " + lstExternalTools->getPath("mkfs.ext3");
+	QString cmdline = "which " + lstExternalTools->getPath("mkfs." + _fsType);
 	fs_open(cmdline);
 
 	char *cline;
@@ -772,7 +772,7 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 	/*---prepare the command line---*/
 	if (!label.isEmpty())
 		cmdline = " -L " + label;
-	cmdline = lstExternalTools->getPath("mkfs.ext3") + cmdline + " " + dev;
+	cmdline = lstExternalTools->getPath("mkfs." + _fsType) + " -t " + _fsType + " " + cmdline + " " + _extraArgs + " " + dev;
 
 	if (!fs_open(cmdline)) {
 		_message = QString(NOTFOUND);
@@ -833,14 +833,14 @@ bool QP_FSExt3::mkpartfs(QString dev, QString label)
 	fs_close();
 
 	if (!success)
-		_message = QString(tr("There was a problem with mkfs.ext3."));
+		_message = tr("There was a problem with mkfs.%1.").arg(_fsType);
 
 	return success;
 }
 
 QString QP_FSExt3::fsname()
 {
-	return QString("ext3");
+	return _fsType;
 }
 
 QString QP_FSExt3::_get_label(PedPartition * p)
@@ -850,115 +850,14 @@ QString QP_FSExt3::_get_label(PedPartition * p)
 }
 
 /*---EXT4 WRAPPER----------------------------------------------------------------*/
-QP_FSExt4::QP_FSExt4()
+QP_FSExt4::QP_FSExt4():QP_FSExt3()
 {
-	wrap_min_size = false;
-	wrap_resize = false;
-	wrap_move = false;
-	wrap_copy = false;
-	wrap_create = false;
-
-	/*---check if the wrapper is installed---*/
-	QString cmdline = "which " + lstExternalTools->getPath("mkfs.ext4");
-	fs_open(cmdline);
-
-	char *cline;
-	while ((cline = fs_getline()))
-		wrap_create = true;
-	fs_close();
-
-}
-
-bool QP_FSExt4::mkpartfs(QString dev, QString label)
-{
-	QString cmdline;
-
-	/*---init of the error message---*/
-	_message = QString::null;
-
-	/*---prepare the command line---*/
-	if (!label.isEmpty())
-		cmdline = " -L " + label;
-	cmdline += " -t ext4 -j -m 1 -O dir_index,extent,flex_bg,resize_inode,sparse_super,uninit_bg ";
-	cmdline = lstExternalTools->getPath("mkfs.ext4") + cmdline + " " + dev;
-
-	if (!fs_open(cmdline)) {
-		_message = QString(NOTFOUND);
-		return false;
-	}
-
-
-	bool writenode = false;
-	bool success = false;
-	char *cline;
-	while ((cline = fs_getline())) {
-		QString line = QString(cline);
-
-		QRegExp rx;
-		rx = QRegExp("^Writing inode tables");
-		if (rx.indexIn(line) == 0) {
-			writenode = true;
-		}
-
-		rx = QRegExp("^Creating journal");
-		if (rx.indexIn(line) == 0) {
-			writenode = false;
-			emit sigTimer(90,
-				      QString(tr
-					      ("Writing superblocks and filesystem.")),
-				      QString::null);
-		}
-
-		if (writenode) {
-			QString linesub = line;
-
-#ifdef QT30COMPATIBILITY
-			linesub.replace(QRegExp("\b"), " ");
-#else
-			linesub.replace(QChar('\b'), " ");
-#endif
-			rx = QRegExp("^.* (\\d*)/(\\d*) .*$");
-			if (rx.indexIn(linesub) == 0) {
-				QString capActual = rx.cap(1);
-				QString capTotal = rx.cap(2);
-
-				bool rc;
-				int iActual = capActual.toInt(&rc);
-				int iTotal = capTotal.toInt(&rc);
-
-				int iPerc = iActual * 80 / iTotal;	//The percentual is calculated in 80% ;)
-				emit sigTimer(iPerc,
-					      QString(tr
-						      ("Writing inode tables.")),
-					      QString::null);
-			}
-		}
-
-		rx = QRegExp("^Writing superblocks and filesystem accounting information: done");
-		if (rx.indexIn(line) == 0)
-			success = true;
-	}
-	fs_close();
-
-	if (!success)
-		_message = QString(tr("There was a problem with mkfs.ext3."));
-
-	return success;
-}
-
-QString QP_FSExt4::fsname()
-{
-	return QString("ext4");
-}
-
-QString QP_FSExt4::_get_label(PedPartition * p)
-{
-	return QP_FSExt2::_get_label(p);
-	//return QString::null;
+	_fsType = "ext4";
+	_extraArgs = " -j -m 1 -O dir_index,extent,flex_bg,resize_inode,sparse_super,uninit_bg ";
 }
 
 /*---BTRFS WRAPPER----------------------------------------------------------------*/
-QP_FSBtrFS::QP_FSExt4()
+QP_FSBtrFS::QP_FSBtrFS()
 {
 	wrap_min_size = false;
 	wrap_resize = false;
