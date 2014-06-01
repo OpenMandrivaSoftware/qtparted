@@ -65,9 +65,10 @@ set(UIS	qp_ui_create.ui
 	qp_ui_progress.ui
 	qp_ui_resize.ui)
 
-qt4_wrap_ui(UI_SRCS ${UIS})
-qt4_wrap_cpp(MOC_SRCS ${PRIVATE_HEADERS} ${UI_SRCS})
+qt5_wrap_ui(UI_SRCS ${UIS})
+qt5_wrap_cpp(MOC_SRCS ${PRIVATE_HEADERS} ${UI_SRCS})
+qt5_add_resources(ICON_SRCS icons.qrc)
 
-add_executable(qtparted ${SRCS} ${MOC_SRCS})
-target_link_libraries(qtparted ${QT_QTMAIN_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${QT_QT3SUPPORT_LIBRARY} parted)
+add_executable(qtparted ${SRCS} ${ICON_SRCS})
+target_link_libraries(qtparted Qt5::Widgets parted)
 install(TARGETS qtparted DESTINATION bin)

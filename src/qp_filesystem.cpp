@@ -25,12 +25,6 @@
 #include "qtparted.h"
 #include "qp_fswrap.h"
 
-#include "xpm/part_dos.xpm"
-#include "xpm/part_windows.xpm"
-#include "xpm/part_linux.xpm"
-#include "xpm/part_free.xpm"
-
-
 /*-----------------------------------------------------------------------------------*/
 /*---the qpfslist is used for select a color for a filesystem					 ---*/
 /*---very important: leave free and unknown to the last lines!					 ---*/
@@ -40,7 +34,7 @@ class QP_FSType {
 public:
 	QString fstype;	  // type of filesystem
 	QColor color;		// color used when draw chart
-	void *pixmap;		// little icon
+	char const * const pixmap;	// little icon
 	PedSector minFsSize; // minimal file system size
 	PedSector maxFsSize; // maximal file system size
 };
@@ -51,21 +45,21 @@ public:
 */
 
 static const QP_FSType qpfslist[] = {
-	{"fat16", Qt::green, &part_dos_xpm, 10*MEGABYTE_SECTORS, 2048*MEGABYTE_SECTORS}, // ok
-	{"fat32", Qt::darkGreen, &part_windows_xpm, 512*MEGABYTE_SECTORS, 0},
-	{"ntfs", Qt::red, &part_windows_xpm, 2*MEGABYTE_SECTORS, 0}, // TODO: check 2MB are enough
-	{"linux-swap",  Qt::blue, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"linux-swap(v0)",  Qt::blue, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"linux-swap(v1)",  Qt::blue, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"ext2", Qt::magenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"ext3", Qt::darkMagenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"ext4", Qt::darkMagenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"btrfs", Qt::darkMagenta, &part_linux_xpm, 2*MEGABYTE_SECTORS, 0},
-	{"reiserfs", QColor(0, 100, 255), &part_linux_xpm, 34*MEGABYTE_SECTORS, 0}, // max is "17,6 TeraBytes"
-	{"jfs", Qt::darkYellow, &part_linux_xpm, 16*MEGABYTE_SECTORS, 0}, // ok
-	{"xfs", QColor(0, 255, 100), &part_linux_xpm, 5*MEGABYTE_SECTORS, 0}, // ok
-	{"free", Qt::gray, &part_free_xpm, 0, 0},
-	{"unknown", Qt::white, &part_free_xpm, 0, 0}
+	{"fat16", Qt::green, ":icons/part_dos.png", 10*MEGABYTE_SECTORS, 2048*MEGABYTE_SECTORS}, // ok
+	{"fat32", Qt::darkGreen, ":icons/part_windows.png", 512*MEGABYTE_SECTORS, 0},
+	{"ntfs", Qt::red, ":icons/part_windows.png", 2*MEGABYTE_SECTORS, 0}, // TODO: check 2MB are enough
+	{"linux-swap",  Qt::blue, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"linux-swap(v0)",  Qt::blue, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"linux-swap(v1)",  Qt::blue, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"ext2", Qt::magenta, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"ext3", Qt::darkMagenta, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"ext4", Qt::darkMagenta, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"btrfs", Qt::darkMagenta, ":icons/part_linux.png", 2*MEGABYTE_SECTORS, 0},
+	{"reiserfs", QColor(0, 100, 255), ":icons/part_linux.png", 34*MEGABYTE_SECTORS, 0}, // max is "17,6 TeraBytes"
+	{"jfs", Qt::darkYellow, ":icons/part_linux.png", 16*MEGABYTE_SECTORS, 0}, // ok
+	{"xfs", QColor(0, 255, 100), ":icons/part_linux.png", 5*MEGABYTE_SECTORS, 0}, // ok
+	{"free", Qt::gray, ":icons/part_free.png", 0, 0},
+	{"unknown", Qt::white, ":icons/part_free.png", 0, 0}
 };
 #define MAXFS (sizeof(qpfslist)/sizeof(QP_FSType))
 /*-----------------------------------------------------------------------------------*/
@@ -91,13 +85,13 @@ QP_FileSystemSpec::QP_FileSystemSpec(QString name, bool create,
 
 	/*---default color is unknow---*/
 	_color = qpfslist[MAXFS-1].color;
-	_pixmap = QPixmap((const char **)qpfslist[MAXFS-1].pixmap);
+	_pixmap = QPixmap(qpfslist[MAXFS-1].pixmap);
 
 	/*---look for a specific color for that filesystem---*/
 	for (int i=0; i<MAXFS; i++)
 		if (name.compare(qpfslist[i].fstype) == 0) {
 			_color = qpfslist[i].color;
-			_pixmap = QPixmap((const char **)qpfslist[i].pixmap);
+			_pixmap = QPixmap(qpfslist[i].pixmap);
 			_minFsSize = qpfslist[i].minFsSize;
 			_maxFsSize = qpfslist[i].maxFsSize;
 		}

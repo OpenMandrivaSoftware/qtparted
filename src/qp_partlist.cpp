@@ -21,7 +21,7 @@
 
 #include "qp_partlist.h"
 
-QP_PartList::QP_PartList(QWidget *parent, Qt::WFlags f)
+QP_PartList::QP_PartList(QWidget *parent, Qt::WindowFlags f)
 	:QWidget(parent, f) {
 }
 

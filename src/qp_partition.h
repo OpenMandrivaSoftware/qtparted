@@ -36,7 +36,7 @@ class QP_Partition : public QP_PartWidget {
 Q_OBJECT
 
 public:
-	QP_Partition(QP_PartInfo *, QWidget *parent=0, Qt::WFlags f = 0);
+	QP_Partition(QP_PartInfo *, QWidget *parent=0, Qt::WindowFlags f = 0);
 	~QP_Partition();
 };
 

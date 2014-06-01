@@ -21,7 +21,7 @@
 
 #include "qp_partition.h"
 
-QP_Partition::QP_Partition(QP_PartInfo *pinfo, QWidget *parent, Qt::WFlags f):QP_PartWidget(pinfo, parent, f) {
+QP_Partition::QP_Partition(QP_PartInfo *pinfo, QWidget *parent, Qt::WindowFlags f):QP_PartWidget(pinfo, parent, f) {
 }
 
 QP_Partition::~QP_Partition() {

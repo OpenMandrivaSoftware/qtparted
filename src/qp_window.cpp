@@ -35,17 +35,6 @@
 #include "qp_filesystem.h"
 #include "qp_fswrap.h"
 
-#include "xpm/tool_disk.xpm"
-#include "xpm/tool_property.xpm"
-#include "xpm/tool_delete.xpm"
-#include "xpm/tool_resize.xpm"
-#include "xpm/tool_move.xpm"
-#include "xpm/tool_quit.xpm"
-#include "xpm/tool_undo.xpm"
-#include "xpm/tool_save.xpm"
-#include "xpm/tool_new.xpm"
-#include "xpm/tool_format.xpm"
-#include "xpm/tool_whatthis.xpm"
 #include "../data/qtparted.xpm"
 
 
@@ -187,137 +176,137 @@ void QP_MainWindow::createAction()
 {
 	/*---Undo button (used in File menu)---*/
 	actUndo = new QAction ( tr ( "&Undo" ), this );
-	actUndo->setIcon ( QPixmap ( tool_undo ) );
+	actUndo->setIcon ( QPixmap ( ":icons/tool_undo.png" ) );
 	actUndo->setToolTip ( tr ( "Undo" ) );
 	actUndo->setWhatsThis ( tr ( "Undo last operation" ) );
 	actUndo->setEnabled ( false );
-	connect ( actUndo, SIGNAL ( activated() ),
+	connect ( actUndo, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotUndo() ) );
 
 	/*---Commit button (used in File menu)---*/
 	actCommit = new QAction ( tr ( "&Commit" ), this );
-	actCommit->setIcon ( QPixmap ( tool_save ) );
+	actCommit->setIcon ( QPixmap ( ":icons/tool_save.png" ) );
 	actCommit->setToolTip ( tr ( "Commit" ) );
 	actCommit->setWhatsThis ( tr ( "Commit all operations" ) );
 	actCommit->setEnabled ( false );
-	connect ( actCommit, SIGNAL ( activated() ),
+	connect ( actCommit, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotCommit() ) );
 
 	/*---Quit button (used in File menu)---*/
 	actQuit = new QAction ( tr ( "&Quit" ), this );
-	actQuit->setIcon ( QPixmap ( tool_quit ) );
+	actQuit->setIcon ( QPixmap ( ":icons/tool_quit.png" ) );
 	actQuit->setToolTip ( tr ( "Quit" ) );
 	actQuit->setWhatsThis ( tr ( "Quit from the application" ) );
 	actQuit->setEnabled ( true );
-	connect ( actQuit, SIGNAL ( activated() ),
+	connect ( actQuit, SIGNAL ( triggered(bool) ),
 			  qApp, SLOT ( quit() ) );
 
 	/*---Property button (used in operations menu)---*/
 	actProperty = new QAction ( tr ( "&Property" ), this );
-	actProperty->setIcon ( QPixmap ( tool_property ) );
+	actProperty->setIcon ( QPixmap ( ":icons/tool_property.png" ) );
 	actProperty->setToolTip ( tr ( "Property" ) );
 	actProperty->setWhatsThis ( tr ( "Property of the selected partition" ) );
 	actProperty->setEnabled ( false );
-	connect ( actProperty, SIGNAL ( activated() ),
+	connect ( actProperty, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotProperty() ) );
 
 	/*---Create button (used in operations menu)---*/
 	actCreate = new QAction ( tr ( "&Create" ), this );
-	actCreate->setIcon ( QPixmap ( tool_new ) );
+	actCreate->setIcon ( QPixmap ( ":icons/tool_new.png" ) );
 	actCreate->setToolTip ( tr ( "Create" ) );
 	actCreate->setWhatsThis ( tr ( "Create a new partition" ) );
 	actCreate->setEnabled ( false );
-	connect ( actCreate, SIGNAL ( activated() ),
+	connect ( actCreate, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotCreate() ) );
 
 
 	/*---Format button (used in operations menu)---*/
 	actFormat = new QAction ( tr ( "&Format" ), this );
-	actFormat->setIcon ( QPixmap ( tool_format ) );
+	actFormat->setIcon ( QPixmap ( ":icons/tool_format.png" ) );
 	actFormat->setToolTip ( tr ( "Format" ) );
 	actFormat->setWhatsThis ( tr ( "Format a new partition" ) );
 	actFormat->setEnabled ( false );
-	connect ( actFormat, SIGNAL ( activated() ),
+	connect ( actFormat, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotFormat() ) );
 
 	/*---Resize button (used in operations menu)---*/
 	actResize = new QAction ( tr ( "&Resize" ), this );
-	actResize->setIcon ( QPixmap ( tool_resize ) );
+	actResize->setIcon ( QPixmap ( ":icons/tool_resize.png" ) );
 	actResize->setToolTip ( tr ( "Resize" ) );
 	actResize->setWhatsThis ( tr ( "Resize a partition" ) );
 	actResize->setEnabled ( false );
-	connect ( actResize, SIGNAL ( activated() ),
+	connect ( actResize, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotResize() ) );
 
 	/*---Move button (used in operations menu)---*/
 	actMove = new QAction ( tr ( "&Move" ), this );
-	actMove->setIcon ( QPixmap ( tool_move ) );
+	actMove->setIcon ( QPixmap ( ":icons/tool_move.png" ) );
 	actMove->setToolTip ( tr ( "Move" ) );
 	actMove->setWhatsThis ( tr ( "Move a partition" ) );
 	actMove->setEnabled ( false );
-	connect ( actMove, SIGNAL ( activated() ),
+	connect ( actMove, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotMove() ) );
 
 	/*---Delete button (used in operations menu)---*/
 	actDelete = new QAction ( tr ( "&Delete" ), this );
-	actDelete->setIcon ( QPixmap ( tool_delete ) );
+	actDelete->setIcon ( QPixmap ( ":icons/tool_delete.png" ) );
 	actDelete->setToolTip ( tr ( "Delete" ) );
 	actDelete->setWhatsThis ( tr ( "Delete a new partition" ) );
 	actDelete->setEnabled ( false );
-	connect ( actDelete, SIGNAL ( activated() ),
+	connect ( actDelete, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotDelete() ) );
 
 	/*---Config button (used in options menu)---*/
 	actConfig = new QAction ( tr ( "&Configuration..." ), this );
-	actConfig->setIcon ( QPixmap ( tool_property ) );
+	actConfig->setIcon ( QPixmap ( ":/icons/tool_property.png" ) );
 	actConfig->setToolTip ( tr ( "Configuration of QTParted" ) );
 	actConfig->setWhatsThis ( tr ( "Open the configuration dialog" ) );
 	actConfig->setEnabled ( true );
-	connect ( actConfig, SIGNAL ( activated() ),
+	connect ( actConfig, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotConfig() ) );
 
 	/*---What this button (used in toolbutton bar)---*/
 	actWhatThis = new QAction ( tr ( "What's &This" ), this );
-	actWhatThis->setIcon ( QPixmap ( tool_whatthis ) );
+	actWhatThis->setIcon ( QPixmap ( ":/icons/tool_whatsthis.png" ) );
 	actWhatThis->setToolTip ( tr ( "What's This" ) );
 	actWhatThis->setWhatsThis ( tr ( "Enter <b>What's This</b> mode"
 									 "It enables the user to ask for help "
 									 "about widgets on the screen." ) );
 	actWhatThis->setEnabled ( true );
 	actWhatThis->setShortcut ( Qt::Key_Shift + Qt::Key_F1 );
-	connect ( actWhatThis, SIGNAL ( activated() ),
+	connect ( actWhatThis, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotWhatsThis() ) );
 
 	/*---About button (used in operations help)---*/
 	actAbout = new QAction ( tr ( "About &QTParted" ), this );
 	actAbout->setToolTip ( tr ( "About QTParted" ) );
 	actAbout->setWhatsThis ( tr ( "Information about QTParted" ) );
-	connect ( actAbout, SIGNAL ( activated() ),
+	connect ( actAbout, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotAbout() ) );
 
 	/*---About QT button (used in operations help)---*/
 	actAboutQT = new QAction ( tr ( "About Q&T" ), this );
 	actAboutQT->setToolTip ( tr ( "About QT" ) );
 	actAboutQT->setWhatsThis ( tr ( "Information about QT" ) );
-	connect ( actAboutQT, SIGNAL ( activated() ),
+	connect ( actAboutQT, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotAboutQT() ) );
 
 	/*---disk navigator property button (used when you right click on a device---*/
 	actNavProperty = new QAction ( tr ( "&Device property" ), this );
-	actNavProperty->setIcon ( QPixmap ( tool_disk ) );
+	actNavProperty->setIcon ( QPixmap ( ":icons/tool_disk.png" ) );
 	actNavProperty->setToolTip ( tr ( "See the property of this disk device" ) );
 	actNavProperty->setWhatsThis ( tr ( "Some information about the disk device" ) );
 	actNavProperty->setEnabled ( true );
-	connect ( actNavProperty, SIGNAL ( activated() ),
+	connect ( actNavProperty, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotNavProperty() ) );
 
 	/*---disk navigator make partition table (used when you right click on a device---*/
 	actNavPartTable = new QAction ( tr ( "&Make a new Partition Table" ), this );
-	actNavPartTable->setIcon ( QPixmap ( tool_format ) );
+	actNavPartTable->setIcon ( QPixmap ( ":icons/tool_format.png" ) );
 	actNavPartTable->setToolTip ( tr ( "This will make the partition table" ) );
 	actNavPartTable->setWhatsThis ( tr ( "You're going to loose all partition data! Are you sure? :)" ) );
 	actNavPartTable->setEnabled ( true );
-	connect ( actNavPartTable, SIGNAL ( activated() ),
+	connect ( actNavPartTable, SIGNAL ( triggered(bool) ),
 			  this, SLOT ( slotNavPartTable() ) );
 }
 
@@ -414,7 +403,7 @@ void QP_MainWindow::setupStatusBar()
 	boldfont.setWeight ( QFont::Bold );
 	lbl2->setFont ( boldfont );
 	lbl2->setMinimumHeight ( lbl2->sizeHint().height() );
-	lbl2->setText ( "(C) 2002-2003 by Zanac / (C) 2005-2011 Ark Linux" );
+	lbl2->setText ( "(C) 2002-2003 by Zanac / (C) 2005-2014 LinDev" );
 	lbl2->setToolTip ( "Message area" );
 	hboxlayout->addWidget ( lbl2 );
 
@@ -826,15 +815,15 @@ void QP_MainWindow::slotAbout()
 					"<p>QTParted is free software, covered by the GNU General Public License"
 					" and you are welcome to change it and/or distribute copies of it under"
 					" certain conditions</p>"
-					"<p>QTParted are currently maintained by <a href=\"http://www.arklinux.org\">Ark Linux Team</a>. Go to "
+					"<p>QTParted is currently maintained by the <a href=\"http://openmandriva.org\">OpenMandriva</a> Team. Go to "
 					" <a href=\"%4\">%4</a> for more "
 					"information.</p>" )
 					  .arg ( QMessageBox::tr ( "QtParted" ) )
 					  .arg ( QMessageBox::tr ( VERSION ) )
 					  .arg ( QMessageBox::tr ( "Copyright (C) 2003 by Vanni Brutto &lt;zanac4ever@virgilio.it&gt;<br />"
-								   "Copyright (C) 2005-2011 by Bernhard Rosenkraenzer &lt;bero@arklinux.org&gt;<br />"
+								   "Copyright (C) 2005-2014 by Bernhard Rosenkraenzer &lt;bero@lindev.ch&gt;<br />"
 								   "Copyright (C) 2007-2008 by David Tio &lt;deux@arklinux.org&gt;<br />"
-								   "(send bug reports to bero@arklinux.org and/or deux@arklinux.org)" ) )
+								   "(send bug reports to issues.openmandriva.org)" ) )
 					  .arg ( QMessageBox::tr ( "http://qtparted.sf.net/" ) );
 
 	QMessageBox mb ( this );

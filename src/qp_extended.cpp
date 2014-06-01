@@ -22,7 +22,7 @@
 #include "qp_extended.h"
 
 
-QP_Extended::QP_Extended(QP_PartInfo *pinfo, QWidget *parent, Qt::WFlags f)
+QP_Extended::QP_Extended(QP_PartInfo *pinfo, QWidget *parent, Qt::WindowFlags f)
     :QP_PartWidget(pinfo, parent, f) {
 
     container = new QWidget(this);

@@ -33,7 +33,7 @@ public:
 	int width;
 };
 
-QP_ListChart::QP_ListChart(QWidget *parent, Qt::WFlags f)
+QP_ListChart::QP_ListChart(QWidget *parent, Qt::WindowFlags f)
 	:QP_PartList(parent, f) {
 
 	/*---prevent a segfualt in ::clear method!---*/

@@ -1,8 +1,7 @@
 /*
     qtparted - a frontend to libparted for manipulating disk partitions
-    Copyright (C) 2002-2003 Vanni Brutto
-
-    Vanni Brutto <zanac (-at-) libero dot it>
+    Copyright (C) 2002-2003 Vanni Brutto <zanac (-at-) libero dot it>
+    Copyright (C) 2014 Bernhard Rosenkränzer <bero@lindev.ch>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,6 +18,8 @@
     Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
+#ifndef _QP_SIZEPART_H_
+#define _QP_SIZEPART_H_ 1
 /* About qp_sizepart.cpp
  *
  * A widget used for resize/move partitions
@@ -45,7 +46,7 @@ class QP_SizeContainer : public QWidget {
 Q_OBJECT
 
 public:
-    QP_SizeContainer(QWidget *parent=0, Qt::WFlags f = 0);
+    QP_SizeContainer(QWidget *parent=0, Qt::WindowFlags f = 0);
     void setGeometry(int x, int y, int w, int h);
     void setMaxPartSector(PedSector);
     void setMinPartSector(PedSector);
@@ -79,7 +80,7 @@ class QP_SizePartition : public QWidget {
 Q_OBJECT
 
 public:
-    QP_SizePartition(QWidget *parent=0, Qt::WFlags f = 0);
+    QP_SizePartition(QWidget *parent=0, Qt::WindowFlags f = 0);
     ~QP_SizePartition();
     void setMinSizeInPixel(int);
     void setMode(QTParted::actType);
@@ -101,3 +102,4 @@ signals:
     void sigChangedEnd();
     void sigChangedPos();
 };
+#endif

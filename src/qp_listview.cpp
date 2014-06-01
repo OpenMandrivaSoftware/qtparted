@@ -261,7 +261,7 @@ void QP_RealListView::rightButtonClicked ( const QPoint &point )
 
 /*----------QP_ListView--------------------------------------------------------------*/
 /*---																			 ---*/
-QP_ListView::QP_ListView ( QWidget *parent, Qt::WFlags f )
+QP_ListView::QP_ListView ( QWidget *parent, Qt::WindowFlags f )
 		: QP_PartList ( parent, f )
 {
 

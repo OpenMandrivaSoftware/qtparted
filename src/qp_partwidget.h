@@ -41,7 +41,7 @@
 class QP_PartWidget : public QWidget {
 	Q_OBJECT
 public:
-	QP_PartWidget(QP_PartInfo *, QWidget *parent=0, Qt::WFlags f = 0);
+	QP_PartWidget(QP_PartInfo *, QWidget *parent=0, Qt::WindowFlags f = 0);
 	~QP_PartWidget();
 	void setSelected(bool);			/*---this give the focus to the partition---*/
 	bool Selected();			/*---return if the partition was selected---*/

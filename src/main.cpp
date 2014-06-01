@@ -148,7 +148,7 @@ int main(int argc, char *argv[]) {
 
         QSplashScreen *splash=new QSplashScreen(QPixmap(DATADIR "/pics/qtp_splash.png"));
         splash->connect(mainwindow, SIGNAL(sigSplashInfo(const QString &)),
-                        SLOT(message(const QString &)));
+                        SLOT(showMessage(const QString &)));
         splash->finish(mainwindow);
         splash->show();
 

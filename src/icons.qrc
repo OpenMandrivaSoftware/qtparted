@@ -1,0 +1,28 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+<qresource>
+	<file>icons/left_arrow.png</file>
+	<file>icons/part_beos.png</file>
+	<file>icons/part_dos.png</file>
+	<file>icons/part_freebsd.png</file>
+	<file>icons/part_free.png</file>
+	<file>icons/part_linux.png</file>
+	<file>icons/part_mac.png</file>
+	<file>icons/part_os2.png</file>
+	<file>icons/part_unknown.png</file>
+	<file>icons/part_windows.png</file>
+	<file>icons/right_arrow.png</file>
+	<file>icons/tool_delete.png</file>
+	<file>icons/tool_disk.png</file>
+	<file>icons/tool_format.png</file>
+	<file>icons/tool_move.png</file>
+	<file>icons/tool_new.png</file>
+	<file>icons/tool_property.png</file>
+	<file>icons/tool_quit.png</file>
+	<file>icons/tool_redo.png</file>
+	<file>icons/tool_resize.png</file>
+	<file>icons/tool_save.png</file>
+	<file>icons/tool_undo.png</file>
+	<file>icons/tool_whatsthis.png</file>
+</qresource>
+</RCC>

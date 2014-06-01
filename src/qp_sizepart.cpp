@@ -27,12 +27,10 @@
 #include <QStyleOption>
 
 #include "qp_sizepart.h"
-#include "xpm/left_arrow.xpm"
-#include "xpm/right_arrow.xpm"
 
 #define ARROW_MARGIN 12
 
-QP_SizeContainer::QP_SizeContainer(QWidget *parent, Qt::WFlags f)
+QP_SizeContainer::QP_SizeContainer(QWidget *parent, Qt::WindowFlags f)
     :QWidget(parent, f) {
     sizepartition = new QP_SizePartition(this);
 
@@ -131,7 +129,7 @@ void QP_SizeContainer::slotChangedPos() {
 
 
 
-QP_SizePartition::QP_SizePartition(QWidget *parent, Qt::WFlags f)
+QP_SizePartition::QP_SizePartition(QWidget *parent, Qt::WindowFlags f)
     :QWidget(parent, f) {
 
     setMouseTracking(true);
@@ -292,8 +290,8 @@ void QP_SizePartition::paintEvent(QPaintEvent *) {
     paint.fillRect(ARROW_MARGIN, 6, width()-ARROW_MARGIN*2, height()-12, Qt::white);
 
     /*---draw two small arrow on the border---*/
-    paint.drawPixmap(QPoint(2, (height()-8)/2), QPixmap(left_arrow_xpm));
-    paint.drawPixmap(QPoint(width()-ARROW_MARGIN+2, (height()-8)/2), QPixmap(right_arrow_xpm));
+    paint.drawPixmap(QPoint(2, (height()-8)/2), QPixmap(":icons/left_arrow.png"));
+    paint.drawPixmap(QPoint(width()-ARROW_MARGIN+2, (height()-8)/2), QPixmap(":icons/right_arrow.png"));
     
 
     /*---draw a small border around the widget---*/

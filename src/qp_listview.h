@@ -121,7 +121,7 @@ protected slots:
 class QP_ListView : public QP_PartList {
 	Q_OBJECT
 public:
-	QP_ListView(QWidget *parent=0, Qt::WFlags f = 0);
+	QP_ListView(QWidget *parent=0, Qt::WindowFlags f = 0);
 	~QP_ListView();
 	void setselPartInfo(QP_PartInfo *);
 	void setDevice(QP_Device *);		/*---ovverride the setDevice method		 ---*/

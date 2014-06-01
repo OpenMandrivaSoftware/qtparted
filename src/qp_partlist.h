@@ -36,7 +36,7 @@
 class QP_PartList : public QWidget {
 	Q_OBJECT
 public:
-	QP_PartList(QWidget *parent=0, Qt::WFlags f = 0);
+	QP_PartList(QWidget *parent=0, Qt::WindowFlags f = 0);
 	~QP_PartList();
 	QP_PartInfo *selPartInfo();		/*---return selected partition              ---*/
 	void setselPartInfo(QP_PartInfo *);	/*---change the selected partition          ---*/

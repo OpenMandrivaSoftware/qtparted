@@ -28,7 +28,7 @@
 #include "qp_partwidget.h"
 #include "qp_filesystem.h"
 
-QP_PartWidget::QP_PartWidget(QP_PartInfo *pinfo, QWidget *parent, Qt::WFlags f)
+QP_PartWidget::QP_PartWidget(QP_PartInfo *pinfo, QWidget *parent, Qt::WindowFlags f)
 	:QWidget(parent, f) {
 	_Selected = false;
 	partinfo = pinfo;   //Pointer to the QP_PartInfo class wich contain info about the partition

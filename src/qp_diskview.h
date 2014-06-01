@@ -40,7 +40,7 @@ class QP_DiskView : public QWidget {
 Q_OBJECT
 
 public:
-	QP_DiskView(QWidget *parent=0, Qt::WFlags f = 0);
+	QP_DiskView(QWidget *parent=0, Qt::WindowFlags f = 0);
 	~QP_DiskView();
 	QP_PartInfo *selPartInfo();					/*---return the selected partition			 ---*/
 	void setDevice(QP_Device *);				   /*---set the device (example: /dev/hda)		---*/
