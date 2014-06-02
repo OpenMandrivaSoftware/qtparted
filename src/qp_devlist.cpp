@@ -43,7 +43,8 @@ time_t uptime() {
 
 	uptime_fd = fopen(UPTIME_FILE, "r");
 	
-	fread(buf, 255, 1, uptime_fd);
+	if(!uptime_fd || (fread(buf, 255, 1, uptime_fd) == 0))
+		return 0;
 	if (sscanf(buf, "%lf %lf", &up, &idle) < 2) {
 		fprintf(stderr, "bad data in " UPTIME_FILE "\n");
 		return 0;
@@ -146,7 +147,7 @@ bool QP_Device::canUpdateGeometry() {
 	/*geometry cannot be changed if last update was > boottime!!*/
 
 	time_t lastUpdate = settings->getDevUpdate(shortname());
-	time_t boottime = time((time_t)0) - uptime();
+	time_t boottime = time(0) - uptime();
 
 	if ((lastUpdate > boottime) && isBusy())
 		return false;
@@ -157,7 +158,7 @@ bool QP_Device::canUpdateGeometry() {
 void QP_Device::commit() {
 	/*---if the device is busy must be updated to "readonly"---*/
 	if (isBusy()) {
-		time_t now = time((time_t)0);
+		time_t now = time(0);
 		settings->setDevUpdate(shortname(), now);
 	}
 }

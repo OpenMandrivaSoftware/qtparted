@@ -69,6 +69,6 @@ qt5_wrap_ui(UI_SRCS ${UIS})
 qt5_wrap_cpp(MOC_SRCS ${PRIVATE_HEADERS} ${UI_SRCS})
 qt5_add_resources(ICON_SRCS icons.qrc)
 
-add_executable(qtparted ${SRCS} ${ICON_SRCS})
+add_executable(qtparted ${SRCS} ${UI_SRCS} ${ICON_SRCS})
 target_link_libraries(qtparted Qt5::Widgets parted)
 install(TARGETS qtparted DESTINATION bin)
